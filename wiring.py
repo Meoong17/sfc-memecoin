@@ -141,13 +141,19 @@ class LivePipelineWire:
         f.organic_raw = 50.0
         f.effective_circulating_supply = info.mcap or 0.0
 
-        # GMGN security -> EV-002
+        # GMGN security -> EV-002 + contract-security facts (renounced/LP)
         if self.sources.gmgn is not None:
             try:
                 cf = self.sources.gmgn.token_security(info.address, info.chain)
                 f.contract_risk_level = _risk_level(cf.buy_tax_pct, cf.sell_tax_pct,
                                                     cf.sell_sellable)
                 f.is_honeypot = not cf.sell_sellable
+                # capture LP/renounce facts so the screener can label a token
+                # "verified/secure" (renounced + LP locked/burned + not honeypot)
+                f.contract_sell_sellable = cf.sell_sellable
+                f.contract_lp_locked_pct = cf.lp_locked_pct
+                f.contract_lp_burned = cf.lp_burned
+                f.contract_renounced = _gmgn_renounced_from_notes(cf.notes or [])
                 f.deployer = info.address  # placeholder until dev lookup wired
             except Exception as e:
                 log.warning("GMGN security failed for %s: %s", info.address, e)
@@ -218,3 +224,17 @@ def _risk_level(buy_tax: float, sell_tax: float, sellable: bool) -> str:
     if max_tax >= 5:
         return "WATCH"
     return "SAFE"
+
+
+def _gmgn_renounced_from_notes(notes: list) -> bool:
+    """Parse GMGN `gmgn_is_renounced=...` from ContractFacts.notes.
+
+    GMGN may serialize renounced as a bool (repr `True`) or string (`"True"`),
+    so match the value case-insensitively rather than expecting a fixed string.
+    Returns False when absent/unparseable (safe default).
+    """
+    for n in notes or []:
+        if "gmgn_is_renounced=" in str(n):
+            val = str(n).partition("gmgn_is_renounced=")[2].strip().lower()
+            return val in ("true", "1", "yes")
+    return False

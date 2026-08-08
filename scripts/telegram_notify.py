@@ -52,10 +52,26 @@ def _fmt_usd(v) -> str:
     if x >= 1e6:
         return f"${x/1e6:.2f}M"
     if x >= 1:
+        if x >= 1000:
+            return f"${x:,.0f}"
         return f"${x:,.4f}"
     if x >= 1e-4:
         return f"${x:.6f}"
     return f"${x:.8f}"
+
+
+_CONTRACT_EMOJI = {
+    "VERIFIED": "🛡️ VERIFIED",
+    "LOCKED": "🔒 LOCKED",
+    "RISKY": "⚠️ RISKY",
+    "CRITICAL": "🚨 CRITICAL",
+    "UNKNOWN": "❔ UNKNOWN",
+}
+
+
+def _contract_badge(status: str) -> str:
+    """Emoji + label for contract status, so the secure coin is obvious."""
+    return _CONTRACT_EMOJI.get(status, f"❔ {status}")
 
 
 class TelegramNotifier:
@@ -114,11 +130,12 @@ class TelegramNotifier:
             price = r.get("price_usd", 0)
             mcap = r.get("mcap")
             dev_rep = r.get("dev_reputation_risk", "LOW")
+            cstat = r.get("contract_status", "UNKNOWN")
             lines.append(f"{i}. {symbol}")
             lines.append(f"   💰 {_fmt_usd(price)} | Cap {_fmt_usd(mcap)}")
             lines.append(f"   📈 RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%} "
                          f"| DevRisk={dev_rep}")
-            lines.append(f"   🧩 Konfluensi: {conf_label}")
+            lines.append(f"   🧩 Konfluensi: {conf_label} | Contract: {_contract_badge(cstat)}")
             lines.append(f"   🔗 {tok[:24]}…" if len(tok) > 24 else f"   🔗 {tok}")
             lines.append("")
 
@@ -133,6 +150,10 @@ class TelegramNotifier:
         lines.append("• DevRisk (Dev Reputation): risiko dari reputasi dev on-chain "
                      "(LOW/MED/HIGH). HIGH = dev pernah rug-pull / dijual habis; "
                      "menurunkan RAA.")
+        lines.append("• Contract: status keamanan smart contract. "
+                     "🛡️ VERIFIED = aman & terverifikasi (renounced + LP locked/burned); "
+                     "🔒 LOCKED = LP aman tapi belum renounced; "
+                     "⚠️ RISKY = LP tidak terjamin; 🚨 CRITICAL = honeypot/rug.")
         lines.append("• Konfluensi: kesepakatan antar-bukti independen:")
         lines.append("   - HIGH_CONFLUENCE = banyak bukti independen searah (paling kuat)")
         lines.append("   - MODERATE_OPPORTUNITY = bukti cukup, ada peluang moderat")

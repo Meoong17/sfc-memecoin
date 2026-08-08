@@ -283,6 +283,29 @@ mengubah ranking Telegram). DIPERBAIKI tanpa double-count:
   insider_probability -> dev_reputation_risk -> RAA -> ranking terbukti di data
   nyata. `telegram_notify.py /tmp/snap_live.json` -> sent=True (pesan terkirim).
 
+### Contract status badge (smart-contract coin tampil jelas di Telegram)
+
+Permintaan user: token dengan kontrak aman/terverifikasi harus tampil jelas.
+
+- `TokenFeatures`: +4 field keamanan kontrak (contract_sell_sellable,
+  contract_lp_locked_pct, contract_lp_burned, contract_renounced), di-capture
+  dari ContractFacts GMGN di `wiring.build_features`.
+- `TokenScore.contract_status` (VERIFIED/LOCKED/RISKY/CRITICAL/UNKNOWN) + helper
+  `_contract_status()` di pipeline:
+  - 🛡️ VERIFIED = aman & terverifikasi: bukan honeypot + sellable + renounced +
+    LP locked/burned (secure >= 50%) — badge coin aman.
+  - 🔒 LOCKED = LP aman tapi belum renounced.
+  - ⚠️ RISKY = LP tidak terjamin.
+  - 🚨 CRITICAL = honeypot / tidak bisa jual.
+  - ❔ UNKNOWN = tidak ada fakta GMGN (degradasi).
+- `_gmgn_renounced_from_notes` parsing robust (bool True repr / string "True").
+- Format Telegram: `Contract: 🛡️ VERIFIED` per token + legenda 4 level.
+  `_fmt_usd` diperbaiki (cap $100k+ -> $100,000, bukan 4 desimal).
+- Verifikasi live (collect_live --limit 6): Aether/AURIS = VERIFIED (renounced +
+  LP aman) -> RAA 40.6/40.4 (tertinggi); FRENS = LOCKED + DevRisk HIGH ->
+  RAA 29.2 (terendah). `telegram_notify.py /tmp/snap_contract.json` ->
+  sent=True. 277 test hijau (+8).
+
 ### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
 
 Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga

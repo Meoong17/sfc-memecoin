@@ -83,7 +83,8 @@ def test_fmt_usd_compact():
     assert _fmt_usd(0.0000012) == "$0.00000120"
     assert _fmt_usd(2500000) == "$2.50M"
     assert _fmt_usd(5.5e9) == "$5.50B"
-    assert _fmt_usd(1234.5) == "$1,234.5000"
+    assert _fmt_usd(1234.5) == "$1,234"   # round-half-even: 1234.5 -> 1234
+    assert _fmt_usd(100000) == "$100,000"
 
 
 def test_format_ranking_empty():

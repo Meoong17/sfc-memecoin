@@ -3,7 +3,8 @@ import pytest
 
 from fetchers.dex_screener import TokenMarketInfo
 from pipeline import TokenFeatures
-from wiring import LiveSourceBundle, LivePipelineWire, LiveUniverse, _risk_level
+from wiring import (LiveSourceBundle, LivePipelineWire, LiveUniverse,
+                    _gmgn_renounced_from_notes, _risk_level)
 
 
 class _FakeGmgn:
@@ -102,6 +103,35 @@ def test_risk_level_mapping():
     assert _risk_level(12, 0, True) == "RISKY"
     assert _risk_level(25, 0, True) == "CRITICAL"
     assert _risk_level(0, 0, False) == "CRITICAL"  # cannot sell
+
+
+def test_gmgn_renounced_parse_bool_and_string():
+    assert _gmgn_renounced_from_notes(["gmgn_is_renounced=True"]) is True
+    assert _gmgn_renounced_from_notes(["gmgn_is_renounced=true"]) is True
+    assert _gmgn_renounced_from_notes(["gmgn_is_renounced=1"]) is True
+    assert _gmgn_renounced_from_notes(["gmgn_is_renounced=False"]) is False
+    assert _gmgn_renounced_from_notes(["gmgn_is_renounced=0"]) is False
+    assert _gmgn_renounced_from_notes([]) is False
+    assert _gmgn_renounced_from_notes(["other_note=1"]) is False
+
+
+def test_build_features_captures_contract_facts():
+    """ContractFacts -> contract-security facts on TokenFeatures."""
+    class _ContractGmgn(_FakeGmgn):
+        def token_security(self, address, chain):
+            from data_sources.honeypot_sim import ContractFacts
+            return ContractFacts(address=address, chain=chain, sell_sellable=True,
+                                 buy_tax_pct=2.0, sell_tax_pct=2.0,
+                                 lp_locked_pct=0.9, lp_burned=True,
+                                 notes=["gmgn_is_renounced=True"])
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_ContractGmgn(), helius=None),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    assert f.contract_sell_sellable is True
+    assert f.contract_lp_locked_pct == 0.9
+    assert f.contract_lp_burned is True
+    assert f.contract_renounced is True
 
 
 def test_available_sources_reporting():

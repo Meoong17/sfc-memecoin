@@ -39,6 +39,13 @@ class TokenFeatures:
     contract_risk_score: float = 0.0
     is_honeypot: bool = False
     deployer: str = ""
+    # contract-security facts (from GMGN token_security -> ContractFacts) used
+    # to label a token as "verified/secure" (renounced + LP locked/burned +
+    # not honeypot). Empty/None = unknown (degraded).
+    contract_sell_sellable: bool = True
+    contract_lp_locked_pct: float = 0.0    # fraction [0,1]
+    contract_lp_burned: bool = False
+    contract_renounced: bool = False
     # insider
     entry_events: list = field(default_factory=list)
     launch_minute: float = 0.0
@@ -73,6 +80,7 @@ class TokenScore:
     insider_probability: float = 0.0
     confluence_label: str = "NEUTRAL"
     regime: str = "NORMAL"
+    contract_status: str = "UNKNOWN"   # VERIFIED / LOCKED / RISKY / CRITICAL
     outputs: dict = field(default_factory=dict)
 
     def summary(self) -> dict:
@@ -90,6 +98,7 @@ class TokenScore:
             "dev_reputation_risk": dev_rep,
             "confluence_label": self.confluence_label,
             "regime": self.regime,
+            "contract_status": self.contract_status,
             "outputs": list(self.outputs.keys()),
         }
 
@@ -114,6 +123,7 @@ class ScreeningPipeline:
         gate = SecurityGate()
         g = gate.evaluate(f.token, f.chain, ev002, deployer=f.deployer or None)
         s.outputs["security"] = g.summary()
+        s.contract_status = _contract_status(f)
         if g.blocked:
             s.admitted = False
             s.hard_block_reasons = g.hard_reasons
@@ -203,3 +213,31 @@ class ScreeningPipeline:
         s.confidence = conf_res.final_confidence
         s.outputs["confidence"] = conf_res.summary()
         return s
+
+
+# ILLUSTRATIVE LP threshold for "secure" contract labeling (calibration doctrine).
+_LP_SECURE_MIN = 0.5
+
+
+def _contract_status(f: TokenFeatures) -> str:
+    """Label a token's contract as VERIFIED / LOCKED / RISKY / CRITICAL.
+
+    VERIFIED = not honeypot, sellable, renounced, AND LP secured (burned OR
+    locked >= threshold) — the "safe/verified smart-contract coin" badge.
+    LOCKED   = sellable, LP secured, but not renounced (ownership still held).
+    RISKY    = sellable but LP unsecured (low/no lock, not burned).
+    CRITICAL = honeypot (cannot sell) — should be hard-blocked anyway.
+    UNKNOWN  = no GMGN contract facts available (degraded).
+    """
+    if f.is_honeypot:
+        return "CRITICAL"
+    if not f.contract_sell_sellable:
+        return "CRITICAL"
+    lp_secure = f.contract_lp_burned or f.contract_lp_locked_pct >= _LP_SECURE_MIN
+    if f.contract_renounced and lp_secure:
+        return "VERIFIED"
+    if lp_secure:
+        return "LOCKED"
+    if f.contract_renounced or f.contract_lp_locked_pct > 0 or f.contract_lp_burned:
+        return "RISKY"
+    return "UNKNOWN"
