@@ -425,6 +425,28 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **Pipeline snapshot launch utk uji score->outcome yg SAH**. Dataset
+  berlabel lama hanya punya fitur GMGN-trending di `note`, jadi uji prediktif
+  cuma bisa pakai PROXY bobot inti (path OKX/funding/market_stats absen). Utk
+  uji yg benar, rekam TokenFeatures PENUH saat launch lalu backfill outcome:
+    - `snapshot_store.py`: serialize/deserialize TokenFeatures bulat (OKX,
+      funding edges, swaps, entry events, wallet analytics, market_stats,
+      contract facts, raw weights) ke JSON — fitur disimpan penuh agar bisa
+      re-score tanpa re-fetch bila rumus berubah.
+    - `scripts/snapshot_collect.py`: jalankan pipeline nyata saat launch,
+      simpan snapshot + skor + ref_price/ref_mcap ke ledger, --dedupe.
+    - `scripts/backfill_outcomes.py`: setelah window observasi, fetch harga kini,
+      hitung return vs ref_price, label rugged/survived/pumped via
+      classify_outcome (independen dari skor — anti-circular).
+    - `validate_predictive_edge.py --snapshots`: re-run score_token() pada fitur
+      tersimpan, ukur AUC RAA/Confidence/Insider vs outcome.
+  Smoke live: 4 snapshot tersimpan (RAA 23.6-43.6, conf 0.18-0.57, insider
+  0.00-0.50); validate benar menolak krn 0 berlabel (pending-backfill). Utk
+  dataset nyata: jalankan snapshot_collect berkala sampai >=21 token, lalu
+  backfill --min-window-days 14, lalu validate --snapshots. Keterbatasan jujur:
+  label versi 1 memakai harga kini tanpa history peak/drawdown (konservatif).
+  302 test hijau (+2 round-trip snapshot).
+
 - 2026-08-09: **UJI PREDICTIVE EDGE — VERDICT: NO EVIDENCE** (user: jangan klaim
   edge sblm uji empiris skor->outcome). `scripts/validate_predictive_edge.py`
   menjalankan skor (proxy historis dari fitur GMGN-trending di dataset berlabel)

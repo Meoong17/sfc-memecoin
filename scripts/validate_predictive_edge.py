@@ -126,7 +126,15 @@ def historical_proxy(note: str | None) -> dict[str, float]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--ds", default="data/labeled_dataset_v4_large.json")
+    ap.add_argument("--snapshots", default="",
+                    help="path to a launch-snapshot ledger (data/launch_snapshots.json); "
+                         "re-scores stored full features against backfilled outcomes "
+                         "(the REAL score->outcome test). Overrides --ds.")
     args = ap.parse_args()
+
+    if args.snapshots:
+        return _run_snapshot_validation(args.snapshots)
+
     ds = json.load(open(args.ds))
     samples = ds["samples"]
 
@@ -206,6 +214,96 @@ def main() -> int:
         print("  outcomes until a score->outcome test on live-feature snapshots")
         print("  passes. Insider/OKX/funding paths are untested here (data absent).")
     print("=" * 72)
+    return 0
+
+
+def _run_snapshot_validation(path: str) -> int:
+    """The REAL score->outcome test on launch snapshots.
+
+    Re-runs the full pipeline (score_token) on the stored TokenFeatures and
+    measures whether the score separates the backfilled outcomes. Unlike the
+    historical-proxy path, this uses the actual live features (OKX/funding/
+    market_stats/wallet analytics) the model would see — so it is a genuine
+    predictive-edge test, not a proxy. Requires the ledger to have backfilled
+    outcomes (scripts/backfill_outcomes.py).
+    """
+    import json
+    from pipeline import ScreeningPipeline
+    from snapshot_store import deserialize_features
+
+    try:
+        ledger = json.load(open(path))
+    except FileNotFoundError:
+        print(f"snapshot ledger not found: {path}", file=sys.stderr)
+        return 1
+    records = ledger["records"]
+    labeled = [r for r in records if r.get("outcome")]
+    pending = len(records) - len(labeled)
+    print(f"Snapshot ledger: {path}")
+    print(f"  total records: {len(records)}  labeled: {len(labeled)}  "
+          f"pending-backfill: {pending}")
+    if len(labeled) < 21:
+        print("  Not enough labeled snapshots for a meaningful test; run "
+              "scripts/backfill_outcomes.py after the observation window.\n")
+        return 0
+
+    pipe = ScreeningPipeline()
+    rows = []
+    for r in labeled:
+        features = deserialize_features(r["features"])
+        try:
+            s = pipe.score_token(features)
+        except Exception as e:
+            print(f"  [{r['token'][:10]}] rescore error: {e}")
+            continue
+        rows.append({"token": r["token"], "outcome": r["outcome"],
+                     "score": s.risk_adjusted_alpha,
+                     "confidence": s.confidence,
+                     "insider": s.insider_probability,
+                     "final": r.get("final_return_pct", 0.0)})
+
+    if len(rows) < 21:
+        print("  Too few re-scorable labeled snapshots; insufficient.\n")
+        return 0
+    counts = Counter(r["outcome"] for r in rows)
+    print(f"  re-scored: {len(rows)}  outcomes={dict(counts)}\n")
+
+    y_rugged = [1 if r["outcome"] == "rugged" else 0 for r in rows]
+    y_pumped = [1 if r["outcome"] == "pumped" else 0 for r in rows]
+
+    print("DISKRIMINASI SKOR -> OUTCOME (AUC; 0.5 = tebak, 1.0 = sempurna)")
+    print(f"{'score':<12}{'AUC(rug)':<10}{'AUC(pump)':<10}  rugged_sep  pumped_sep  verdict")
+    print("-" * 74)
+    for name, key in [("RAA", "score"), ("Confidence", "confidence"),
+                      ("Insider", "insider")]:
+        sc = [r[key] for r in rows]
+        a_r = auc_rank(y_rugged, sc)
+        a_p = auc_rank(y_pumped, sc)
+        sep_r, sep_p = 1 - a_r, a_p
+        verdict = "GOOD" if (sep_r >= VERDICT_GOOD_AUC and sep_p >= VERDICT_GOOD_AUC) \
+            else ("WEAK" if (sep_r > 0.5 or sep_p > 0.5) else "NONE")
+        print(f"{name:<12}{a_r:<10.3f}{a_p:<10.3f}  {sep_r:<11.3f}{sep_p:<11.3f}{verdict}")
+
+    # correlation of score with final return
+    xs = [r["score"] for r in rows]
+    ys = [r["final"] for r in rows]
+    print(f"\nRAA vs final_return_pct  Pearson={pearson(xs, ys):+.3f}")
+
+    print("\n" + "=" * 74)
+    any_good = False
+    for key in ["score", "confidence", "insider"]:
+        sc = [r[key] for r in rows]
+        if (1 - auc_rank(y_rugged, sc)) >= VERDICT_GOOD_AUC and \
+           auc_rank(y_pumped, sc) >= VERDICT_GOOD_AUC:
+            any_good = True
+    if any_good:
+        print("VERDICT: SUPPORTED — the pipeline score separates outcome on live-")
+        print("feature snapshots. (Empirical predictive edge evidence present.)")
+    else:
+        print("VERDICT: NO EVIDENCE OF PREDICTIVE EDGE on live-feature snapshots.")
+        print("  Score components are ~coin-flip (AUC ~0.5). Keep collecting")
+        print("  snapshots; do not claim edge until a good-separation pass.")
+    print("=" * 74)
     return 0
 
 
