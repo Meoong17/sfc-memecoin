@@ -425,6 +425,20 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **UJI PREDICTIVE EDGE — VERDICT: NO EVIDENCE** (user: jangan klaim
+  edge sblm uji empiris skor->outcome). `scripts/validate_predictive_edge.py`
+  menjalankan skor (proxy historis dari fitur GMGN-trending di dataset berlabel)
+  terhadap outcome rugged/survived/pumped (v4_large, n=122):
+    - organic AUC(rug)0.537/AUC(pump)0.507 WEAK; safety/alpha/raa AUC 0.500 NONE.
+    - Korelasi skor vs final_return ~0.000 utk semua komponen.
+    - Walk-forward temporal: organic sign TIDAK konsisten lintas waktu.
+    - Sinyal lemah: sniper_count (rug_sep 0.639), holders (0.581) — tidak stabil.
+  KESIMPULAN JUJUR: skor yang bisa diuji historis TIDAK memprediksi outcome;
+  TIDAK BOLEH diklaim model punya predictive edge. Batasan: dataset berlabel
+  hanya punya fitur GMGN-trending (tanpa OKX/funding/market_stats snapshot
+  live), jadi path insider/OKX BELUM teruji — butuh snapshot live-feature di
+  waktu launch utk uji penuh. 300 test hijau (+5, helper validasi).
+
 - 2026-08-09: **Confidence & Insider kini di-derive dari data presence nyata**
   (gejala 0.39 & 40% konstan diperbaiki). (1) `_confidence_from_data()` di
   pipeline mengganti komponen confidence hardcoded (0.8/0.9/0.8) — completeness/
