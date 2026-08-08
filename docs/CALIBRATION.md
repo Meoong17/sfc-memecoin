@@ -120,6 +120,37 @@ mereplikasi secara temporal/robust. Nilai Pearson tinggi itu artefak outlier.
 doktrin: narasi -> uji empiris (n>100, rank-robust, temporal) -> tidak stabil ->
 jangan build. Semua threshold tetap ILLUSTRATIVE.
 
+### Label insider sejati — on-chain (data/insider_labeled_dataset_v1.json)
+
+Setelah v4 membuktikan label proxy harga (twitter_create_token_count) rapuh,
+kita bangun label INSIDER SEJATI berbasis perilaku on-chain dev/holder/LP — bukan
+harga. Modul `backtest/insider_labels.py` (rug / dev_dump / early_sell / clean).
+
+- Sumber (GMGN live, terverifikasi): `token traders --tag dev` (dev sell ratio,
+  sell/buy tx count, transfer-out) + `token security` (top_10_holder_rate,
+  is_honeypot, lock_summary, renounced).
+- Live collect `scripts/label_insiders.py` -> **19 sampel: 14 clean, 4 dev_dump,
+  1 early_sell**. Variasi kelas nyata, semua dari data on-chain sejati.
+- **TEMUAN METODOLOGIS: `lock_summary.lock_percent="0"` BUKAN berarti LP tak
+  terkunci.** `lock_detail[].is_blackhole=true` + `burn_ratio=1` = LP DIBAKAR
+  permanen ke dead address (aman, tak bisa ditarik). Interpretasi awal (rug saat
+  lock_percent<30%) salah; diperbaiki: LP burned/locked = SECURE, dev dump pada
+  LP secure = dev_dump (bukan rug). Rug = honeypot ATAU dev dump + LP tak secure.
+
+Status: label sejati KONFIRMASI bisa dikumpulkan dari data on-chain nyata, tapi
+n=19 masih kecil. Threshold insider (DEV_DUMP_SELL_RATIO=0.6, EARLY_SELL_TOP10=0.3,
+dst) tetap ILLUSTRATIVE — butuh dataset lebih besar + walk-forward sblm enforce.
+
+### Wiring EV-021 funding trace ke pipeline score (live)
+
+`wiring.build_features` kini mengisi `funding_clusters` (EV-021) dari Helius:
+GMGN dev wallet -> `helius.fetch_funding_edges` -> FundingEdge list -> pipeline.
+
+- Verifikasi live: token dengan funding cluster nyata (2-15 edges) kini
+  `insider_probability` = **0.200** (sebelumnya selalu 0.00 di live score).
+- Hanya Solana (Helius = RPC Solana); non-sol & kegagalan RPC terdegradasi aman.
+- Fix env: HELIUS_API_KEY punya trailing space di .env -> HTTP 401; di-strip.
+
 ### Kenapa belum bisa kalibrasi (final)
 
 | Masalah | Dampak |

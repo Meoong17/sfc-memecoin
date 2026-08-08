@@ -20,6 +20,34 @@ class _FakeHelius:
     pass
 
 
+class _DevHelius:
+    """Helius that returns a funding edge from the dev master wallet."""
+    def __init__(self):
+        self.traced = []
+    def fetch_funding_edges(self, master, token_mint, chain="solana", max_tx=60):
+        from data_sources.wallet_funding import FundingEdge
+        from datetime import datetime, timezone
+        self.traced.append((master, token_mint))
+        return [FundingEdge(master_wallet=master, sub_wallet="SUB" + str(i),
+                            amount=1e9, ts=datetime.now(timezone.utc), chain=chain)
+                for i in range(2)]
+
+
+class _DevGmgn(_FakeGmgn):
+    """GMGN that returns a dev wallet + dev dump signals."""
+    def __init__(self, dev="DEVWALLET11111111111111111111111111111111"):
+        super().__init__()
+        self.dev = dev
+        self.dev_signals_calls = 0
+    def find_dev_wallet(self, address, chain="solana"):
+        return self.dev
+    def dev_trader_signals(self, address, chain="solana"):
+        self.dev_signals_calls += 1
+        return {"dev_wallet": self.dev, "dev_sell_amount_percentage": 0.95,
+                "dev_sell_tx_count": 8, "dev_buy_tx_count": 1,
+                "dev_current_sell_amount": 5e9, "dev_current_transfer_out_amount": 5e9}
+
+
 def _info(address="ADDR", chain="solana", liq=500000.0, vol=100000.0):
     return TokenMarketInfo(address=address, chain=chain, symbol="TKN",
                            price_usd=0.1, volume_24h=vol, liquidity_usd=liq,
@@ -73,6 +101,61 @@ def test_risk_level_mapping():
 def test_available_sources_reporting():
     b = LiveSourceBundle(dex_screener=object(), gmgn=_FakeGmgn())
     assert set(b.available) == {"dex_screener", "gmgn"}
+
+
+def test_build_features_wires_helius_funding_trace():
+    """EV-021: dev wallet from GMGN -> Helius funding edges -> funding_clusters."""
+    helius = _DevHelius()
+    gmgn = _DevGmgn()
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=gmgn, helius=helius),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    assert len(f.funding_clusters) == 2
+    assert f.deployer == "DEVWALLET11111111111111111111111111111111"
+    # helius traced the dev wallet with the token mint
+    assert helius.traced[0][0] == "DEVWALLET11111111111111111111111111111111"
+    assert helius.traced[0][1] == "ADDR"  # token mint = token address
+
+
+def test_build_features_skips_helius_on_non_sol():
+    """EV-021 is Solana RPC only — non-sol chains get no funding trace."""
+    helius = _DevHelius()
+    gmgn = _DevGmgn()
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=gmgn, helius=helius),
+        sources_from_env=False)
+    f = wire.build_features(_info(chain="bsc"))
+    assert f.funding_clusters == []
+    assert helius.traced == []
+
+
+def test_build_features_degrades_when_helius_fails():
+    """A Helius exception must not break the whole token build."""
+    class _FailingHelius:
+        def fetch_funding_edges(self, *a, **kw):
+            raise RuntimeError("rpc down")
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(),
+                                 helius=_FailingHelius()),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    assert f.funding_clusters == []
+    assert f.token == "ADDR"  # still built
+
+
+def test_score_with_funding_clusters_lifts_insider_probability():
+    """Funding edges flowing into the pipeline should raise insider_probability."""
+    helius = _DevHelius()
+    gmgn = _DevGmgn()
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=gmgn, helius=helius),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    assert len(f.funding_clusters) == 2
+    score = wire.pipeline.score_token(f)
+    # insider cluster evidence present -> insider probability > 0
+    assert score.insider_probability > 0.0
 
 
 def test_enrich_market_uses_detail():

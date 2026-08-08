@@ -1,0 +1,374 @@
+{
+  "generated_at": 1786200082.5524838,
+  "label_type": "insider_onchain (rug/dev_dump/early_sell/clean) \u2014 NOT price proxy",
+  "source": "GMGN token traders --tag dev + token security",
+  "n": 19,
+  "counts": {
+    "clean": 14,
+    "dev_dump": 4,
+    "early_sell": 1
+  },
+  "samples": [
+    {
+      "token": "26U6dfd1bjqcQS5B142NMefMnNzLqJid1rDETVurpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "61AoSTHp59yhtS7gJJ3ppiFtzL9HfJ1rGC9CuBuBrTMZ",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 1,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 96109814.1753,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.1889,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "CtruThUchYSyT8T3K747fHAVTTWJSMDzqmpKfqfzpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "AScHJYdSJw51YYRhBWMirvfZzo3YB48rpYnxNsR4NWiY",
+        "dev_sell_amount_percentage": 0.9398,
+        "dev_sell_tx_count": 2,
+        "dev_buy_tx_count": 3,
+        "dev_current_sell_amount": 0.0,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.2206,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "5qqsuuTYSgyXwWGirqU4rkyaY35qDq4gKHwV9UejYtMk",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "7NncveKVHCYRSuqa5qmcgHeA51o8RvzVgrkCJ68p3pYb",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 1,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 36583451.8688,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.0262,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "4SS6ikszgkEZ9G8aWrRu5xR7ipBbZM1yH8PgkG6rpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "5jQtrxwHg9PimuBiAxQpBXw4mQd18nsWLnF1RjEyoBJE",
+        "dev_sell_amount_percentage": 0.0,
+        "dev_sell_tx_count": 0,
+        "dev_buy_tx_count": 34,
+        "dev_current_sell_amount": 0.0,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.1545,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "5XhJSFcBvpEZrtdaydTuhyjvv5SyaHXWAD5sXzT1pump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "D5Q1TmxDw8Edq4DivDNPMrcPS2A6jKotsm1S1yy5ZqDw",
+        "dev_sell_amount_percentage": 0.903,
+        "dev_sell_tx_count": 93,
+        "dev_buy_tx_count": 165,
+        "dev_current_sell_amount": 6849522.6189,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.3034,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "85R2SUPSUDHcZBYrxXdGPoBT4sc8WCA1hXCyvXtGpump",
+      "chain": "solana",
+      "outcome": "dev_dump",
+      "signals": {
+        "dev_wallet": "BDo4WBsk42KsnaCKTG6RYd23UfMNvyrJUzwbCtx8YLDm",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 3,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 49863491.0941,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.2144,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "A13oRB9FFaiUjfi6LdCg6p9ka1u8SfGkUFs4SKvPpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "8N4AmrpFTmQtMGniZguxgLU4W2f6pJ7KJdCnmJ3kmTZa",
+        "dev_sell_amount_percentage": 0.0,
+        "dev_sell_tx_count": 0,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 0.0,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.3237,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "CzGjoXivo315CWguVLsjxgtPpMAropRRtdEuk6GLpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "zXL64LyDTYLJQDn5fA9hLBcNs2fjhKcJ4zqzozr5FgD",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 1,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 15577495.8949,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.245,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "H6jR4eKYVAr9MQ385Cmvo3SogLiYeUX8ECsxqihApump",
+      "chain": "solana",
+      "outcome": "dev_dump",
+      "signals": {
+        "dev_wallet": "J2xRe6oSqirGre2P6xLwjQXLuEuWKhKE5DZoroMbhv3S",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 49,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 170426424.9113,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.0222,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "EzZKwCTUsWtcV2Ai9DfpnVJd9FDMwLzW5KyP8ezHCM6h",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "2QC9w52RDB87QUDKiHXvKxJSeMRVi6eT647AAFxqetvi",
+        "dev_sell_amount_percentage": 0.0,
+        "dev_sell_tx_count": 0,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 0.0,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.2435,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "KffU8fZ1C3PGijGUKhZKZXUmvawm94iTNRqWVrYpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "CSk9nNJk1wXP5Etso3jhWPBgKzovsHacJQ4CDqgoW5oj",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 3,
+        "dev_buy_tx_count": 12,
+        "dev_current_sell_amount": 25190018.8304,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.0211,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "DzKCPcu9j1N4rr8xfKGtCakVDZG8MSduLkxxcGjXpump",
+      "chain": "solana",
+      "outcome": "dev_dump",
+      "signals": {
+        "dev_wallet": "38ivX6wPsKvr57pwnsU63dsyZHmrVKezXXJVhzgBsJp1",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 6,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 76667591.5339,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.076,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "BitihMR91FwBjFArYh2ususajJMa4Wo5EMp2JN7Fpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "4HKaCM2i36B5dUTk6tRnMkBV93aJbhsQeo4nVCSqtMgc",
+        "dev_sell_amount_percentage": 0.0,
+        "dev_sell_tx_count": 0,
+        "dev_buy_tx_count": 2,
+        "dev_current_sell_amount": 0.0,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.1116,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "B8dBBTAm3iZHu8ibvvGoSeqTJ69XEiXeJgsfWX5opump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "4vexcv1jwmkc6JvdudQk5AmfqjnemoD6WceZX8Kd8mwR",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 1,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 97545454.5455,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.1899,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "4poF8QUZtWQrkuSHvEFU1HQ6grPqnYU3gRKMfftWpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "6wnsv3mh5yxMxarzojBvGX9qYZ9jZYRFXA2dstgSX8kE",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 2,
+        "dev_buy_tx_count": 4,
+        "dev_current_sell_amount": 4138382.3772,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.2219,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "CyFyTxkTxA5hDLo7o4hkdtEJLQBbiekruRMf8pvSpump",
+      "chain": "solana",
+      "outcome": "early_sell",
+      "signals": {
+        "dev_wallet": "Dk7nYtufh9KueASrDMyztWkeFdpsCJoBCxG8592Goiyr",
+        "dev_sell_amount_percentage": 0.0,
+        "dev_sell_tx_count": 0,
+        "dev_buy_tx_count": 3,
+        "dev_current_sell_amount": 0.0,
+        "dev_current_transfer_out_amount": 53439877.317,
+        "top_10_holder_rate": 0.3006,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "7GPskZmDQS1GAPAMupq8sb8BNFRNCfvFZvnENYaNpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "E52BnyfqSyCntaPqjxgN4WAjZoMDxhd76X5EBszPick3",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 1,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 148336728.7623,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.0768,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "AV8JP1bGQdicYj4Bj5j11pyFMQ1HPAMRcrVNhLjSpump",
+      "chain": "solana",
+      "outcome": "dev_dump",
+      "signals": {
+        "dev_wallet": "8b9crpXN3TF5fyVUaf36ywH8i66Mv5QZWeDojzdEfRG3",
+        "dev_sell_amount_percentage": 1.0,
+        "dev_sell_tx_count": 2,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 27041330.6452,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.2371,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    },
+    {
+      "token": "CL72hRY4d7CiRZTyYewD5yE7aqLHqqwC2Lh1LNuVpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "dev_wallet": "BD1yWRNccGTBHWGPSZMcTvR6R6doNPrgjKFZma3X9z1j",
+        "dev_sell_amount_percentage": 0.0,
+        "dev_sell_tx_count": 0,
+        "dev_buy_tx_count": 1,
+        "dev_current_sell_amount": 0.0,
+        "dev_current_transfer_out_amount": 0.0,
+        "top_10_holder_rate": 0.0821,
+        "is_honeypot": false,
+        "renounced": false,
+        "lp_locked_pct": 1.0,
+        "lp_burned": true,
+        "rug_ratio": 0.0
+      }
+    }
+  ]
+}

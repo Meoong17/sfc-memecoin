@@ -103,6 +103,57 @@ class GmgnFetcher:
     def _chain_flag(self, chain: str) -> str:
         return {"solana": "sol", "sol": "sol", "bsc": "bsc", "base": "base"}.get(chain, chain)
 
+    # --- dev/creator wallet lookup -> master wallet for EV-021 funding trace ---
+    def find_dev_wallet(self, address: str, chain: str = "solana") -> str | None:
+        """Find the token's dev wallet via `token traders --tag dev`.
+
+        Returns the first dev `account_address`, or None if no dev trader is
+        tagged (e.g. no GMGN dev record). This wallet is the natural EV-021
+        master to trace funding edges from.
+        """
+        try:
+            data = self._run("token", "traders", "--chain", self._chain_flag(chain),
+                             "--address", address, "--tag", "dev", "--limit", "5")
+        except FetchError:
+            return None
+        lst = data.get("list") or []
+        for t in lst:
+            acc = t.get("account_address") or t.get("address")
+            if acc:
+                return acc
+        return None
+
+    # --- dev dump signals (on-chain insider evidence) ---
+    def dev_trader_signals(self, address: str, chain: str = "solana") -> dict:
+        """Pull the dev trader's on-chain sell/transfer activity (insider label).
+
+        Maps fields VERIFIED live in `token traders --tag dev`: the dev's own
+        sell ratio and transfer-out amount are direct evidence of dev-dump.
+        Returns a dict with keys prefixed `dev_` (empty if no dev record).
+        """
+        try:
+            data = self._run("token", "traders", "--chain", self._chain_flag(chain),
+                             "--address", address, "--tag", "dev", "--limit", "5")
+        except FetchError:
+            return {}
+        lst = data.get("list") or []
+        if not lst:
+            return {}
+        t = lst[0]
+        def f(k):
+            try:
+                return float(t.get(k))
+            except (TypeError, ValueError):
+                return 0.0
+        return {
+            "dev_wallet": t.get("account_address") or t.get("address"),
+            "dev_sell_amount_percentage": f("sell_amount_percentage"),
+            "dev_sell_tx_count": int(f("sell_tx_count_cur")),
+            "dev_buy_tx_count": int(f("buy_tx_count_cur")),
+            "dev_current_sell_amount": f("current_sell_amount"),
+            "dev_current_transfer_out_amount": f("current_transfer_out_amount"),
+        }
+
     # --- token security -> ContractFacts (EV-002) ---
     def token_security(self, address: str, chain: str = "solana") -> ContractFacts:
         """Fetch token security metrics, map into ContractFacts for honeypot sim."""

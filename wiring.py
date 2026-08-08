@@ -143,6 +143,24 @@ class LivePipelineWire:
             except Exception as e:
                 log.warning("GMGN security failed for %s: %s", info.address, e)
 
+        # Helius funding trace -> EV-021 (insider cluster).
+        # Master wallet = the token's dev wallet (GMGN), funded sub-wallets
+        # detected via on-chain transfers from that master. Only Solana (Helius
+        # is Solana RPC). Degrades gracefully if no dev wallet / no edges.
+        if self.sources.helius is not None and info.chain in ("solana", "sol"):
+            try:
+                master = None
+                if self.sources.gmgn is not None:
+                    master = self.sources.gmgn.find_dev_wallet(info.address, info.chain)
+                if master:
+                    edges = self.sources.helius.fetch_funding_edges(
+                        master, token_mint=info.address, chain=info.chain, max_tx=60)
+                    if edges:
+                        f.funding_clusters = edges
+                        f.deployer = master
+            except Exception as e:
+                log.warning("Helius funding trace failed for %s: %s", info.address, e)
+
         return f
 
     def score_from_market(self, info: TokenMarketInfo):
