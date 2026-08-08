@@ -1,0 +1,212 @@
+{
+  "generated_at": 1786197616.2291439,
+  "config": {
+    "chain": "solana",
+    "resolution": "1d",
+    "rug_max_dd_pct": -60.0,
+    "pump_min_peak_pct": 300.0,
+    "pump_min_hold_days": 7
+  },
+  "samples": [
+    {
+      "token": "2oGjeSZgWuZDmrFAF7aXMFXDx9JnP7hgiLPwtrZkpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:59:17",
+      "outcome": "survived",
+      "peak_return_pct": 27.5,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=1; is_honeypot="
+    },
+    {
+      "token": "6hqnoTFXSN4fHxtbigdwcijCVpWLXLe7B1Z1MvqHpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:59:14",
+      "outcome": "survived",
+      "peak_return_pct": 3.34,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=1; is_honeypot="
+    },
+    {
+      "token": "A13oRB9FFaiUjfi6LdCg6p9ka1u8SfGkUFs4SKvPpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:59:13",
+      "outcome": "survived",
+      "peak_return_pct": 50.51,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=68; is_honeypot=no"
+    },
+    {
+      "token": "4ofyGHLZ9tkoMUQJZnTr3SdyT8dFgf44FKyiurSEpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:59:13",
+      "outcome": "survived",
+      "peak_return_pct": 0.37,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=1; is_honeypot="
+    },
+    {
+      "token": "Eyw2fgQ9jD5d2UJFZvXMyhFopUbKcMrmNDuWCftNpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:59:03",
+      "outcome": "survived",
+      "peak_return_pct": 0.39,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=1; is_honeypot="
+    },
+    {
+      "token": "ChpJ1u4KQLmhoB63LQZCQj62MSyuNGzFLuLA41CDpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:54",
+      "outcome": "survived",
+      "peak_return_pct": 0.0,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=3; is_honeypot="
+    },
+    {
+      "token": "EnYa3cmoMAVezYd8p3JYiFBSwAcwApfhvSC63LEpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:54",
+      "outcome": "survived",
+      "peak_return_pct": 47.02,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=1; is_honeypot="
+    },
+    {
+      "token": "uW3eBx4TAr96fNjPwDT8hmnEaV9YgVpDwKcEUjxpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:54",
+      "outcome": "survived",
+      "peak_return_pct": 0.0,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=1; is_honeypot="
+    },
+    {
+      "token": "CkkZ4x8VnEmRAajU2UA1Cw5d1Vg5RnnzXcq77wFtpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:53",
+      "outcome": "survived",
+      "peak_return_pct": 0.38,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=4; is_honeypot="
+    },
+    {
+      "token": "6c7p2KSLtCQUH4oZoUUN6yjV3yiUijgjian12SBEogYa",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:48",
+      "outcome": "survived",
+      "peak_return_pct": 1.58,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=8; is_honeypot="
+    },
+    {
+      "token": "4QLurvnQByAoA9nxQR9oHbMEqgkAfzU4duDtVnDwpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:44",
+      "outcome": "survived",
+      "peak_return_pct": 0.4,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=1; is_honeypot="
+    },
+    {
+      "token": "6mwhnCNBaJR8uumsVRVDZ4EyXyvWTwStZRYBKd8Tpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:43",
+      "outcome": "survived",
+      "peak_return_pct": 0.0,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=2; is_honeypot="
+    },
+    {
+      "token": "933d75yScJtzotCJnEzXVq7c5dcGwXsGofRV7eZgpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:41",
+      "outcome": "survived",
+      "peak_return_pct": 0.0,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=2; is_honeypot="
+    },
+    {
+      "token": "3nVTcb6cTwgozmPaWq243gULEdd4AKn5XAxxb2Kipump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:36",
+      "outcome": "survived",
+      "peak_return_pct": 0.0,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=2; is_honeypot="
+    },
+    {
+      "token": "FXGCLYc23rCBTCSLfAUeka8d98Go3LVLkm7Gc9ENpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:35",
+      "outcome": "survived",
+      "peak_return_pct": 0.12,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=56; is_honeypot="
+    },
+    {
+      "token": "2QyWp24R8fgQJ3LS6y9PUXL7eYrWApBygze2CDNjqB3c",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:35",
+      "outcome": "survived",
+      "peak_return_pct": 12.23,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=2; is_honeypot="
+    },
+    {
+      "token": "FaAP7RtpuYX9Li4k2LKUyadhztuvzKJCZs7upPqupump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:32",
+      "outcome": "survived",
+      "peak_return_pct": 0.0,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=2; is_honeypot="
+    },
+    {
+      "token": "HiiAUTcQm4TK7tae1PVY2s4RkxNdaJYMYHowc8Aspump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:30",
+      "outcome": "survived",
+      "peak_return_pct": 260.22,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=3; is_honeypot="
+    },
+    {
+      "token": "6fFM16qfU5ccTYDAms3joFfhk2DJoR3F2ZEycBPHpump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:30",
+      "outcome": "survived",
+      "peak_return_pct": 19.99,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=3; is_honeypot="
+    },
+    {
+      "token": "83jRbFWvPwZK4We3rBeVKJSxVANtMTHeEC1q8tN7pump",
+      "chain": "solana",
+      "launch": "2026-08-08T21:58:27",
+      "outcome": "survived",
+      "peak_return_pct": 992.03,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=4; is_honeypot="
+    }
+  ]
+}
