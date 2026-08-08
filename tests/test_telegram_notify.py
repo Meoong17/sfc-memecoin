@@ -80,6 +80,30 @@ def test_format_ranking():
     assert "FALSE_MOMENTUM" in msg
 
 
+def test_format_ranking_with_explanations():
+    n = TelegramNotifier(token="t", chat_id="c")
+    snap = {
+        "count": 2, "admitted": 2,
+        "ranking": [
+            {"token": "AAA", "symbol": "TOPA", "risk_adjusted_alpha": 60.0,
+             "confidence": 0.5, "insider_probability": 0.1, "dev_reputation_risk": "LOW",
+             "confluence_label": "NEUTRAL", "contract_status": "LOCKED"},
+            {"token": "BBB", "symbol": "BOTB", "risk_adjusted_alpha": 40.0,
+             "confidence": 0.5, "insider_probability": 0.5, "dev_reputation_risk": "HIGH",
+             "confluence_label": "NEUTRAL", "contract_status": "LOCKED"},
+        ],
+    }
+    explanations = {"AAA": "RAA tinggi karena kontrak terverifikasi.", "BBB": ""}
+    msg = n.format_ranking(snap, explanations=explanations)
+    # section header + only the glossed token appears
+    assert "Kenapa token teratas ini" in msg
+    assert "TOPA: RAA tinggi karena kontrak terverifikasi." in msg
+    assert "BOTB:" not in msg          # empty gloss omitted
+    assert "bukan rekomendasi beli/jual" in msg
+    # when no explanations, no section is added
+    assert "Kenapa token teratas ini" not in n.format_ranking(snap)
+
+
 def test_fmt_usd_compact():
     from scripts.telegram_notify import _fmt_usd
     assert _fmt_usd(None) == "—"

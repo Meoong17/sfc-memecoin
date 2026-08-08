@@ -425,6 +425,15 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **LLM Explainer -> Telegram (live)**. Penjelasan DeepSeek kini
+  dikirim ke pesan ranking Telegram untuk 2 token teratas (--notify --gloss).
+  `format_ranking` punya section "🧠 Kenapa token teratas ini?" (explain-only,
+  bukan rekomendasi beli/jual). `collect_live` menghasilkan gloss via
+  `LLMExplainer.gloss(explain_token(...))` untuk top-2 admitted. Cron
+  `sfc_memecoin_collect.sh` di-update export LLM keys + --gloss. Live verify:
+  `gloss enabled=True model=deepseek-v4-flash`, `sent=True gloss_tokens=2`.
+  285 test hijau (+1).
+
 - 2026-08-09: **LLM Explainer stub** (`llm_explainer.py`, spec §5 final stage
   RANKING -> LLM EXPLAINER). Menjelaskan kenapa tiap token di-rank begini dari
   evidence NYATA di `TokenScore.outputs` (OKX rugPullCount/devHoldings,

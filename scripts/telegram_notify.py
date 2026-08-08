@@ -100,11 +100,15 @@ class TelegramNotifier:
             return False
 
     def format_ranking(self, snapshot: dict, *, universe_size: int = 0,
-                       ts_label: str = "") -> str:
+                       ts_label: str = "", explanations: dict | None = None) -> str:
         """Build a readable ranking message with a clear legend/definitions.
 
         Plain text (no markdown markers) so it renders cleanly in Telegram's
         default parse mode — avoids bold/escape rendering pitfalls.
+
+        `explanations`: optional {token_addr: natural-language explanation}
+        from the LLM Explainer. Shown as a compact "why" section for the top
+        tokens. The LLM explains only; it never changes the ranking here.
         """
         sep = "──────────────────────────────"
         lines = []
@@ -139,6 +143,21 @@ class TelegramNotifier:
             lines.append(f"   🔗 {tok}")
             lines.append("")
 
+        # LLM Explainer "why" section for the top tokens (explain-only).
+        if explanations:
+            glossed = []
+            for r in items[:3]:
+                txt = explanations.get(r.get("token") or "")
+                if txt:
+                    sym = (r.get("symbol") or r.get("token") or "?")[:14]
+                    glossed.append(f"{sym}: {txt.strip()}")
+            if glossed:
+                lines.append(sep)
+                lines.append("🧠 Kenapa token teratas ini? (penjelasan, bukan "
+                             "rekomendasi beli/jual)")
+                lines.extend(f"• {g}" for g in glossed)
+                lines.append("")
+
         lines.append(sep)
         lines.append("Cara baca skor:")
         lines.append("• RAA (Risk-Adjusted Alpha): potensi return dikurangi risiko "
@@ -165,9 +184,10 @@ class TelegramNotifier:
         return "\n".join(lines)
 
     def send_ranking(self, snapshot: dict, *, universe_size: int = 0,
-                     ts_label: str = "") -> bool:
+                     ts_label: str = "", explanations: dict | None = None) -> bool:
         return self.send_text(self.format_ranking(snapshot, universe_size=universe_size,
-                                                  ts_label=ts_label))
+                                                  ts_label=ts_label,
+                                                  explanations=explanations))
 
 
 def main() -> int:

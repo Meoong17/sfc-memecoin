@@ -32,6 +32,9 @@ def main() -> int:
     ap.add_argument("--timeout", type=float, default=120, help="overall timeout seconds")
     ap.add_argument("--notify", action="store_true",
                     help="push the ranking to Telegram (TELEGRAM_BOT_TOKEN/CHAT_ID in .env)")
+    ap.add_argument("--gloss", action="store_true",
+                    help="with --notify, add LLM explanations (LLM_API_KEY/LLM_MODEL) "
+                         "for the top-2 tokens to the Telegram message")
     args = ap.parse_args()
 
     wire = LivePipelineWire()
@@ -102,8 +105,21 @@ def main() -> int:
     if notif is not None:
         snap = board.snapshot()
         _attach_market(snap, market_by_token)
-        ok = notif.send_ranking(snap, universe_size=len(universe.tokens))
-        print(f"[telegram] ranking sent={ok}")
+        # LLM Explainer: explain the top-2 admitted tokens in natural language.
+        # LLM explains only; it never changes the ranking.
+        explanations = {}
+        if args.gloss:
+            from llm_explainer import LLMExplainer, explain_token
+            ex = LLMExplainer()
+            print(f"[llm] gloss enabled={ex.enabled} model={ex.model or '-'}")
+            top = sorted([x for x in board.scores if x.admitted],
+                         key=lambda s: s.risk_adjusted_alpha, reverse=True)[:2]
+            for s in top:
+                sym = market_by_token.get(s.token, {}).get("symbol", "")
+                explanations[s.token] = ex.gloss(explain_token(s, symbol=sym))
+        ok = notif.send_ranking(snap, universe_size=len(universe.tokens),
+                                explanations=explanations)
+        print(f"[telegram] ranking sent={ok} gloss_tokens={len(explanations)}")
 
     print(f"\nDone in {time.time()-start:.1f}s | {board.snapshot()['admitted']} admitted / {board.snapshot()['count']}")
     return 0
