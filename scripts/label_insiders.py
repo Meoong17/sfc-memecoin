@@ -82,6 +82,11 @@ def _okx_universe(okx, chain="solana", stages=("NEW", "MIGRATING", "MIGRATED")):
     fallback when GMGN is rate-limit-banned, and its MIGRATING/MIGRATED tokens
     carry richer devHoldingsPercent / insidersPercent signals than newborn NEW.
     Returns list of {address, chain, created_ts, tags}.
+
+    NOTE: OKX `createdTimestamp` is MILLISECONDS (13 digits, e.g. 1786203812000)
+    while walk_forward_insider.py uses `datetime.fromtimestamp` (SECONDS). We
+    normalize to seconds here so temporal folds are correct — ms would put every
+    fold ~57000 years in the future and break no-look-ahead ordering.
     """
     tokens: dict[str, dict] = {}
     for st in stages:
@@ -89,9 +94,12 @@ def _okx_universe(okx, chain="solana", stages=("NEW", "MIGRATING", "MIGRATED")):
             for t in okx.universe(chain=chain, stage=st):
                 addr = t.get("tokenAddress")
                 if addr:
+                    ts = int(t.get("createdTimestamp") or 0)
+                    if ts > 10**12:      # ms -> seconds
+                        ts = ts // 1000
                     tokens[addr] = {
                         "address": addr, "chain": chain,
-                        "created_ts": int(t.get("createdTimestamp") or 0),
+                        "created_ts": ts,
                         "tags": t.get("tags") or {},
                     }
         except Exception:

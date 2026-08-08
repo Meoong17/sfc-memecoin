@@ -179,6 +179,25 @@ yang GMGN trending tidak bisa hasilkan (n=120 GMGN: 0 rug). Modul
   (limit 30-50) lalu `walk_forward_insider.py` utk verdict stabilitas kelas
   rug/dev_dump. 249 test hijau.
 
+### Label insider sejati — OKX v2 (data/insider_labeled_dataset_okx_v2.json)
+
+Perluas ke n=40 (blend NEW/MIGRATING/MIGRATED). **Variasi kelas nyata:
+29 clean / 6 rug / 4 early_sell / 1 dev_dump.** OKX memberi 6 label `rug`
+(GMGN trending n=120: 0 rug) — konfirmasi OKX menyelesaikan gap kelas minority.
+
+- **BUG FIX (penting): `created_ts` OKX awalnya MILLISECONDS (13 digit) —
+  `walk_forward_insider.py` memakai `datetime.fromtimestamp` (DETIK).** Tanpa
+  normalisasi, fold temporal akan salah (tahun ~57000). `_okx_universe` kini
+  mengubah ms->detik (bagi 1000 bila > 1e12). Dataset v1 juga diregenerasi.
+  GMGN v2_large sudah detik (10 digit), tidak terpengaruh.
+- Walk-forward (dirty-rate = rug+dev_dump, urut created_ts, min_train 20):
+  **mean 0.400 -> INSUFFICIENT** (hanya 2 fold: 0.100 / 0.700). n=40 + kelas
+  minoritas (6 rug/1 dev_dump) masih terlalu kecil & tidak stabil temporal.
+  Verdict jujur sesuai doktrin: **threshold OKX TETAP ILLUSTRATIVE.**
+- Tempel: span created_ts ~23.5 jam (29 distinct) — universe OKX mememump
+  didominasi token baru-baru dibuat, jadi fold temporal terbatas. Untuk
+  stabilitas rug yang andal butuh n>100 + sebaran waktu lebih panjang.
+
 ### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
 
 Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga
