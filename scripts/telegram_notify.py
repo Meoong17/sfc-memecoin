@@ -161,7 +161,6 @@ class TelegramNotifier:
         lines.append("   - FALSE_MOMENTUM = momentum tampak bullish tapi risiko kuat "
                      "membatalkannya (hindari)")
         lines.append("")
-        lines.append("⚠️ Threshold belum terkalibrasi (ILLUSTRATIVE) — bukan rekomendasi investasi.")
         lines.append(f"⏱ {time.strftime('%Y-%m-%d %H:%M')} | @SfcMeme_bot")
         return "\n".join(lines)
 
