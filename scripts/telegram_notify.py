@@ -53,29 +53,49 @@ class TelegramNotifier:
 
     def format_ranking(self, snapshot: dict, *, universe_size: int = 0,
                        ts_label: str = "") -> str:
-        """Build a readable ranking message from a board.snapshot()."""
-        header = "🧿 SFC Meme Screening"
-        if ts_label:
-            header += f" — {ts_label}"
-        header += "\n" + "=" * 32
-        lines = [header]
+        """Build a readable ranking message with a clear legend/definitions.
+
+        Plain text (no markdown markers) so it renders cleanly in Telegram's
+        default parse mode — avoids bold/escape rendering pitfalls.
+        """
+        sep = "──────────────────────────────"
+        lines = []
+        lines.append("🧿 SFC MEME SCREENER" + (f" — {ts_label}" if ts_label else ""))
+        lines.append(sep)
 
         admitted = snapshot.get("admitted", 0)
         total = snapshot.get("count", universe_size)
-        lines.append(f"Universe: {total} | Admitted: {admitted}")
+        lines.append(f"📊 Universe: {total} token | ✅ Admitted: {admitted} | "
+                     f"🚫 Blocked: {total - admitted}")
+        lines.append("")
 
         items = snapshot.get("ranking") or []
         if not items:
-            lines.append("No admitted tokens this run.")
+            lines.append("⚠️ Tidak ada token yang lolos filter (semua diblok / gagal).")
         for i, r in enumerate(items[:10], 1):
-            lines.append(
-                f"{i}. {r.get('token', '?')[:16]}\n"
-                f"   RAA={r.get('risk_adjusted_alpha', 0):.1f} "
-                f"conf={r.get('confidence', 0):.2f} "
-                f"insider={r.get('insider_probability', 0):.2f} "
-                f"({r.get('confluence_label', '?')})")
-        lines.append("=" * 32)
-        lines.append(f"generated {time.strftime('%Y-%m-%d %H:%M')} by SFC Memecoin bot")
+            tok = (r.get("token") or "?")[:14]
+            raa = r.get("risk_adjusted_alpha", 0)
+            conf = r.get("confidence", 0)
+            ins = r.get("insider_probability", 0)
+            conf_label = r.get("confluence_label", "NEUTRAL")
+            lines.append(f"{i}. {tok}")
+            lines.append(f"   • RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%}")
+            lines.append(f"   • Konfluensi: {conf_label}")
+            lines.append("")
+
+        lines.append(sep)
+        lines.append("Cara baca skor:")
+        lines.append("• RAA (Risk-Adjusted Alpha): potensi return dikurangi risiko "
+                     "insider/sybil. Semakin tinggi, semakin menarik relatif terhadap risikonya.")
+        lines.append("• Insider: probabilitas token terkait insider (0-100%). "
+                     "Tinggi = risiko manipulasi harga tinggi.")
+        lines.append("• Conf (Confidence): keyakinan model pada skor (0-1). "
+                     "Tinggi = evidence lengkap & konsisten.")
+        lines.append("• Konfluensi: kesepakatan antar-bukti independen — "
+                     "MODERATE_OPPORTUNITY = peluang moderat.")
+        lines.append("")
+        lines.append("⚠️ Threshold belum terkalibrasi (ILLUSTRATIVE) — bukan rekomendasi investasi.")
+        lines.append(f"⏱ {time.strftime('%Y-%m-%d %H:%M')} | @SfcMeme_bot")
         return "\n".join(lines)
 
     def send_ranking(self, snapshot: dict, *, universe_size: int = 0,

@@ -49,6 +49,8 @@ class TokenFeatures:
     # social
     mention_series: list = field(default_factory=list)
     domains: list = field(default_factory=list)
+    # wallet analytics (GMGN wallet_stats) -> classification features
+    wallet_analytics: list = field(default_factory=list)
     # raw scores (could come from other producers)
     alpha_raw: float = 50.0
     organic_raw: float = 50.0
@@ -127,8 +129,17 @@ class ScreeningPipeline:
 
         # --- WALLET CLASSIFY ---
         clf = WalletClassifier()
-        s.outputs["wallet_classify"] = [clf.classify(WalletSignals(wallet=w)).summary()
-                                        for w in flow.trades_per_wallet]
+        # classification features from GMGN wallet_stats (when wired), else
+        # empty-signal default for each trading wallet.
+        wallet_sigs: dict[str, WalletSignals] = {}
+        for wa in (f.wallet_analytics or []):
+            wa_sig = wa.to_wallet_signals() if hasattr(wa, "to_wallet_signals") else wa
+            wallet_sigs[wa_sig.wallet] = wa_sig
+        classified = []
+        for w in flow.trades_per_wallet:
+            sig = wallet_sigs.get(w, WalletSignals(wallet=w))
+            classified.append(clf.classify(sig).summary())
+        s.outputs["wallet_classify"] = classified
 
         # --- INSIDER INTELLIGENCE (EV-021 + EV-001) ---
         ins = InsiderIntelligenceEngine(fg, flow).analyze(f.token, InsiderInputs(

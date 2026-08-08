@@ -161,6 +161,17 @@ class LivePipelineWire:
             except Exception as e:
                 log.warning("Helius funding trace failed for %s: %s", info.address, e)
 
+        # GMGN wallet_stats -> classification features (dev wallet).
+        # Populates the dev wallet's behavioral analytics (win rate, frequency,
+        # fresh-wallet, early-entry) so WalletClassifier can use real signals.
+        if self.sources.gmgn is not None and f.deployer:
+            try:
+                wa = self.sources.gmgn.wallet_stats(f.deployer, info.chain)
+                if wa is not None:
+                    f.wallet_analytics = [wa]
+            except Exception as e:
+                log.warning("GMGN wallet_stats failed for %s: %s", info.address, e)
+
         return f
 
     def score_from_market(self, info: TokenMarketInfo):

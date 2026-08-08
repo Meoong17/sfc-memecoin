@@ -58,14 +58,18 @@ def test_format_ranking():
         ],
     }
     msg = n.format_ranking(snap, universe_size=5, ts_label="test")
-    assert "SFC Meme Screening" in msg
-    assert "TOKENADDR12" in msg  # truncated to 16
+    assert "SFC MEME SCREENER" in msg
+    assert "TOKENADDR12345" in msg  # truncated to 14
     assert "RAA=61.6" in msg
-    assert "insider=0.20" in msg
-    assert "Universe: 5 | Admitted: 3" in msg
+    assert "Insider=20%" in msg  # formatted as percent
+    assert "Universe: 5 token" in msg
+    assert "Admitted: 3" in msg
+    # legend / definitions present
+    assert "Cara baca skor" in msg
+    assert "Risk-Adjusted Alpha" in msg
 
 
 def test_format_ranking_empty():
     n = TelegramNotifier(token="t", chat_id="c")
     msg = n.format_ranking({"count": 0, "admitted": 0, "ranking": []})
-    assert "No admitted tokens" in msg
+    assert "Tidak ada token" in msg

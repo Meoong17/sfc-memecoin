@@ -49,13 +49,40 @@ def _gmgn_trending_universe(gmgn, chain="solana", intervals=("1h", "6h", "24h", 
     return list(tokens.values())
 
 
+def _gmgn_completed_universe(gmgn, chain="solana", limit=100):
+    """Universe from GMGN `trenches completed` (bonding-curve finished).
+
+    These tokens have completed their bonding curve — frequently where dev-dumps
+    and rugs happen (serial creator, creator_balance_rate near 0). Good source to
+    enrich the dev_dump/rug minority classes that `trending` under-supplies.
+    """
+    chain_flag = {"solana": "sol"}.get(chain, chain)
+    tokens: dict[str, dict] = {}
+    try:
+        data = gmgn._run("market", "trenches", "--chain", chain_flag,
+                         "--type", "completed", "--limit", str(limit),
+                         "--sort-by", "created_timestamp", "--raw")
+    except Exception:
+        return []
+    bucket = (data or {}).get("completed") or []
+    for t in bucket:
+        addr = t.get("address")
+        if addr:
+            tokens[addr] = {
+                "address": addr, "chain": chain,
+                "created_ts": int(t.get("created_timestamp") or 0),
+            }
+    return list(tokens.values())
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=20)
     ap.add_argument("--out", type=str, default="data/insider_labeled_dataset_v1.json")
     ap.add_argument("--universe", type=str, default="dex",
-                    choices=["dex", "trending"],
-                    help="universe source: dex (DexScreener ~30) or trending (GMGN, large)")
+                    choices=["dex", "trending", "completed", "blend"],
+                    help="universe source: dex, trending, completed (bonding-curve "
+                         "finished = dev-dump/rug rich), or blend (trending+completed)")
     args = ap.parse_args()
 
     sources = LiveSourceBundle.from_env()
@@ -67,6 +94,18 @@ def main() -> int:
     if args.universe == "trending":
         cand = _gmgn_trending_universe(sources.gmgn)
         print(f"GMGN trending universe: {len(cand)} tokens (pre-limit)")
+    elif args.universe == "completed":
+        cand = _gmgn_completed_universe(sources.gmgn)
+        print(f"GMGN completed universe: {len(cand)} tokens (pre-limit)")
+    elif args.universe == "blend":
+        seen = set()
+        cand = []
+        for t in (_gmgn_trending_universe(sources.gmgn)
+                  + _gmgn_completed_universe(sources.gmgn)):
+            if t["address"] not in seen:
+                seen.add(t["address"])
+                cand.append(t)
+        print(f"GMGN blend (trending+completed): {len(cand)} tokens (pre-limit)")
     else:
         uni = wire.fetch_universe(limit=args.limit)
         cand = [{"address": t.address, "chain": t.chain} for t in uni.tokens]

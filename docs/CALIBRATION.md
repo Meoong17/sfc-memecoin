@@ -160,8 +160,24 @@ ke DM meong via Bot API. Verifikasi live: SENT=True. `collect_live --notify`
 mengirim ranking setelah scoring. Load .env via config.settings (jalan dari
 shell kosong). 5 test.
 
-### Wiring EV-021 funding trace ke pipeline score (live)
+### Wiring GMGN wallet_stats -> classification features (live)
 
+Gap terakhir di live path di-tutup: `wiring.build_features` kini memanggil
+`gmgn.wallet_stats(dev_wallet)` dan mengisi `TokenFeatures.wallet_analytics`.
+Pipeline wallet_classify memakai sinyal tersebut (win rate, fresh-wallet,
+early-entry) alih-alih empty-signal. Verifikasi live: `wallet_analytics=1`
+per token dengan dev wallet. 2 test baru.
+
+### Cron + Telegram format
+
+- Cron `collect_live --notify` tiap 6 jam (script `~/.hermes/scripts/sfc_memecoin_collect.sh`
+  -> push ranking ke Telegram via Bot API, independen dari Hermes delivery).
+- Format pesan Telegram diperjelas: header + emoji stats (Universe/Admitted/
+  Blocked), per-token `RAA | Conf | Insider %`, legenda "Cara baca skor"
+  mendefinisikan RAA/Insider/Conf/Konfluensi dalam Bahasa Indonesia, disclaimer
+  ILLUSTRATIVE. Plain text (tanpa markdown) agar render bersih.
+
+### Wiring EV-021 funding trace ke pipeline score (live)
 `wiring.build_features` kini mengisi `funding_clusters` (EV-021) dari Helius:
 GMGN dev wallet -> `helius.fetch_funding_edges` -> FundingEdge list -> pipeline.
 
