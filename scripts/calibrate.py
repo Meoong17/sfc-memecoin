@@ -47,11 +47,14 @@ def main() -> int:
     ap.add_argument("--save-ds", type=str, default="", help="save labeled dataset JSON path")
     ap.add_argument("--chain", type=str, default="solana")
     ap.add_argument("--min-age", type=int, default=2)
+    ap.add_argument("--universe", type=str, default="trending",
+                    choices=["trending", "trenches"],
+                    help="universe source: trending (mature, default) or trenches (new)")
     args = ap.parse_args()
 
     gmgn = GmgnFetcher()
     cfg = BackfillConfig(chain=args.chain, max_tokens=args.max,
-                         min_launch_days_ago=args.min_age)
+                         min_launch_days_ago=args.min_age, universe_mode=args.universe)
     backfiller = DatasetBackfiller(gmgn, cfg)
 
     print(f"=== Backfilling labeled dataset (chain={args.chain}, max={args.max}) ===")

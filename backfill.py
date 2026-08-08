@@ -29,6 +29,9 @@ class BackfillConfig:
     max_tokens: int = 40
     min_launch_days_ago: int = 1      # skip tokens created today (no history)
     max_launch_days_ago: int = 90     # skip ancient tokens
+    # universe source: "trending" (mature tokens via --min-created) or "trenches" (new)
+    universe_mode: str = "trending"
+    trending_min_created: str = "7d"  # min token age for trending universe
     # outcome thresholds (from backtest.labeler defaults; override for calibration)
     rug_max_dd_pct: float = -60.0
     pump_min_peak_pct: float = 300.0
@@ -79,22 +82,39 @@ class DatasetBackfiller:
         return {"solana": "sol", "sol": "sol"}.get(self.config.chain, self.config.chain)
 
     def fetch_universe(self) -> list[dict]:
-        """Fetch token universe from trenches (new_creation + completed)."""
+        """Fetch token universe: trending mature tokens or trenches (new)."""
         tokens: dict[str, dict] = {}
-        for typ in ("new_creation", "completed"):
+        if self.config.universe_mode == "trending":
+            # mature universe: tokens older than min_created (need rug/pump horizon)
             try:
-                data = self.gmgn._run("market", "trenches", "--chain", self._chain(),
-                                      "--type", typ, "--limit", "80",
-                                      "--sort-by", "created_timestamp", "--raw")
+                data = self.gmgn._run("market", "trending", "--chain", self._chain(),
+                                      "--interval", "24h", "--limit", "100",
+                                      "--min-created", self.config.trending_min_created, "--raw")
+                rank = ((data or {}).get("data") or {}).get("rank") or []
+                for t in rank:
+                    addr = t.get("address")
+                    if addr:
+                        # trending uses creation_timestamp
+                        t.setdefault("created_timestamp", t.get("creation_timestamp", 0))
+                        tokens[addr] = t
             except Exception as e:
                 import logging
-                logging.warning("trenches %s failed: %s", typ, e)
-                continue
-            bucket = data.get(typ) or []
-            for t in bucket:
-                addr = t.get("address")
-                if addr:
-                    tokens[addr] = t
+                logging.warning("trending universe failed: %s", e)
+        else:
+            for typ in ("new_creation", "completed"):
+                try:
+                    data = self.gmgn._run("market", "trenches", "--chain", self._chain(),
+                                          "--type", typ, "--limit", "80",
+                                          "--sort-by", "created_timestamp", "--raw")
+                except Exception as e:
+                    import logging
+                    logging.warning("trenches %s failed: %s", typ, e)
+                    continue
+                bucket = data.get(typ) or []
+                for t in bucket:
+                    addr = t.get("address")
+                    if addr:
+                        tokens[addr] = t
         return list(tokens.values())
 
     def _launch_age_days(self, created_ts: int) -> int:
@@ -105,7 +125,7 @@ class DatasetBackfiller:
         ds = LabeledDataset()
         universe = self.fetch_universe()
         if progress:
-            print(f"Universe: {len(universe)} tokens from trenches")
+            print(f"Universe: {len(universe)} tokens from {self.config.universe_mode}")
 
         kept = 0
         for t in universe:
@@ -122,10 +142,12 @@ class DatasetBackfiller:
             try:
                 kline = self.gmgn._run("market", "kline", "--chain", self._chain(),
                                        "--address", addr,
-                                       "--resolution", self.config.resolution, "--raw")
+                                       "--resolution", self.config.resolution,
+                                       "--from", str(created or 0),
+                                       "--to", str(int(time.time())), "--raw")
             except Exception:
                 continue
-            klist = (kline or {}).get("list") or []
+            klist = ((kline or {}).get("data") or {}).get("list") or (kline or {}).get("list") or []
             metrics = KlineAnalyzer.analyze(klist)
             if metrics is None:
                 continue
@@ -137,6 +159,18 @@ class DatasetBackfiller:
                 peak_return_pct=metrics["peak_return_pct"],
                 days_observed=metrics["days_observed"],
             )
+            # insider-relevant features present in real GMGN trending data
+            # (field names verified live against market trending response)
+            note = (f"holder_count={t.get('holder_count')}; is_honeypot={t.get('is_honeypot')}; "
+                    f"bundler_rate={t.get('bundler_rate')}; "
+                    f"sniper_count={t.get('sniper_count')}; "
+                    f"top70_sniper_hold_rate={t.get('top70_sniper_hold_rate')}; "
+                    f"dev_team_hold_rate={t.get('dev_team_hold_rate')}; "
+                    f"creator_close={t.get('creator_close')}; "
+                    f"rug_ratio={t.get('rug_ratio')}; "
+                    f"entrapment_ratio={t.get('entrapment_ratio')}; "
+                    f"renounced_mint={t.get('renounced_mint')}; "
+                    f"twitter_create_token_count={t.get('twitter_create_token_count')}")
             ds.add(LabeledToken(
                 token=addr, chain=self.config.chain,
                 launch_ts=__import__("datetime").datetime.fromtimestamp(created or time.time()),
@@ -144,7 +178,7 @@ class DatasetBackfiller:
                 peak_return_pct=metrics["peak_return_pct"],
                 final_return_pct=metrics["max_drawdown_pct"],
                 days_observed=metrics["days_observed"],
-                note=f"holder_count={t.get('holder_count')}; is_honeypot={t.get('is_honeypot')}",
+                note=note,
             ))
             kept += 1
             if progress:
@@ -157,6 +191,7 @@ class DatasetBackfiller:
             "generated_at": time.time(),
             "config": {
                 "chain": self.config.chain, "resolution": self.config.resolution,
+                "universe_mode": self.config.universe_mode,
                 "rug_max_dd_pct": self.config.rug_max_dd_pct,
                 "pump_min_peak_pct": self.config.pump_min_peak_pct,
                 "pump_min_hold_days": self.config.pump_min_hold_days,

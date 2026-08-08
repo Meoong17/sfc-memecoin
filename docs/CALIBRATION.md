@@ -6,9 +6,9 @@ threshold dicatat di sini dengan bukti empiris.
 
 ## Status: SEMUA threshold masih ILLUSTRATIVE (calibrated=False)
 
-Backfill pertama (2026-08) DIJALANKAN dengan data nyata GMGN, hasilnya jujur:
-**data belum cukup untuk kalibrasi.** Threshold tetap ILLUSTRATIVE dan TIDAK
-ditegakkan di produksi oleh `VetoEvaluator`.
+Backfill v1 & v2 (2026-08) DIJALANKAN dengan data nyata GMGN. Hasil jujur:
+**data masih belum cukup untuk kalibrasi.** Threshold tetap ILLUSTRATIVE dan
+TIDAK ditegakkan di produksi oleh `VetoEvaluator`.
 
 ### Hasil backfill nyata — v1 (data/labeled_dataset_v1.json)
 
@@ -19,13 +19,42 @@ ditegakkan di produksi oleh `VetoEvaluator`.
   Karena semua label identik, rugged-rate train==test==0 jadi "konsisten".
   Ini TIDAK membuktikan threshold apa pun.
 
-### Kenapa belum bisa kalibrasi
+### Hasil backfill nyata — v2 (data/labeled_dataset_v2_mature.json)
+
+Pelajaran dari v1: trenches tidak memberi horizon historis. Solusi: universe
+MATANG dari `market trending --min-created 7d` + kline 1d dari LAUNCH
+(`--from created_timestamp`). Terverifikasi live: token age 720 hari, kline 100 bars.
+
+- Universe: 79 token matang (solana, trending 24h, min-created 7d).
+- 15 sampel dilabeli. **Semua `rugged`** (peak 238%-261.473%, dd -35% s/d -98%).
+- Walk-forward score 1.000 lagi-lagi **ARTEFAK DATA HOMOGEN** (semua rugged ->
+  train==test rugged-rate==1.0), bukan bukti threshold.
+
+Analisis korelasi fitur insider vs severity (n=15, semua rugged — sampel kecil &
+tanpa variasi outcome, JADI HIPOTESIS awal, bukan kalibrasi):
+
+| Fitur | corr(peak) | corr(dd) | Baca |
+|---|---|---|---|
+| twitter_create_token_count | **+0.818** | -0.024 | serial creator -> pump tinggi (pola dev/insider) |
+| top70_sniper_hold_rate | -0.194 | **+0.419** | sniper hold tinggi -> rug dangkal |
+| dev_team_hold_rate | -0.188 | **+0.390** | dev hold tinggi -> rug dangkal |
+| bundler_rate | +0.085 | -0.255 | lemah |
+| rug_ratio | -0.237 | -0.164 | lemah |
+| sniper_count | +0.040 | -0.031 | lemah |
+
+Catatan: field insider tersedia DI data trending nyata (`bundler_rate`,
+`sniper_count`, `top70_sniper_hold_rate`, `dev_team_hold_rate`, `rug_ratio`,
+`entrapment_ratio`, `twitter_create_token_count`), bukan hanya di trenches.
+Ini menyediakan fitur untuk kalibrasi IHR/insider pada universe yang cukup.
+
+### Kenapa belum bisa kalibrasi (final)
 
 | Masalah | Dampak |
 |---|---|
-| Trenches memberi token baru (age<=2 hari) | kline 1d cuma 1-2 baris -> tak ada horizon utk deteksi rug/pump |
-| Definisi outcome butuh minggu | rugged/pumped tak bisa dideteksi dalam 2 hari |
-| Threshold IHR/ITA butuh label insider | label insider = rug/dev-dump/early-sell, butuh data historis panjang |
+| n kecil + semua label homogen (v1 survived, v2 rugged) | walk-forward score 1.000 = artefak, tak ada variasi untuk ukur diskriminasi |
+| Universe tunggal (trenches / trending 24h) bias sampel | bukan populasi meme coin yang beragam |
+| Threshold IHR/ITA butuh label insider | label insider = rug/dev-dump/early-sell, butuh data historis panjang + korelasi label |
+| Korelasi fitur v2 dari n=15 | sinyal awal, butuh n>=50-100 beragam utk threshold produksi |
 
 ### Threshold belum dikalibrasi (dari config/thresholds.py)
 
