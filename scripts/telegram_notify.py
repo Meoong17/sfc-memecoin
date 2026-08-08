@@ -135,12 +135,17 @@ class TelegramNotifier:
             mcap = r.get("mcap")
             dev_rep = r.get("dev_reputation_risk", "LOW")
             cstat = r.get("contract_status", "UNKNOWN")
+            alpha = r.get("alpha", 0)
+            organic = r.get("organic", 0)
+            safety = r.get("safety", 0)
+            smart = r.get("smart_money", 0)
             lines.append(f"{i}. {symbol}")
             lines.append(f"   💰 {_fmt_usd(price)} | Cap {_fmt_usd(mcap)}")
-            lines.append(f"   📈 RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%} "
-                         f"| DevRisk={dev_rep}")
-            lines.append(f"   🧩 Konfluensi: {conf_label} | Contract: {_contract_badge(cstat)}")
-            lines.append(f"   🔗 {tok}")
+            lines.append(f"   🎯 RAA={raa:.1f} | Alpha={alpha:.0f} | Organic={organic:.0f} "
+                         f"| Safety={safety:.0f} | Smart={smart:.0f}")
+            lines.append(f"   🧠 Insider={ins:.0%} | Conf={conf:.2f} | DevRisk={dev_rep} | "
+                         f"{conf_label}")
+            lines.append(f"   {_contract_badge(cstat)} | 🔗 {tok}")
             lines.append("")
 
         # LLM Explainer "why" section for the top tokens (explain-only).
@@ -159,27 +164,6 @@ class TelegramNotifier:
                 lines.append("")
 
         lines.append(sep)
-        lines.append("Cara baca skor:")
-        lines.append("• RAA (Risk-Adjusted Alpha): potensi return dikurangi risiko "
-                     "insider/sybil. Semakin tinggi, semakin menarik relatif terhadap risikonya.")
-        lines.append("• Insider: probabilitas token terkait aktivitas insider (0-100%). "
-                     "Tinggi = risiko manipulasi harga tinggi.")
-        lines.append("• Conf (Confidence): keyakinan model pada skor (0-1). "
-                     "Tinggi = evidence lengkap & konsisten.")
-        lines.append("• DevRisk (Dev Reputation): risiko dari reputasi dev on-chain "
-                     "(LOW/MED/HIGH). HIGH = dev pernah rug-pull / dijual habis; "
-                     "menurunkan RAA.")
-        lines.append("• Contract: status keamanan smart contract. "
-                     "🛡️ VERIFIED = aman & terverifikasi (renounced + LP locked/burned); "
-                     "🔒 LOCKED = LP aman tapi belum renounced; "
-                     "⚠️ RISKY = LP tidak terjamin; 🚨 CRITICAL = honeypot/rug.")
-        lines.append("• Konfluensi: kesepakatan antar-bukti independen:")
-        lines.append("   - HIGH_CONFLUENCE = banyak bukti independen searah (paling kuat)")
-        lines.append("   - MODERATE_OPPORTUNITY = bukti cukup, ada peluang moderat")
-        lines.append("   - NEUTRAL = tidak ada arah jelas")
-        lines.append("   - FALSE_MOMENTUM = momentum tampak bullish tapi risiko kuat "
-                     "membatalkannya (hindari)")
-        lines.append("")
         lines.append(f"⏱ {time.strftime('%Y-%m-%d %H:%M')} | @SfcMeme_bot")
         return "\n".join(lines)
 

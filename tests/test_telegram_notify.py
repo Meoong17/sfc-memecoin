@@ -72,12 +72,31 @@ def test_format_ranking():
     # full contract address shown (not truncated to 24)
     assert "🔗 TOKENADDR123456789" in msg
     assert "TOKENADDR123456789" in msg
-    assert "…" not in msg.replace("Cara baca skor", "")  # no truncation ellipsis
-    # legend / definitions present
-    assert "Cara baca skor" in msg
-    assert "Risk-Adjusted Alpha" in msg
-    assert "HIGH_CONFLUENCE" in msg  # full confluence legend
-    assert "FALSE_MOMENTUM" in msg
+    assert "…" not in msg  # no truncation ellipsis
+    # "Cara baca skor" legend removed per user request
+    assert "Cara baca skor" not in msg
+
+
+def test_format_ranking_shows_core_weights():
+    """Alpha/Organic/Safety/Smart Money shown per token (measured weights)."""
+    n = TelegramNotifier(token="t", chat_id="c")
+    snap = {
+        "count": 1, "admitted": 1,
+        "ranking": [
+            {"token": "TOK1", "symbol": "ABC", "price_usd": 0.001, "mcap": 1e6,
+             "risk_adjusted_alpha": 40.0, "alpha": 72.0, "organic": 31.0,
+             "safety": 50.0, "smart_money": 60.0, "confidence": 0.5,
+             "insider_probability": 0.3, "dev_reputation_risk": "LOW",
+             "confluence_label": "NEUTRAL", "contract_status": "LOCKED"},
+        ],
+    }
+    msg = n.format_ranking(snap)
+    assert "Alpha=72" in msg
+    assert "Organic=31" in msg
+    assert "Safety=50" in msg
+    assert "Smart=60" in msg
+    assert "Insider=30%" in msg
+    assert "🔒 LOCKED" in msg
 
 
 def test_format_ranking_with_explanations():

@@ -92,11 +92,22 @@ class TokenScore:
         ins = self.outputs.get("insider") or {}
         if isinstance(ins, dict):
             dev_rep = ins.get("dev_reputation_risk", "LOW")
+        # core measured weights (from alpha_risk producer) so ranking/Telegram
+        # can show Alpha/Organic/Safety/Smart Money, not just Risk-Adjusted Alpha.
+        ar = self.outputs.get("alpha_risk") or {}
+        alpha = round(float(ar.get("alpha", 0) or 0), 1)
+        organic = round(float(ar.get("organic", 0) or 0), 1)
+        safety = round(float(ar.get("safety", 0) or 0), 1)
+        smart_money = round(float(ar.get("smart_money", 0) or 0), 1)
         return {
             "token": self.token,
             "chain": self.chain,
             "admitted": self.admitted,
             "risk_adjusted_alpha": round(self.risk_adjusted_alpha, 1),
+            "alpha": alpha,
+            "organic": organic,
+            "safety": safety,
+            "smart_money": smart_money,
             "confidence": round(self.confidence, 3),
             "insider_probability": round(self.insider_probability, 3),
             "dev_reputation_risk": dev_rep,

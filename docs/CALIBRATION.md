@@ -425,6 +425,13 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **Format Telegram diperkaya + hilangkan "Cara baca skor"**. Per
+  token kini tampil Alpha/Organic/Safety/Smart Money (bobot inti terukur),
+  Insider/Conf/DevRisk, contract badge, alamat penuh. `TokenScore.summary()`
+  expose alpha/organic/safety/smart_money dari alpha_risk. Section legenda
+  "Cara baca skor" (RAA/Insider/Conf/DevRisk/Contract/Konfluensi) DIHAPUS dari
+  pesan — pesan lebih padat. Fix emoji 🔒 dobel. 292 test hijau (+1).
+
 - 2026-08-09: **alpha_raw diperkaya momentum + buy pressure** (weight audit
   langkah 4). `_map_alpha_raw()` menambah price_24h momentum (±15), buy_volume
   share (±10), liquidity bonus (≤10) ke base `40 + vol/1M*40`. Live verify
