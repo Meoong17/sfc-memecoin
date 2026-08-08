@@ -60,6 +60,10 @@ class InsiderResult:
     early_entry_events: list[str] = field(default_factory=list)
     evidence: list[str] = field(default_factory=list)
     counter_evidence: list[str] = field(default_factory=list)
+    # OKX dev-reputation downside (serial rugger / dev sold-off / coordination),
+    # mapped separately from IHR/exit-liquidity so RAA can discount it without
+    # double-counting. LOW/MED/HIGH. ILLUSTRATIVE (docs/CALIBRATION.md).
+    dev_reputation_risk: str = "LOW"
 
     def summary(self) -> dict:
         return {
@@ -72,6 +76,7 @@ class InsiderResult:
             "distribution_level": self.distribution_level,
             "exit_liquidity_risk": self.exit_liquidity_risk,
             "ita": round(self.ita, 3),
+            "dev_reputation_risk": self.dev_reputation_risk,
             "evidence": self.evidence,
             "counter_evidence": self.counter_evidence,
         }
@@ -195,6 +200,15 @@ class InsiderIntelligenceEngine:
             r.evidence.append(f"okx_coordinated_{okx_coord:.1f}%")
         if okx_top10 >= 60.0:
             r.evidence.append(f"okx_concentrated_top10_{okx_top10:.1f}%")
+
+        # OKX dev-reputation downside level (separate from IHR/exit so RAA can
+        # discount it without double-counting). ILLUSTRATIVE.
+        #   HIGH: serial rugger (strongest direct signal)
+        #   MED : dev sold off AND/OR coordinated insider composition
+        if okx_rug >= 1:
+            r.dev_reputation_risk = "HIGH"
+        elif (okx_dev_hold < 20.0 and okx_dev_total >= 1) or okx_coord >= 30.0:
+            r.dev_reputation_risk = "MED"
 
         # --- 6.6.8 Insider probability (rule-based P0) ---
         score = 0.0

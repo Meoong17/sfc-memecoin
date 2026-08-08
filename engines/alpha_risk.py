@@ -57,6 +57,9 @@ _EXIT_LIQ_PENALTY = {"LOW": 0.0, "MED": 0.15, "HIGH": 0.30}
 _IHR_PENALTY = {"LOW": 0.0, "MODERATE": 0.10, "HIGH": 0.20, "CRITICAL": 0.30}
 _SYBIL_PENALTY = 0.15
 _DISTRIBUTION_PENALTY = 0.15
+# OKX dev-reputation downside (serial rugger / dev sold-off / coordination),
+# separate from IHR/exit so it discounts without double-counting.
+_DEV_REP_PENALTY = {"LOW": 0.0, "MED": 0.15, "HIGH": 0.30}
 
 
 class AlphaRiskEngine:
@@ -80,6 +83,12 @@ class AlphaRiskEngine:
                 res.downside_factors.append("exit_liquidity_high")
             if inp.insider.ihr_class in ("HIGH", "CRITICAL"):
                 res.downside_factors.append(f"insider_hold_{inp.insider.ihr_class}")
+            # OKX dev-reputation downside (serial rugger / dev sold-off / coord)
+            dev_pen = _DEV_REP_PENALTY.get(inp.insider.dev_reputation_risk, 0.0)
+            penalty += dev_pen
+            if dev_pen > 0:
+                res.downside_factors.append(
+                    f"okx_dev_reputation_{inp.insider.dev_reputation_risk}")
 
         # Sybil downside
         if inp.sybil is not None and inp.sybil.risk_level == "HIGH":

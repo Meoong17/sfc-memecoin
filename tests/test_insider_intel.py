@@ -133,3 +133,26 @@ def test_okx_empty_signals_degrade_gracefully():
     r = eng.analyze("TOK", InsiderInputs())       # okx_signals defaults to {}
     assert r.insider_probability == 0.0
     assert r.evidence == []
+
+
+def test_okx_serial_rugger_sets_dev_reputation_high():
+    eng = InsiderIntelligenceEngine(_empty_funding())
+    r = eng.analyze("TOK", InsiderInputs(
+        okx_signals={"okx_rug_pull_count": 5, "okx_dev_total_tokens": 100,
+                     "okx_dev_holding_percent": 0.0}))
+    assert r.dev_reputation_risk == "HIGH"
+
+
+def test_okx_dev_sold_off_sets_dev_reputation_med():
+    eng = InsiderIntelligenceEngine(_empty_funding())
+    r = eng.analyze("TOK", InsiderInputs(
+        okx_signals={"okx_rug_pull_count": 0, "okx_dev_total_tokens": 100,
+                     "okx_dev_holding_percent": 8.0,
+                     "okx_snipers_percent": 50.0}))
+    assert r.dev_reputation_risk == "MED"
+
+
+def test_no_okx_signal_stays_low_dev_reputation():
+    eng = InsiderIntelligenceEngine(_empty_funding())
+    r = eng.analyze("TOK", InsiderInputs())
+    assert r.dev_reputation_risk == "LOW"

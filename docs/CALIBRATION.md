@@ -243,6 +243,25 @@ dev-reputation, komposisi holder tidak masuk scoring per-token. Kini:
   98.3%` + `okx_dev_sold_off_0.0%`. Semua 14 key OKX ter-merge.
 - 263 test hijau (+4: token_tags_by_address parses/null/fail, wiring merge).
 
+### FIX GAP: OKX evidence kini benar-benar menurunkan RAA (efek rantai)
+
+Audit objektif menemukan GAP: `insider_probability` dinaikkan OKX (0→0.75) TAPI
+`Risk-Adjusted Alpha` TIDAK berubah (60→60) karena `AlphaRiskEngine` hanya
+mengonsumsi `exit_liquidity_risk`/`ihr_class`/`insider_distribution` — BUKAN
+`insider_probability`. Semua wiring OKX ke scoring tadinya DEKORATIF (tidak
+mengubah ranking Telegram). DIPERBAIKI tanpa double-count:
+
+- `InsiderResult.dev_reputation_risk` (LOW/MED/HIGH) — downside OKX terpisah
+  dari IHR/exit. Set di `insider_intel.analyze`: HIGH jika serial rugger
+  (rugPullCount>=1); MED jika dev sold-off ATAU koordinasi (snipers/insiders/
+  bundlers>=30%). LOW jika tidak ada sinyal OKX.
+- `AlphaRiskEngine`: `_DEV_REP_PENALTY = {LOW:0, MED:0.15, HIGH:0.30}` +
+  downside factor `okx_dev_reputation_{level}`.
+- Verifikasi deterministik: OKX serial rugger (rug=5, top10=98%) -> insider_prob
+  0.75, dev_reputation_risk=HIGH, **RAA 60 -> 42**. Efek rantai tertutup.
+- Tetap ILLUSTRATIVE (belum walk-forward). 269 test hijau (+6: dev_reputation
+  level di insider_intel, penalty HIGH/MED/LOW di alpha_risk).
+
 ### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
 
 Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga

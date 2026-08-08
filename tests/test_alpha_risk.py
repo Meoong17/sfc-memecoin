@@ -65,3 +65,30 @@ def test_summary_shape():
     for k in ["alpha", "organic", "safety", "smart_money", "risk_adjusted_alpha",
               "risk_penalty", "downside_factors"]:
         assert k in s
+
+
+def test_okx_dev_reputation_high_penalty():
+    """OKX serial-rugger (dev_reputation_risk=HIGH) must discount alpha."""
+    insider = InsiderResult(token="X", dev_reputation_risk="HIGH")
+    r = eng.compute(AlphaInputs(alpha=60, organic=60, safety=60, smart_money=60,
+                                insider=insider))
+    assert r.risk_penalty == pytest.approx(0.30)
+    assert r.risk_adjusted_alpha == pytest.approx(60.0 * 0.70)
+    assert "okx_dev_reputation_HIGH" in r.downside_factors
+
+
+def test_okx_dev_reputation_med_penalty():
+    """OKX dev-sold-off / coordinated (dev_reputation_risk=MED) = 0.15."""
+    insider = InsiderResult(token="X", dev_reputation_risk="MED")
+    r = eng.compute(AlphaInputs(alpha=60, organic=60, safety=60, smart_money=60,
+                                insider=insider))
+    assert r.risk_penalty == pytest.approx(0.15)
+    assert "okx_dev_reputation_MED" in r.downside_factors
+
+
+def test_okx_low_dev_reputation_no_penalty():
+    insider = InsiderResult(token="X", dev_reputation_risk="LOW")
+    r = eng.compute(AlphaInputs(alpha=60, organic=60, safety=60, smart_money=60,
+                                insider=insider))
+    assert r.risk_penalty == 0.0
+    assert not any(f.startswith("okx_") for f in r.downside_factors)
