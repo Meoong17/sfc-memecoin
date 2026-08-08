@@ -217,6 +217,33 @@ class LivePipelineWire:
             except Exception as e:
                 log.warning("OKX insider signals failed for %s: %s", info.address, e)
 
+        # --- ACTIVATE insider evidence from data ALREADY fetched (no extra API) ---
+        # The Insider engine was running on empty inputs (suspected_insider_holdings
+        # / insider_cluster_supply = 0), so IHR + distribution contributions were
+        # dead (a big reason insider_probability was inflated/arbitrary). Fill
+        # them from OKX holder composition (top10 = suspected insider supply,
+        # max(snipers,insiders,bundlers) = coordinated cluster supply) using the
+        # token's circulating supply as the denominator.
+        if f.okx_signals and f.effective_circulating_supply:
+            try:
+                def okx_f(k, d=0.0) -> float:
+                    v = f.okx_signals.get(k)
+                    try:
+                        return float(v) if v is not None else d
+                    except (TypeError, ValueError):
+                        return d
+                top10 = okx_f("okx_top10_holdings_percent")
+                coord = max(okx_f("okx_snipers_percent"), okx_f("okx_insiders_percent"),
+                            okx_f("okx_bundlers_percent"))
+                supply = float(f.effective_circulating_supply or 0.0)
+                if supply > 0:
+                    # suspected insider holdings ~ top-10 concentration of supply
+                    f.suspected_insider_holdings = supply * min(100.0, top10) / 100.0
+                    # coordinated (sniper/insider/bundler) cluster share of supply
+                    f.insider_cluster_supply = supply * min(100.0, coord) / 100.0
+            except Exception as e:
+                log.warning("insider supply mapping failed for %s: %s", info.address, e)
+
         return f
 
     def score_from_market(self, info: TokenMarketInfo):

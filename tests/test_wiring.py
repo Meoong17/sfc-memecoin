@@ -299,6 +299,31 @@ def test_okx_signals_degrade_when_empty():
     assert f.okx_signals == {}
 
 
+def test_okx_holder_composition_activates_insider_supply():
+    """OKX top10/coord holder composition fills suspected_insider_holdings.
+
+    Previously these inputs were 0, so IHR + distribution were dead and the
+    insider probability was inflated/arbitrary. Now top10 concentration maps to
+    suspected insider supply and max(sniper/insider/bundler) to cluster supply.
+    """
+    okx = _FakeOkx(sig={"okx_rug_pull_count": 0, "okx_dev_total_tokens": 1,
+                        "okx_dev_holding_percent": 0.0},
+                   tags={"okx_snipers_percent": 40.0, "okx_insiders_percent": 30.0,
+                         "okx_bundlers_percent": 10.0,
+                         "okx_top10_holdings_percent": 60.0})
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(), okx=okx),
+        sources_from_env=False)
+    f = wire.build_features(_info())  # mcap = 10_000_000 = effective supply
+    # top10 60% of supply -> suspected_insider_holdings
+    assert abs(f.suspected_insider_holdings - 6_000_000.0) < 1.0
+    # coord = max(40,30,10) = 40% -> insider_cluster_supply
+    assert abs(f.insider_cluster_supply - 4_000_000.0) < 1.0
+    # these activate IHR -> insider_probability should rise vs no data
+    score = wire.pipeline.score_token(f)
+    assert score.insider_probability > 0.0
+
+
 def test_build_features_wires_helius_funding_trace():
     """EV-021: dev wallet from GMGN -> Helius funding edges -> funding_clusters."""
     helius = _DevHelius()

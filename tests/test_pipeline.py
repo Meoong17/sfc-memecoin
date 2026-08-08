@@ -56,6 +56,49 @@ def test_pipeline_blocks_critical_contract():
     assert "contract_risk_critical" in s.hard_block_reasons
 
 
+def test_confidence_derived_from_data_presence():
+    """Confidence must rise as real evidence sources are present (not constant)."""
+    from pipeline import _confidence_from_data
+    # bare token (no market/okx/funding/wallet data) -> low DQI
+    bare = _clean_features("BARE")
+    bare.okx_signals = {}
+    bare.funding_clusters = []
+    bare.wallet_analytics = []
+    bare.market_stats = {}
+    bare.swaps = []
+    s_bare, dqi_bare = _confidence_from_data(bare)
+
+    # rich token (market + okx + funding + wallet data) -> higher DQI/confidence
+    rich = _clean_features("RICH")
+    rich.okx_signals = {"okx_rug_pull_count": 1}
+    rich.funding_clusters = [("a", "b")]
+    rich.wallet_analytics = [object()]
+    rich.market_stats = {"holder_count": 1000}
+    rich.swaps = [object()]
+    s_rich, dqi_rich = _confidence_from_data(rich)
+
+    assert dqi_rich > dqi_bare
+    assert dqi_bare >= 0.4 and dqi_rich <= 1.0
+    # engine completeness tracks source presence
+    by = {e.engine: e for e in s_rich}
+    assert by["Insider Intel"].completeness == 1.0  # okx present
+    assert by["Sybil Score"].completeness == 1.0    # funding present
+
+
+def test_confidence_differs_across_tokens():
+    """Confidence in the scored output should NOT be identical across tokens."""
+    pipe = ScreeningPipeline()
+    rich = _clean_features("RICH")
+    rich.okx_signals = {"okx_rug_pull_count": 1, "okx_top10_holdings_percent": 60}
+    rich.market_stats = {"holder_count": 1000}
+    bare = _clean_features("BARE")
+    bare.okx_signals = {}
+    bare.market_stats = {}
+    c_rich = pipe.score_token(rich).confidence
+    c_bare = pipe.score_token(bare).confidence
+    assert c_rich > c_bare  # more evidence -> higher confidence, not constant
+
+
 def test_pipeline_insider_detection_lowers_alpha():
     pipe = ScreeningPipeline()
     clean = pipe.score_token(_clean_features("CLEAN"))

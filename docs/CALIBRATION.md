@@ -425,6 +425,19 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **Confidence & Insider kini di-derive dari data presence nyata**
+  (gejala 0.39 & 40% konstan diperbaiki). (1) `_confidence_from_data()` di
+  pipeline mengganti komponen confidence hardcoded (0.8/0.9/0.8) — completeness/
+  quality/DQI kini dari apakah market_stats/okx/funding/wallet/swaps benar-benar
+  hadir; token dengan lebih banyak evidence dapat confidence lebih tinggi.
+  (2) Activate evidence insider di wiring: `suspected_insider_holdings` &
+  `insider_cluster_supply` kini diisi dari OKX top10/coord holder composition
+  (sebelumnya 0 → IHR/distribution mati → insider_probability arbitrer).
+  Live verify: Insider 0.00–0.95, Confidence 0.15–0.57 (tidak lagi konstan);
+  token insider 0.95 → RAA 4.3. 295 test hijau (+3). IHR mapping memakai
+  `effective_circulating_supply` (=mcap) sbg denominator — rasio top10/coord
+  konsisten (unit saling hapus). Semua tetap ILLUSTRATIVE.
+
 - 2026-08-09: **Desain ulang pesan Telegram (polished)**. Format baru: header
   🚀 + garis ━━━, ringkasan universe padat, PODIUM medali untuk top-3
   (🥇🥈🥉), kartu per token (RAA/Alpha/Organic/Safety/Smart satu baris, dots

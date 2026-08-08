@@ -219,12 +219,12 @@ class ScreeningPipeline:
         s.outputs["alpha_risk"] = ar.summary()
 
         # --- CONFIDENCE (multiplicative x DQI, shared-evidence discount) ---
-        # engines used: Insider, Sybil share EV-021; Absorption uses EV-001
-        conf_res = compute_confidence(self.registry, [
-            EngineScores("Insider Intel", evidence_quality=0.8, completeness=0.9, stability=0.8),
-            EngineScores("Sybil Score", evidence_quality=0.8, completeness=0.9, stability=0.8),
-            EngineScores("Absorption", evidence_quality=0.9, completeness=0.8, stability=0.8),
-        ], dqi=0.9)
+        # Derived from REAL data presence on TokenFeatures (not hardcoded): a
+        # token scored with GMGN+OKX+Helius evidence gets higher confidence
+        # than one with only Dex. Engines sharing EV-021 (Insider, Sybil) are
+        # discounted by the registry.
+        engine_scores, dqi = _confidence_from_data(f)
+        conf_res = compute_confidence(self.registry, engine_scores, dqi=dqi)
         s.confidence = conf_res.final_confidence
         s.outputs["confidence"] = conf_res.summary()
         return s
@@ -256,3 +256,67 @@ def _contract_status(f: TokenFeatures) -> str:
     if f.contract_renounced or f.contract_lp_locked_pct > 0 or f.contract_lp_burned:
         return "RISKY"
     return "UNKNOWN"
+
+
+# ILLUSTRATIVE data-presence weights for confidence components (calibration
+# doctrine). Completeness/quality/DQI are derived from REAL data presence on the
+# TokenFeatures, not hardcoded — so confidence reflects how much evidence was
+# actually collected for this token.
+def _has_data(v) -> bool:
+    """True if a feature carries real data (non-empty)."""
+    if v is None:
+        return False
+    if isinstance(v, dict):
+        return bool(v)
+    if isinstance(v, (list, tuple, set)):
+        return len(v) > 0
+    try:
+        return bool(float(v))
+    except (TypeError, ValueError):
+        return bool(v)
+
+
+def _confidence_from_data(f: TokenFeatures) -> tuple[list, float]:
+    """Derive per-engine confidence inputs + DQI from real data presence.
+
+    Returns (engine_scores, dqi). Each engine's completeness/quality tracks
+    whether its actual evidence sources returned data:
+
+      Insider Intel  <- okx_signals OR funding_clusters (EV-021) OR entry_events
+      Sybil          <- funding_clusters (EV-021)
+      Absorption     <- swaps (EV-001) OR market_stats (demand/liquidity)
+
+    DQI reflects how many independent sources contributed, so a token scored
+    with GMGN+OKX+Helius data has higher confidence than one with only Dex.
+    This replaces the previous hardcoded (0.8/0.9/0.8) components — the 0.39
+    confidence was constant across all tokens regardless of data quality.
+    """
+    # per-engine completeness: did its sources return real data?
+    insider_src = any([_has_data(f.okx_signals), _has_data(f.funding_clusters),
+                       _has_data(f.entry_events)])
+    sybil_src = _has_data(f.funding_clusters)
+    abs_src = any([_has_data(f.swaps), _has_data(f.market_stats)])
+    # wallet analytics + market stats add to overall data richness
+    wallet_src = _has_data(f.wallet_analytics)
+    market_src = _has_data(f.market_stats)
+
+    def engine_scores(name: str, src: bool) -> EngineScores:
+        # completeness: 1.0 if source present, 0.4 if absent (degraded)
+        completeness = 1.0 if src else 0.4
+        # evidence_quality: modest bonus when multiple independent sources
+        quality = 0.85 if src else 0.5
+        # stability: better with richer data (market + wallet), else neutral
+        stability = 0.9 if (src and market_src) else 0.8
+        return EngineScores(name, evidence_quality=quality,
+                            completeness=completeness, stability=stability)
+
+    scores = [
+        engine_scores("Insider Intel", insider_src),
+        engine_scores("Sybil Score", sybil_src),
+        engine_scores("Absorption", abs_src),
+    ]
+    # DQI = fraction of tracked sources actually present
+    present = sum([insider_src, sybil_src, abs_src, wallet_src, market_src])
+    dqi = 0.4 + 0.12 * present   # 0.4 (all missing) .. 1.0 (all present)
+    dqi = max(0.4, min(1.0, dqi))
+    return scores, dqi
