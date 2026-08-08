@@ -83,6 +83,15 @@ def main() -> int:
         print(f"  {i}. {r['token'][:16]:<18} RAA={r['risk_adjusted_alpha']:.1f} "
               f"conf={r['confidence']:.2f} conf<>={r['confluence_label']}")
 
+    # LLM Explainer stub: explain why each token is ranked this way, from real
+    # evidence. LLM only explains — it never changes the ranking.
+    print("\n=== Penjelasan ranking (LLM Explainer — penjelasan, bukan keputusan) ===")
+    from llm_explainer import explain_token
+    for s in sorted([x for x in board.scores if x.admitted],
+                    key=lambda s: s.risk_adjusted_alpha, reverse=True):
+        sym = market_by_token.get(s.token, {}).get("symbol", "")
+        print(explain_token(s, symbol=sym) + "\n")
+
     if args.out:
         out = Path(args.out)
         snap = board.snapshot()

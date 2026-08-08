@@ -425,6 +425,17 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **LLM Explainer stub** (`llm_explainer.py`, spec §5 final stage
+  RANKING -> LLM EXPLAINER). Menjelaskan kenapa tiap token di-rank begini dari
+  evidence NYATA di `TokenScore.outputs` (OKX rugPullCount/devHoldings,
+  dev_reputation_risk, contract_status, confluence, downside_factors alpha).
+  Arsitektur #6 ditegakkan: LLM hanya MENJELASKAN, tidak pernah memutus —
+  ranking tetap dari pipeline (Risk-Adjusted Alpha). Deterministik (tanpa LLM
+  = 0 panggilan), hook LLM opsional jika `LLM_API_KEY`/`LLM_MODEL` ada (gagal
+  aman -> fallback rule-text). Smoke live n=5: PEPECOQUI RAA terendah 29.1
+  dijelaskan krn DevRisk HIGH (okx_serial_rugger) + Contract LOCKED; STONKRUSH
+  tertinggi krn Contract VERIFIED + insider 0%. 284 test hijau (+7).
+
 - 2026-08: backfill v1 (GMGN trenches, 20 sampel, semua survived) -> INSIGHT:
   trenches = token baru, tidak valid untuk outcome historis. Belum ada threshold
   yang dinyatakan terkalibrasi. Tool backfill (`backfill.py`,
