@@ -167,7 +167,7 @@ class LLMExplainer:
                          "Content-Type": "application/json"},
                 json={"model": self.model,
                       "messages": [{"role": "user", "content": prompt}],
-                      "temperature": 0.2, "max_tokens": 220},
+                      "temperature": 0.2, "max_tokens": 600},
                 timeout=30)
         except requests.RequestException:
             return ""  # fall back to rule-based explanation
