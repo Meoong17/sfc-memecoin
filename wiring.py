@@ -141,6 +141,18 @@ class LivePipelineWire:
         f.organic_raw = 50.0
         f.effective_circulating_supply = info.mcap or 0.0
 
+        # GMGN token market microstructure -> measured Organic/Smart Money/Safety
+        # (weight audit: core weights were hardcoded 50; now driven by real data).
+        if self.sources.gmgn is not None:
+            try:
+                ms = self.sources.gmgn.market_stats(info.address, info.chain)
+                f.market_stats = ms.summary()
+                org, sm, safe = _map_core_weights(f.market_stats)
+                f.organic_raw, f.smart_money_raw = org, sm
+                f.safety_raw = safe
+            except Exception as e:
+                log.warning("GMGN market_stats failed for %s: %s", info.address, e)
+
         # GMGN security -> EV-002 + contract-security facts (renounced/LP)
         if self.sources.gmgn is not None:
             try:
@@ -224,6 +236,54 @@ def _risk_level(buy_tax: float, sell_tax: float, sellable: bool) -> str:
     if max_tax >= 5:
         return "WATCH"
     return "SAFE"
+
+
+def _map_core_weights(ms: dict | None) -> tuple[float, float, float]:
+    """Map GMGN token-market microstructure onto Organic / Smart Money / Safety.
+
+    This is what makes the core weights MEASURED rather than constants (weight
+    audit, docs/WEIGHT_AUDIT.md). All scaling is ILLUSTRATIVE (calibration
+    doctrine) and returns baseline 50 when no market data is present (degraded,
+    not a signal).
+
+    Organic (quality of demand): high holder count + low sniper/bundler/fresh
+    wallet share = organic demand. Organic = 50 + holders/1e5*10 - sniper_share*40
+      - bundler_share*40 - fresh_share*20, clipped to [20,100].
+
+    Smart Money (quality of wallet flow): high smart/renowned/whale wallet
+    counts = sophisticated flow. SmartMoney = 50 + smart/1e3*30 + renowned/1e2*10
+      - rat_share*30, clipped to [20,100].
+
+    Safety (structural): higher LP locked = safer. Safety = 50 + locked_ratio*50,
+      clipped to [20,100] (kept conservative vs the security gate).
+    """
+    if not ms:
+        return 50.0, 50.0, 50.0
+    holders = float(ms.get("holder_count", 0) or 0)
+    smart = float(ms.get("smart_wallets", 0) or 0)
+    sniper = float(ms.get("sniper_wallets", 0) or 0)
+    bundler = float(ms.get("bundler_wallets", 0) or 0)
+    fresh = float(ms.get("fresh_wallets", 0) or 0)
+    whale = float(ms.get("whale_wallets", 0) or 0)
+    renowned = float(ms.get("renowned_wallets", 0) or 0)
+    rat = float(ms.get("rat_trader_wallets", 0) or 0)
+    locked = float(ms.get("locked_ratio", 0) or 0)
+
+    total_tagged = max(1.0, smart + sniper + bundler + fresh + whale + renowned + rat)
+    sniper_share = sniper / total_tagged
+    bundler_share = bundler / total_tagged
+    fresh_share = fresh / total_tagged
+    rat_share = rat / total_tagged
+
+    organic = 50.0 + (holders / 1e5) * 10.0 - sniper_share * 40.0 \
+        - bundler_share * 40.0 - fresh_share * 20.0
+    smart_money = 50.0 + (smart / 1e3) * 30.0 + (renowned / 1e2) * 10.0 \
+        + (whale / 1e3) * 10.0 - rat_share * 30.0
+    safety = 50.0 + locked * 50.0
+
+    return (min(100.0, max(20.0, organic)),
+            min(100.0, max(20.0, smart_money)),
+            min(100.0, max(20.0, safety)))
 
 
 def _gmgn_renounced_from_notes(notes: list) -> bool:

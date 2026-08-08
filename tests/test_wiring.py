@@ -4,7 +4,7 @@ import pytest
 from fetchers.dex_screener import TokenMarketInfo
 from pipeline import TokenFeatures
 from wiring import (LiveSourceBundle, LivePipelineWire, LiveUniverse,
-                    _gmgn_renounced_from_notes, _risk_level)
+                    _gmgn_renounced_from_notes, _map_core_weights, _risk_level)
 
 
 class _FakeGmgn:
@@ -15,6 +15,14 @@ class _FakeGmgn:
         from data_sources.honeypot_sim import ContractFacts
         return ContractFacts(address=address, chain=chain, sell_sellable=True,
                              buy_tax_pct=3.0, sell_tax_pct=5.0)
+    def market_stats(self, address, chain="solana"):
+        from fetchers.gmgn import TokenMarketStats
+        self.calls += 1
+        return TokenMarketStats(address=address, chain=chain, holder_count=12000,
+                                smart_wallets=150, sniper_wallets=30,
+                                bundler_wallets=40, fresh_wallets=100,
+                                whale_wallets=130, renowned_wallets=37,
+                                rat_trader_wallets=6, locked_ratio=0.5)
 
 
 class _FakeHelius:
@@ -87,7 +95,7 @@ def test_build_features_from_market():
     assert f.token == "ADDR"
     assert f.contract_risk_level == "WATCH"  # sell tax 5% -> WATCH
     assert f.effective_circulating_supply == 10000000.0
-    assert fake_gmgn.calls == 1
+    assert fake_gmgn.calls == 2  # market_stats + token_security
 
 
 def test_build_features_no_gmgn_degrades():
@@ -95,6 +103,51 @@ def test_build_features_no_gmgn_degrades():
     f = wire.build_features(_info())
     assert f.contract_risk_level == "SAFE"  # default, no GMGN
     assert f.token == "ADDR"
+
+
+def test_map_core_weights_from_market_stats():
+    """GMGN market stats drive measured Organic/Smart Money/Safety (not 50)."""
+    ms = {
+        "holder_count": 120000, "smart_wallets": 1000, "sniper_wallets": 30,
+        "bundler_wallets": 40, "fresh_wallets": 100, "whale_wallets": 1300,
+        "renowned_wallets": 100, "rat_trader_wallets": 6, "locked_ratio": 0.9,
+    }
+    org, sm, safe = _map_core_weights(ms)
+    # high holders + low sniper/bundler share -> organic well above baseline
+    assert org > 50.0
+    # high smart/renowned/whale -> smart money above baseline
+    assert sm > 50.0
+    # high locked ratio -> safety above baseline
+    assert safe > 80.0
+    assert all(20.0 <= x <= 100.0 for x in (org, sm, safe))
+
+
+def test_map_core_weights_penalizes_sniper_bundler():
+    """A token dominated by snipers/bundlers/fresh wallets gets LOW organic."""
+    ms = {"holder_count": 100, "smart_wallets": 1, "sniper_wallets": 900,
+          "bundler_wallets": 900, "fresh_wallets": 900, "whale_wallets": 1,
+          "renowned_wallets": 1, "rat_trader_wallets": 900, "locked_ratio": 0.0}
+    org, sm, safe = _map_core_weights(ms)
+    assert org < 30.0
+    assert sm < 50.0
+
+
+def test_map_core_weights_empty_returns_baseline():
+    assert _map_core_weights({}) == (50.0, 50.0, 50.0)
+    assert _map_core_weights(None) == (50.0, 50.0, 50.0)
+
+
+def test_build_features_measures_core_weights_from_gmgn():
+    """Organic/Smart Money are no longer hardcoded 50 when GMGN data present."""
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_FakeGmgn(), helius=None),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    # fake stats: 12000 holders, 150 smart, locked 0.5 -> should differ from 50
+    assert f.organic_raw != 50.0
+    assert f.smart_money_raw != 50.0
+    assert f.safety_raw != 50.0
+    assert f.market_stats  # captured for transparency
 
 
 def test_risk_level_mapping():

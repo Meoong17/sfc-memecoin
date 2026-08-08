@@ -62,6 +62,10 @@ class TokenFeatures:
     # composition) -> direct insider evidence. keys `okx_` prefixed from
     # fetchers/okx.py. Empty = no OKX data (degraded, not an insider signal).
     okx_signals: dict = field(default_factory=dict)
+    # GMGN token market microstructure (holder/smart/sniper/bundler wallet
+    # counts + buy/sell microstructure) -> drives Organic/Smart Money weights.
+    # None = no GMGN market data (degraded, weights fall back to baseline).
+    market_stats: dict = field(default_factory=dict)
     # raw scores (could come from other producers)
     alpha_raw: float = 50.0
     organic_raw: float = 50.0

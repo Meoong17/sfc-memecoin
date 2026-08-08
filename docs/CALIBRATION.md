@@ -425,6 +425,15 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **Bobot inti kini TERUKUR (weight audit, docs/WEIGHT_AUDIT.md)**.
+  Audit menemukan organic_raw & smart_money_raw HARDCODED 50 → Risk-Adjusted
+  Alpha didorong hampir seluruhnya oleh penalti downside (bukan kualitas positif
+  terukur). Fix: tambah GMGN `market_stats` (`token info`: holder_count,
+  wallet_tags_stat smart/sniper/bundler/fresh/whale/renowned/rat, locked_ratio,
+  buy/sell/vol 24h) + `_map_core_weights()` mengisi organic/smart_money/safety
+  dari data nyata. Live verify (CATE): organic 31.3, smart_money 59.6, safety 50.
+  289 test hijau (+4). Semua scaling TETAP ILLUSTRATIVE (calibration doctrine).
+
 - 2026-08-09: **LLM DISABLED di jalur otomatis**. User minta disable LLM.
   Cron `sfc_memecoin_collect.sh` direvert: hapus `--gloss` dan export LLM_* keys;
   kini hanya `--notify` (deterministik, 0 panggilan LLM). Flag `--gloss` di

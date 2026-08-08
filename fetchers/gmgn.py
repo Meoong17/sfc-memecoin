@@ -69,6 +69,50 @@ def _f(v, default=0.0) -> float:
         return default
 
 
+@dataclass
+class TokenMarketStats:
+    """Token market microstructure stats (from GMGN `token info`).
+
+    Feeds the core weight mapping (Organic = quality of demand, Smart Money =
+    quality of wallet flow) so Risk-Adjusted Alpha is measured, not a constant.
+    Empty/zero = no data (degraded, not a signal).
+    """
+    address: str
+    chain: str
+    holder_count: int = 0
+    locked_ratio: float = 0.0          # fraction of supply LP-locked [0,1]
+    smart_wallets: int = 0
+    sniper_wallets: int = 0
+    bundler_wallets: int = 0
+    fresh_wallets: int = 0
+    whale_wallets: int = 0
+    renowned_wallets: int = 0
+    rat_trader_wallets: int = 0
+    creator_wallets: int = 0
+    buys_24h: int = 0
+    sells_24h: int = 0
+    swaps_24h: int = 0
+    buy_volume_24h: float = 0.0
+    sell_volume_24h: float = 0.0
+    volume_24h: float = 0.0
+    price_24h: float = 0.0            # 24h price change fraction (e.g. 0.41 = +41%)
+
+    def summary(self) -> dict:
+        return {
+            "address": self.address, "chain": self.chain,
+            "holder_count": self.holder_count, "locked_ratio": round(self.locked_ratio, 4),
+            "smart_wallets": self.smart_wallets, "sniper_wallets": self.sniper_wallets,
+            "bundler_wallets": self.bundler_wallets, "fresh_wallets": self.fresh_wallets,
+            "whale_wallets": self.whale_wallets, "renowned_wallets": self.renowned_wallets,
+            "rat_trader_wallets": self.rat_trader_wallets,
+            "creator_wallets": self.creator_wallets,
+            "buys_24h": self.buys_24h, "sells_24h": self.sells_24h, "swaps_24h": self.swaps_24h,
+            "buy_volume_24h": round(self.buy_volume_24h, 2),
+            "sell_volume_24h": round(self.sell_volume_24h, 2),
+            "volume_24h": round(self.volume_24h, 2), "price_24h": round(self.price_24h, 4),
+        }
+
+
 class GmgnFetcher:
     """Fetches GMGN data via the official gmgn-cli."""
 
@@ -153,6 +197,47 @@ class GmgnFetcher:
             "dev_current_sell_amount": f("current_sell_amount"),
             "dev_current_transfer_out_amount": f("current_transfer_out_amount"),
         }
+
+    # --- token market microstructure -> TokenMarketStats (core weight mapping) ---
+    def market_stats(self, address: str, chain: str = "solana") -> TokenMarketStats:
+        """Fetch token basic info + realtime price microstructure from GMGN.
+
+        Maps `token info` fields onto TokenMarketStats so the pipeline can drive
+        Organic (quality of demand) and Smart Money (quality of wallet flow) from
+        real data instead of constants. Returns a stats object (zeros if the
+        fetch fails / no data — degraded, not a signal).
+        """
+        st = TokenMarketStats(address=address, chain=chain)
+        try:
+            data = self._run("token", "info", "--chain", self._chain_flag(chain),
+                             "--address", address)
+        except FetchError:
+            return st
+        st.holder_count = int(_f(data.get("holder_count"), 0))
+        st.locked_ratio = min(1.0, _f(data.get("locked_ratio"), 0.0))
+
+        tags = data.get("wallet_tags_stat") or {}
+        if isinstance(tags, dict):
+            st.smart_wallets = int(_f(tags.get("smart_wallets"), 0))
+            st.sniper_wallets = int(_f(tags.get("sniper_wallets"), 0))
+            st.bundler_wallets = int(_f(tags.get("bundler_wallets"), 0))
+            st.fresh_wallets = int(_f(tags.get("fresh_wallets"), 0))
+            st.whale_wallets = int(_f(tags.get("whale_wallets"), 0))
+            st.renowned_wallets = int(_f(tags.get("renowned_wallets"), 0))
+            st.rat_trader_wallets = int(_f(tags.get("rat_trader_wallets"), 0))
+            st.creator_wallets = int(_f(tags.get("creator_wallets"), 0))
+
+        p = data.get("price") or {}
+        if isinstance(p, dict):
+            st.buys_24h = int(_f(p.get("buys_24h"), 0))
+            st.sells_24h = int(_f(p.get("sells_24h"), 0))
+            st.swaps_24h = int(_f(p.get("swaps_24h"), 0))
+            st.buy_volume_24h = max(0.0, _f(p.get("buy_volume_24h"), 0.0))
+            st.sell_volume_24h = max(0.0, _f(p.get("sell_volume_24h"), 0.0))
+            st.volume_24h = max(0.0, _f(p.get("volume_24h"), 0.0))
+            # price_24h is a fraction change (e.g. 0.41 = +41%); it can be < -1
+            st.price_24h = _f(p.get("price_24h"), 0.0)
+        return st
 
     # --- token security -> ContractFacts (EV-002) ---
     def token_security(self, address: str, chain: str = "solana") -> ContractFacts:
