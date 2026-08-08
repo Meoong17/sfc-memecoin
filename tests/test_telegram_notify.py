@@ -64,11 +64,11 @@ def test_format_ranking():
     assert "PEPE" in msg          # symbol shown
     assert "$0.00000120" in msg   # sub-cent price formatted
     assert "Cap $2.50M" in msg    # mcap in M
-    assert "RAA=61.6" in msg
-    assert "Insider=20%" in msg   # formatted as percent
-    assert "DevRisk=MED" in msg   # dev reputation shown
-    assert "Universe: 5 token" in msg
-    assert "Admitted: 3" in msg
+    assert "RAA 61.6" in msg
+    assert "Insider 20%" in msg   # formatted as percent
+    assert "Dev MED" in msg       # dev reputation shown
+    assert "5 token" in msg
+    assert "lolos 3" in msg
     # full contract address shown (not truncated to 24)
     assert "🔗 TOKENADDR123456789" in msg
     assert "TOKENADDR123456789" in msg
@@ -91,11 +91,11 @@ def test_format_ranking_shows_core_weights():
         ],
     }
     msg = n.format_ranking(snap)
-    assert "Alpha=72" in msg
-    assert "Organic=31" in msg
-    assert "Safety=50" in msg
-    assert "Smart=60" in msg
-    assert "Insider=30%" in msg
+    assert "Alpha 72" in msg
+    assert "Organic 31" in msg
+    assert "Safety 50" in msg
+    assert "Smart 60" in msg
+    assert "Insider 30%" in msg
     assert "🔒 LOCKED" in msg
 
 
@@ -115,12 +115,12 @@ def test_format_ranking_with_explanations():
     explanations = {"AAA": "RAA tinggi karena kontrak terverifikasi.", "BBB": ""}
     msg = n.format_ranking(snap, explanations=explanations)
     # section header + only the glossed token appears
-    assert "Kenapa token teratas ini" in msg
+    assert "Kenapa token teratas" in msg
     assert "TOPA: RAA tinggi karena kontrak terverifikasi." in msg
     assert "BOTB:" not in msg          # empty gloss omitted
-    assert "bukan rekomendasi beli/jual" in msg
+    assert "bukan rekomendasi" in msg
     # when no explanations, no section is added
-    assert "Kenapa token teratas ini" not in n.format_ranking(snap)
+    assert "Kenapa token teratas" not in n.format_ranking(snap)
 
 
 def test_fmt_usd_compact():

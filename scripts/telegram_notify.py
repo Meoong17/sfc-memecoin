@@ -101,29 +101,32 @@ class TelegramNotifier:
 
     def format_ranking(self, snapshot: dict, *, universe_size: int = 0,
                        ts_label: str = "", explanations: dict | None = None) -> str:
-        """Build a readable ranking message with a clear legend/definitions.
+        """Build a polished ranking message.
 
-        Plain text (no markdown markers) so it renders cleanly in Telegram's
-        default parse mode — avoids bold/escape rendering pitfalls.
+        Plain text (no markdown) so it renders cleanly in Telegram's default
+        parse mode. Podium for the top 3, compact measured-weights cards, and a
+        clean footer.
 
         `explanations`: optional {token_addr: natural-language explanation}
         from the LLM Explainer. Shown as a compact "why" section for the top
         tokens. The LLM explains only; it never changes the ranking here.
         """
-        sep = "──────────────────────────────"
+        rule = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        thin = "──────────────────────────────"
         lines = []
-        lines.append("🧿 SFC MEME SCREENER" + (f" — {ts_label}" if ts_label else ""))
-        lines.append(sep)
+        lines.append("🚀 SFC MEME SCREENER" + (f"  {ts_label}" if ts_label else ""))
+        lines.append(rule)
 
         admitted = snapshot.get("admitted", 0)
         total = snapshot.get("count", universe_size)
-        lines.append(f"📊 Universe: {total} token | ✅ Admitted: {admitted} | "
-                     f"🚫 Blocked: {total - admitted}")
+        lines.append(f"📡 {total} token  ·  ✅ lolos {admitted}  ·  🚫 blokir {total - admitted}")
         lines.append("")
 
         items = snapshot.get("ranking") or []
         if not items:
             lines.append("⚠️ Tidak ada token yang lolos filter (semua diblok / gagal).")
+
+        _rank_medal = {1: "🥇", 2: "🥈", 3: "🥉"}
         for i, r in enumerate(items[:10], 1):
             symbol = (r.get("symbol") or r.get("token") or "?")[:14]
             tok = (r.get("token") or "?")
@@ -139,14 +142,21 @@ class TelegramNotifier:
             organic = r.get("organic", 0)
             safety = r.get("safety", 0)
             smart = r.get("smart_money", 0)
-            lines.append(f"{i}. {symbol}")
-            lines.append(f"   💰 {_fmt_usd(price)} | Cap {_fmt_usd(mcap)}")
-            lines.append(f"   🎯 RAA={raa:.1f} | Alpha={alpha:.0f} | Organic={organic:.0f} "
-                         f"| Safety={safety:.0f} | Smart={smart:.0f}")
-            lines.append(f"   🧠 Insider={ins:.0%} | Conf={conf:.2f} | DevRisk={dev_rep} | "
-                         f"{conf_label}")
-            lines.append(f"   {_contract_badge(cstat)} | 🔗 {tok}")
-            lines.append("")
+
+            rank = _rank_medal.get(i, f"{i}.")
+            # risk dots for dev reputation
+            dev_dot = {"LOW": "🟢", "MED": "🟡", "HIGH": "🔴"}.get(dev_rep, "⚪")
+            conf_emoji = {"HIGH_CONFLUENCE": "🔥", "MODERATE_OPPORTUNITY": "✨",
+                          "NEUTRAL": "⚪", "FALSE_MOMENTUM": "🧨"}.get(conf_label, "⚪")
+
+            lines.append(f"{rank}  {symbol}")
+            lines.append(f"    RAA {raa:.1f}   Alpha {alpha:.0f}   Organic {organic:.0f} "
+                         f"  Safety {safety:.0f}  Smart {smart:.0f}")
+            lines.append(f"    {dev_dot} Dev {dev_rep}   👥 Insider {ins:.0%}   "
+                         f"🎯 Conf {conf:.2f}   {conf_emoji} {conf_label}")
+            lines.append(f"    💰 {_fmt_usd(price)}  ·  Cap {_fmt_usd(mcap)}")
+            lines.append(f"    {_contract_badge(cstat)}   🔗 {tok}")
+            lines.append(thin)
 
         # LLM Explainer "why" section for the top tokens (explain-only).
         if explanations:
@@ -157,14 +167,12 @@ class TelegramNotifier:
                     sym = (r.get("symbol") or r.get("token") or "?")[:14]
                     glossed.append(f"{sym}: {txt.strip()}")
             if glossed:
-                lines.append(sep)
-                lines.append("🧠 Kenapa token teratas ini? (penjelasan, bukan "
-                             "rekomendasi beli/jual)")
+                lines.append("🧠 Kenapa token teratas? (penjelasan, bukan rekomendasi)")
                 lines.extend(f"• {g}" for g in glossed)
                 lines.append("")
 
-        lines.append(sep)
-        lines.append(f"⏱ {time.strftime('%Y-%m-%d %H:%M')} | @SfcMeme_bot")
+        lines.append(rule)
+        lines.append(f"⚡ Live scan  ·  ⏱ {time.strftime('%d %b %Y %H:%M')}  ·  @SfcMeme_bot")
         return "\n".join(lines)
 
     def send_ranking(self, snapshot: dict, *, universe_size: int = 0,

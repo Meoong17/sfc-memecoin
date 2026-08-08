@@ -425,6 +425,12 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **Desain ulang pesan Telegram (polished)**. Format baru: header
+  🚀 + garis ━━━, ringkasan universe padat, PODIUM medali untuk top-3
+  (🥇🥈🥉), kartu per token (RAA/Alpha/Organic/Safety/Smart satu baris, dots
+  risiko dev 🟢🟡🔴 + emoji konfluensi 🔥✨⚪🧨, harga/cap, contract badge,
+  alamat penuh), footer ⚡ Live scan. 292 test hijau.
+
 - 2026-08-09: **Format Telegram diperkaya + hilangkan "Cara baca skor"**. Per
   token kini tampil Alpha/Organic/Safety/Smart Money (bobot inti terukur),
   Insider/Conf/DevRisk, contract badge, alamat penuh. `TokenScore.summary()`
