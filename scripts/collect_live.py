@@ -30,10 +30,18 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=5, help="universe size (start small)")
     ap.add_argument("--out", type=str, default="", help="optional JSON output path")
     ap.add_argument("--timeout", type=float, default=120, help="overall timeout seconds")
+    ap.add_argument("--notify", action="store_true",
+                    help="push the ranking to Telegram (TELEGRAM_BOT_TOKEN/CHAT_ID in .env)")
     args = ap.parse_args()
 
     wire = LivePipelineWire()
     print(f"Live sources available: {wire.sources.available or '(none)'}")
+
+    notif = None
+    if args.notify:
+        from scripts.telegram_notify import TelegramNotifier
+        notif = TelegramNotifier()
+        print(f"[telegram] enabled={notif.enabled}")
 
     start = time.time()
     try:
@@ -70,6 +78,11 @@ def main() -> int:
         out = Path(args.out)
         out.write_text(json.dumps(board.snapshot(), indent=2))
         print(f"\nSaved snapshot -> {out}")
+
+    if notif is not None:
+        snap = board.snapshot()
+        ok = notif.send_ranking(snap, universe_size=len(universe.tokens))
+        print(f"[telegram] ranking sent={ok}")
 
     print(f"\nDone in {time.time()-start:.1f}s | {board.snapshot()['admitted']} admitted / {board.snapshot()['count']}")
     return 0

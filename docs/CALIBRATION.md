@@ -141,6 +141,25 @@ Status: label sejati KONFIRMASI bisa dikumpulkan dari data on-chain nyata, tapi
 n=19 masih kecil. Threshold insider (DEV_DUMP_SELL_RATIO=0.6, EARLY_SELL_TOP10=0.3,
 dst) tetap ILLUSTRATIVE — butuh dataset lebih besar + walk-forward sblm enforce.
 
+### Label insider sejati — v2 (data/insider_labeled_dataset_v2_large.json)
+
+Perluas ke n>100 via universe GMGN `trending` (DexScreener profiles cap ~30).
+120 sampel live, masing2 dengan `created_ts` (untuk temporal walk-forward).
+Distribusi: 71 clean / 45 dev_dump / 4 early_sell.
+
+Walk-forward (dirty-rate = dev_dump+rug, urut created_ts, min_train 20):
+mean **0.531 -> INSUFFICIENT** (fold 0.143-0.918). Label insider on-chain JUGA
+belum stabil secara temporal di n=120 -> threshold insider TETAP ILLUSTRATIVE.
+Catatan: early_sell hanya 4 sampel, rug 0 (universe trending = LP dibakar aman);
+kelas minority belum cukup untuk menilai. Ini verdict jujur sesuai doktrin.
+
+### Telegram notifier (scripts/telegram_notify.py + collect_live --notify)
+
+Bot @SfcMeme_bot (TELEGRAM_BOT_TOKEN/CHAT_ID di .env) push ranking screener
+ke DM meong via Bot API. Verifikasi live: SENT=True. `collect_live --notify`
+mengirim ranking setelah scoring. Load .env via config.settings (jalan dari
+shell kosong). 5 test.
+
 ### Wiring EV-021 funding trace ke pipeline score (live)
 
 `wiring.build_features` kini mengisi `funding_clusters` (EV-021) dari Helius:
