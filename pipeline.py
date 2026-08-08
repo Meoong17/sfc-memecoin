@@ -51,6 +51,10 @@ class TokenFeatures:
     domains: list = field(default_factory=list)
     # wallet analytics (GMGN wallet_stats) -> classification features
     wallet_analytics: list = field(default_factory=list)
+    # OKX dev-reputation signals (rugPullCount, devHoldingsPercent, holder
+    # composition) -> direct insider evidence. keys `okx_` prefixed from
+    # fetchers/okx.py. Empty = no OKX data (degraded, not an insider signal).
+    okx_signals: dict = field(default_factory=dict)
     # raw scores (could come from other producers)
     alpha_raw: float = 50.0
     organic_raw: float = 50.0
@@ -141,13 +145,14 @@ class ScreeningPipeline:
             classified.append(clf.classify(sig).summary())
         s.outputs["wallet_classify"] = classified
 
-        # --- INSIDER INTELLIGENCE (EV-021 + EV-001) ---
+        # --- INSIDER INTELLIGENCE (EV-021 + EV-001 + OKX dev-reputation) ---
         ins = InsiderIntelligenceEngine(fg, flow).analyze(f.token, InsiderInputs(
             entry_events=f.entry_events, launch_minute=f.launch_minute,
             info_expansion_minute=f.info_expansion_minute,
             suspected_insider_holdings=f.suspected_insider_holdings,
             effective_circulating_supply=f.effective_circulating_supply,
-            insider_cluster_supply=f.insider_cluster_supply))
+            insider_cluster_supply=f.insider_cluster_supply,
+            okx_signals=f.okx_signals))
         s.insider_probability = ins.insider_probability
         s.outputs["insider"] = ins.summary()
 

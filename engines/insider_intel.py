@@ -43,6 +43,7 @@ class InsiderInputs:
     effective_circulating_supply: float = 0.0
     insider_cluster_supply: float = 0.0   # supply held by insider clusters
     supply_by_role: dict[str, float] = field(default_factory=dict)  # role -> pct of supply
+    okx_signals: dict = field(default_factory=dict)  # OKX dev-reputation (rug/dev/holder)
 
 
 @dataclass
@@ -164,6 +165,37 @@ class InsiderIntelligenceEngine:
         if r.ihr >= 0.20:
             r.counter_evidence.append("no_direct_dev_relationship_check")
 
+        # --- OKX dev-reputation as direct insider evidence (ILLUSTRATIVE) ---
+        # OKX fields are PERCENT (0-100). A serial rugger / dev sold-off / tight
+        # holder composition is DIRECT on-chain insider evidence, independent of
+        # the funding-cluster path. Thresholds ILLUSTRATIVE (docs/CALIBRATION.md).
+        okx = ins.okx_signals or {}
+        def okx_f(k, d=0.0) -> float:
+            v = okx.get(k)
+            if v is None:
+                return d
+            try:
+                return float(v)
+            except (TypeError, ValueError):
+                return d
+        okx_rug = int(okx_f("okx_rug_pull_count"))
+        okx_dev_hold = okx_f("okx_dev_holding_percent")
+        okx_dev_total = okx_f("okx_dev_total_tokens")
+        okx_snipers = okx_f("okx_snipers_percent")
+        okx_insiders = okx_f("okx_insiders_percent")
+        okx_bundlers = okx_f("okx_bundlers_percent")
+        okx_top10 = okx_f("okx_top10_holdings_percent")
+        okx_coord = max(okx_snipers, okx_insiders, okx_bundlers)
+
+        if okx_rug >= 1:
+            r.evidence.append(f"okx_serial_rugger_{okx_rug}")
+        if okx_dev_hold < 20.0 and okx_dev_total >= 1:
+            r.evidence.append(f"okx_dev_sold_off_{okx_dev_hold:.1f}%")
+        if okx_coord >= 30.0:
+            r.evidence.append(f"okx_coordinated_{okx_coord:.1f}%")
+        if okx_top10 >= 60.0:
+            r.evidence.append(f"okx_concentrated_top10_{okx_top10:.1f}%")
+
         # --- 6.6.8 Insider probability (rule-based P0) ---
         score = 0.0
         if r.early_entry_events:
@@ -174,6 +206,15 @@ class InsiderIntelligenceEngine:
             score += 0.20
         if r.insider_distribution:
             score += 0.25
+        # OKX direct dev-reputation contributions (ILLUSTRATIVE)
+        if okx_rug >= 1:
+            score += 0.30                       # serial rugger = strongest direct signal
+        if okx_dev_hold < 20.0 and okx_dev_total >= 1:
+            score += 0.20                       # dev sold off its position
+        if okx_coord >= 30.0:
+            score += 0.15                       # coordinated insider/sniper/bundler
+        if okx_top10 >= 60.0:
+            score += 0.10                       # top-heavy holder concentration
         r.insider_probability = min(1.0, round(score, 3))
         r.confidence = round(min(1.0, 0.5 + 0.1 * len(r.evidence)), 3)
         return r

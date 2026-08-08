@@ -198,6 +198,32 @@ Perluas ke n=40 (blend NEW/MIGRATING/MIGRATED). **Variasi kelas nyata:
   didominasi token baru-baru dibuat, jadi fold temporal terbatas. Untuk
   stabilitas rug yang andal butuh n>100 + sebaran waktu lebih panjang.
 
+### OKX dev-reputation sebagai fitur insider langsung (wiring scoring)
+
+Selain label, OKX dev-reputation kini di-wire ke JALUR SCORING live sebagai
+evidence insider langsung (independen dari funding-cluster EV-021):
+
+- `TokenFeatures.okx_signals` + `InsiderInputs.okx_signals` (pipeline.py).
+- `InsiderIntelligenceEngine.analyze`: membaca `okx_rug_pull_count` /
+  `okx_dev_holding_percent` / `okx_dev_total_tokens` / komposisi holder dan
+  menambah evidence + probabilitas (ILLUSTRATIVE): serial-rugger 0.30,
+  dev-sold-off 0.20, coordinated (snipers/insiders/bundlers>=30%) 0.15,
+  top10>=60% 0.10. Kontribusi ini BUKAN menggantikan funding-cluster, tapi
+  menambah (skor cap 1.0).
+- `wiring.build_features`: saat okx tersedia & chain solana, fetch
+  `okx.insider_signals(addr)` -> `f.okx_signals`. Degradasi aman (gagal/empty/
+  non-sol -> okx_signals={}).
+- **CATATAN jujur:** `insider_signals` hanya berisi field dev-reputation
+  (rugPullCount/devHoldingsPercent/devTotalTokens) — komposisi holder
+  (snipers/insiders/bundlers/top10) hanya tersedia saat koleksi universe via
+  list `tokens`, bukan per-token di jalur scoring. Sinyal terkuat (serial
+  rugger + dev sold-off) tetap aktif.
+- Verifikasi live (`collect_live --limit 4`): insider_probability kini
+  bervariasi 0.20-0.70 (baseline funding-cluster 0.20). Probe langsung:
+  token devhold=0/total=1 -> insider_prob 0.20 dari evidence okx_dev_sold_off.
+- Kontribusi probabilitas ILLUSTRATIVE (belum walk-forward) — konsisten doktrin:
+  menambah SINYAL nyata, bukan mengklaim terkalibrasi. 259 test hijau.
+
 ### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
 
 Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga

@@ -109,6 +109,76 @@ def test_available_sources_reporting():
     assert set(b.available) == {"dex_screener", "gmgn"}
 
 
+class _FakeOkx:
+    """OKX fetcher returning dev-reputation insider signals."""
+    def __init__(self, sig=None):
+        self.sig = sig if sig is not None else {
+            "okx_rug_pull_count": 69, "okx_dev_total_tokens": 14594,
+            "okx_dev_holding_percent": 0.0}
+    def insider_signals(self, address):
+        return dict(self.sig)
+
+
+def test_available_sources_includes_okx():
+    b = LiveSourceBundle(dex_screener=object(), gmgn=_FakeGmgn(), okx=_FakeOkx())
+    assert set(b.available) == {"dex_screener", "gmgn", "okx"}
+
+
+def test_build_features_wires_okx_insider_signals():
+    """OKX dev-reputation flows into TokenFeatures.okx_signals (Solana)."""
+    okx = _FakeOkx()
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(), okx=okx),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    assert f.okx_signals["okx_rug_pull_count"] == 69
+    assert f.okx_signals["okx_dev_total_tokens"] == 14594
+
+
+def test_okx_signals_lift_insider_probability_in_score():
+    """A serial-rugger OKX signal must raise the scored insider_probability."""
+    okx = _FakeOkx()
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(), okx=okx),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    score = wire.pipeline.score_token(f)
+    assert score.insider_probability >= 0.30   # rugger contributes 0.30+
+
+
+def test_build_features_skips_okx_on_non_sol():
+    """OKX memepump is Solana-focused; non-sol chains get no okx_signals."""
+    okx = _FakeOkx()
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(), okx=okx),
+        sources_from_env=False)
+    f = wire.build_features(_info(chain="bsc"))
+    assert f.okx_signals == {}
+
+
+def test_build_features_degrades_when_okx_fails():
+    """An OKX exception must not break the whole token build."""
+    class _FailingOkx:
+        def insider_signals(self, address):
+            raise RuntimeError("okx down")
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(),
+                                 okx=_FailingOkx()),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    assert f.okx_signals == {}
+    assert f.token == "ADDR"  # still built
+
+
+def test_okx_signals_degrade_when_empty():
+    """No OKX dev record -> empty okx_signals (not an insider signal)."""
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(), okx=_FakeOkx({})),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    assert f.okx_signals == {}
+
+
 def test_build_features_wires_helius_funding_trace():
     """EV-021: dev wallet from GMGN -> Helius funding edges -> funding_clusters."""
     helius = _DevHelius()

@@ -97,3 +97,39 @@ def test_summary_shape():
     for k in ["insider_probability", "ihr", "ihr_class", "exit_liquidity_risk",
               "ita", "evidence", "counter_evidence"]:
         assert k in s
+
+
+# --- OKX dev-reputation as direct insider evidence ---
+
+def test_okx_serial_rugger_raises_probability():
+    eng = InsiderIntelligenceEngine(_empty_funding())
+    r = eng.analyze("TOK", InsiderInputs(
+        okx_signals={"okx_rug_pull_count": 69, "okx_dev_total_tokens": 14594,
+                     "okx_dev_holding_percent": 0.0}))
+    assert r.insider_probability >= 0.30          # rugger alone contributes 0.30
+    assert any("okx_serial_rugger" in e for e in r.evidence)
+
+
+def test_okx_dev_sold_off_adds_evidence():
+    eng = InsiderIntelligenceEngine(_empty_funding())
+    r = eng.analyze("TOK", InsiderInputs(
+        okx_signals={"okx_rug_pull_count": 0, "okx_dev_total_tokens": 100,
+                     "okx_dev_holding_percent": 8.0}))
+    assert r.insider_probability >= 0.20          # dev sold off contributes 0.20
+    assert any("okx_dev_sold_off" in e for e in r.evidence)
+
+
+def test_okx_clean_no_signal_stays_zero():
+    eng = InsiderIntelligenceEngine(_empty_funding())
+    r = eng.analyze("TOK", InsiderInputs(
+        okx_signals={"okx_rug_pull_count": 0, "okx_dev_total_tokens": 0,
+                     "okx_dev_holding_percent": 0.0}))
+    assert r.insider_probability == 0.0           # no OKX signal -> no bump
+    assert not any(e.startswith("okx_") for e in r.evidence)
+
+
+def test_okx_empty_signals_degrade_gracefully():
+    eng = InsiderIntelligenceEngine(_empty_funding())
+    r = eng.analyze("TOK", InsiderInputs())       # okx_signals defaults to {}
+    assert r.insider_probability == 0.0
+    assert r.evidence == []

@@ -181,6 +181,18 @@ class LivePipelineWire:
             except Exception as e:
                 log.warning("GMGN wallet_stats failed for %s: %s", info.address, e)
 
+        # OKX dev-reputation -> direct insider evidence (separate source from
+        # GMGN/Helius). Fetches rugPullCount / devHoldingsPercent / holder
+        # composition, which InsiderIntelligenceEngine consumes as insider
+        # evidence. Solana only (memepump universe). Degrades gracefully.
+        if self.sources.okx is not None and info.chain in ("solana", "sol"):
+            try:
+                okx_sig = self.sources.okx.insider_signals(info.address)
+                if okx_sig:
+                    f.okx_signals = okx_sig
+            except Exception as e:
+                log.warning("OKX insider signals failed for %s: %s", info.address, e)
+
         return f
 
     def score_from_market(self, info: TokenMarketInfo):
