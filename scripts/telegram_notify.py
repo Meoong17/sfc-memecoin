@@ -26,6 +26,33 @@ from config import settings as _settings  # noqa: F401  (side-effect: loads .env
 _BOT_URL = "https://api.telegram.org/bot{token}/sendMessage"
 
 
+def _fmt_usd(v) -> str:
+    """Compact USD formatting for memo-coin prices and caps.
+
+    Prices are often sub-cent (0.00000012) -> show enough significant digits;
+    caps can be millions/billions -> M/B suffix. Missing/zero -> '—'.
+    """
+    if v is None:
+        return "—"
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return "—"
+    if x <= 0:
+        return "0"
+    if x >= 1e12:
+        return f"${x/1e12:.2f}T"
+    if x >= 1e9:
+        return f"${x/1e9:.2f}B"
+    if x >= 1e6:
+        return f"${x/1e6:.2f}M"
+    if x >= 1:
+        return f"${x:,.4f}"
+    if x >= 1e-4:
+        return f"${x:.6f}"
+    return f"${x:.8f}"
+
+
 class TelegramNotifier:
     """Sends screener results to a Telegram chat. No-op-safe when unconfigured."""
 
@@ -73,26 +100,35 @@ class TelegramNotifier:
         if not items:
             lines.append("⚠️ Tidak ada token yang lolos filter (semua diblok / gagal).")
         for i, r in enumerate(items[:10], 1):
-            tok = (r.get("token") or "?")[:14]
+            symbol = (r.get("symbol") or r.get("token") or "?")[:14]
+            tok = (r.get("token") or "?")
             raa = r.get("risk_adjusted_alpha", 0)
             conf = r.get("confidence", 0)
             ins = r.get("insider_probability", 0)
             conf_label = r.get("confluence_label", "NEUTRAL")
-            lines.append(f"{i}. {tok}")
-            lines.append(f"   • RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%}")
-            lines.append(f"   • Konfluensi: {conf_label}")
+            price = r.get("price_usd", 0)
+            mcap = r.get("mcap")
+            lines.append(f"{i}. {symbol}")
+            lines.append(f"   💰 {_fmt_usd(price)} | Cap {_fmt_usd(mcap)}")
+            lines.append(f"   📈 RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%}")
+            lines.append(f"   🧩 Konfluensi: {conf_label}")
+            lines.append(f"   🔗 {tok[:24]}…" if len(tok) > 24 else f"   🔗 {tok}")
             lines.append("")
 
         lines.append(sep)
         lines.append("Cara baca skor:")
         lines.append("• RAA (Risk-Adjusted Alpha): potensi return dikurangi risiko "
                      "insider/sybil. Semakin tinggi, semakin menarik relatif terhadap risikonya.")
-        lines.append("• Insider: probabilitas token terkait insider (0-100%). "
+        lines.append("• Insider: probabilitas token terkait aktivitas insider (0-100%). "
                      "Tinggi = risiko manipulasi harga tinggi.")
         lines.append("• Conf (Confidence): keyakinan model pada skor (0-1). "
                      "Tinggi = evidence lengkap & konsisten.")
-        lines.append("• Konfluensi: kesepakatan antar-bukti independen — "
-                     "MODERATE_OPPORTUNITY = peluang moderat.")
+        lines.append("• Konfluensi: kesepakatan antar-bukti independen:")
+        lines.append("   - HIGH_CONFLUENCE = banyak bukti independen searah (paling kuat)")
+        lines.append("   - MODERATE_OPPORTUNITY = bukti cukup, ada peluang moderat")
+        lines.append("   - NEUTRAL = tidak ada arah jelas")
+        lines.append("   - FALSE_MOMENTUM = momentum tampak bullish tapi risiko kuat "
+                     "membatalkannya (hindari)")
         lines.append("")
         lines.append("⚠️ Threshold belum terkalibrasi (ILLUSTRATIVE) — bukan rekomendasi investasi.")
         lines.append(f"⏱ {time.strftime('%Y-%m-%d %H:%M')} | @SfcMeme_bot")

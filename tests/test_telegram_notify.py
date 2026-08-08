@@ -52,21 +52,36 @@ def test_format_ranking():
     snap = {
         "count": 5, "admitted": 3,
         "ranking": [
-            {"token": "TOKENADDR123456789", "risk_adjusted_alpha": 61.6,
+            {"token": "TOKENADDR123456789", "symbol": "PEPE", "price_usd": 0.0000012,
+             "mcap": 2500000, "risk_adjusted_alpha": 61.6,
              "confidence": 0.39, "insider_probability": 0.2,
              "confluence_label": "MODERATE_OPPORTUNITY"},
         ],
     }
     msg = n.format_ranking(snap, universe_size=5, ts_label="test")
     assert "SFC MEME SCREENER" in msg
-    assert "TOKENADDR12345" in msg  # truncated to 14
+    assert "PEPE" in msg          # symbol shown
+    assert "$0.00000120" in msg   # sub-cent price formatted
+    assert "Cap $2.50M" in msg    # mcap in M
     assert "RAA=61.6" in msg
-    assert "Insider=20%" in msg  # formatted as percent
+    assert "Insider=20%" in msg   # formatted as percent
     assert "Universe: 5 token" in msg
     assert "Admitted: 3" in msg
     # legend / definitions present
     assert "Cara baca skor" in msg
     assert "Risk-Adjusted Alpha" in msg
+    assert "HIGH_CONFLUENCE" in msg  # full confluence legend
+    assert "FALSE_MOMENTUM" in msg
+
+
+def test_fmt_usd_compact():
+    from scripts.telegram_notify import _fmt_usd
+    assert _fmt_usd(None) == "—"
+    assert _fmt_usd(0) == "0"
+    assert _fmt_usd(0.0000012) == "$0.00000120"
+    assert _fmt_usd(2500000) == "$2.50M"
+    assert _fmt_usd(5.5e9) == "$5.50B"
+    assert _fmt_usd(1234.5) == "$1,234.5000"
 
 
 def test_format_ranking_empty():

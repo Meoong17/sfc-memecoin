@@ -52,6 +52,7 @@ def main() -> int:
     print(f"Universe: {universe.count} tokens fetched in {time.time()-start:.1f}s\n")
 
     board = RankingBoard()
+    market_by_token: dict[str, dict] = {}   # token -> {symbol, price, mcap, liq, vol}
     for info in universe.tokens:
         if time.time() - start > args.timeout:
             print("TIMEOUT reached; stopping.", file=sys.stderr)
@@ -59,11 +60,19 @@ def main() -> int:
         if not info.address:
             continue
         try:
-            score = wire.score_from_market(info)
+            enriched = wire.enrich_market(info)
+            score = wire.score_from_market(enriched)
         except Exception as e:
             print(f"  [{info.symbol or info.address[:10]}] SCORE ERROR: {e}")
             continue
         board.add(score)
+        market_by_token[enriched.address] = {
+            "symbol": enriched.symbol,
+            "price_usd": enriched.price_usd,
+            "mcap": enriched.mcap,
+            "liquidity_usd": enriched.liquidity_usd,
+            "volume_24h": enriched.volume_24h,
+        }
         status = "BLOCKED" if not score.admitted else "scored"
         print(f"  {info.symbol or info.address[:10]:<12} {status:<8} "
               f"RAA={score.risk_adjusted_alpha:6.1f} insider={score.insider_probability:.2f}")
@@ -76,16 +85,37 @@ def main() -> int:
 
     if args.out:
         out = Path(args.out)
-        out.write_text(json.dumps(board.snapshot(), indent=2))
+        snap = board.snapshot()
+        _attach_market(snap, market_by_token)
+        out.write_text(json.dumps(snap, indent=2))
         print(f"\nSaved snapshot -> {out}")
 
     if notif is not None:
         snap = board.snapshot()
+        _attach_market(snap, market_by_token)
         ok = notif.send_ranking(snap, universe_size=len(universe.tokens))
         print(f"[telegram] ranking sent={ok}")
 
     print(f"\nDone in {time.time()-start:.1f}s | {board.snapshot()['admitted']} admitted / {board.snapshot()['count']}")
     return 0
+
+
+def _attach_market(snap: dict, market_by_token: dict[str, dict]) -> None:
+    """Merge symbol/price/mcap/liquidity/volume into each ranking item.
+
+    RankingBoard items carry the token address; the market data was captured
+    per-token during collection. This keeps the notifier format decoupled from
+    the collection internals (the snapshot is the contract).
+    """
+    for item in snap.get("ranking", []):
+        tok = item.get("token")
+        m = market_by_token.get(tok)
+        if m:
+            item["symbol"] = m.get("symbol", "")
+            item["price_usd"] = m.get("price_usd", 0.0)
+            item["mcap"] = m.get("mcap")
+            item["liquidity_usd"] = m.get("liquidity_usd", 0.0)
+            item["volume_24h"] = m.get("volume_24h", 0.0)
 
 
 if __name__ == "__main__":
