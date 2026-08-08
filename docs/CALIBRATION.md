@@ -262,6 +262,27 @@ mengubah ranking Telegram). DIPERBAIKI tanpa double-count:
 - Tetap ILLUSTRATIVE (belum walk-forward). 269 test hijau (+6: dev_reputation
   level di insider_intel, penalty HIGH/MED/LOW di alpha_risk).
 
+### Verifikasi live end-to-end (DevRisk di ranking + Telegram)
+
+- `TokenScore.summary()` kini mengekspos `dev_reputation_risk` (dibaca dari
+  `outputs.insider`), sehingga field itu tampil di snapshot/ranking.
+- Format Telegram menambahkan `DevRisk={LOW/MED/HIGH}` per token + definisi di
+  legenda. `scripts/telegram_notify.py` diberi sys.path bootstrap agar bisa
+  dijalankan langsung (sebelumnya `ModuleNotFoundError: config`).
+- Verifikasi live (`collect_live --limit 6`, snapshot /tmp/snap_live.json):
+  | RAA | insider | DevRisk | sym  |
+  |----|---------|---------|------|
+  | 41.4 | 0.00 | LOW  | FEATHY (tertinggi) |
+  | 36.4 | 0.40 | MED  | SOOK  |
+  | 35.5 | 0.20 | MED  | Oggie |
+  | 35.4 | 0.20 | MED  | BITPEPE |
+  | 34.1 | 0.40 | MED  | IPO   |
+  | 28.6 | 0.50 | HIGH | FRENS (terendah) |
+  RAA kini bervariasi 28.6-41.4 (bukan rata ~40), DevRisk HIGH (FRENS) -> RAA
+  terendah, DevRisk LOW (FEATHY) -> RAA tertinggi. Efek rantai OKX ->
+  insider_probability -> dev_reputation_risk -> RAA -> ranking terbukti di data
+  nyata. `telegram_notify.py /tmp/snap_live.json` -> sent=True (pesan terkirim).
+
 ### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
 
 Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga

@@ -76,6 +76,10 @@ class TokenScore:
     outputs: dict = field(default_factory=dict)
 
     def summary(self) -> dict:
+        dev_rep = "LOW"
+        ins = self.outputs.get("insider") or {}
+        if isinstance(ins, dict):
+            dev_rep = ins.get("dev_reputation_risk", "LOW")
         return {
             "token": self.token,
             "chain": self.chain,
@@ -83,6 +87,7 @@ class TokenScore:
             "risk_adjusted_alpha": round(self.risk_adjusted_alpha, 1),
             "confidence": round(self.confidence, 3),
             "insider_probability": round(self.insider_probability, 3),
+            "dev_reputation_risk": dev_rep,
             "confluence_label": self.confluence_label,
             "regime": self.regime,
             "outputs": list(self.outputs.keys()),

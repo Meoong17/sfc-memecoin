@@ -14,9 +14,14 @@ Usage (module):
 from __future__ import annotations
 
 import os
+import sys
 import time
+from pathlib import Path
 
 import requests
+
+# Allow running directly: add repo root to sys.path so `config` resolves.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 # Trigger the repo's .env loader (config.settings calls _load_env on import),
 # so TELEGRAM_BOT_TOKEN/CHAT_ID from .env are in os.environ even when this
@@ -108,9 +113,11 @@ class TelegramNotifier:
             conf_label = r.get("confluence_label", "NEUTRAL")
             price = r.get("price_usd", 0)
             mcap = r.get("mcap")
+            dev_rep = r.get("dev_reputation_risk", "LOW")
             lines.append(f"{i}. {symbol}")
             lines.append(f"   💰 {_fmt_usd(price)} | Cap {_fmt_usd(mcap)}")
-            lines.append(f"   📈 RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%}")
+            lines.append(f"   📈 RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%} "
+                         f"| DevRisk={dev_rep}")
             lines.append(f"   🧩 Konfluensi: {conf_label}")
             lines.append(f"   🔗 {tok[:24]}…" if len(tok) > 24 else f"   🔗 {tok}")
             lines.append("")
@@ -123,6 +130,9 @@ class TelegramNotifier:
                      "Tinggi = risiko manipulasi harga tinggi.")
         lines.append("• Conf (Confidence): keyakinan model pada skor (0-1). "
                      "Tinggi = evidence lengkap & konsisten.")
+        lines.append("• DevRisk (Dev Reputation): risiko dari reputasi dev on-chain "
+                     "(LOW/MED/HIGH). HIGH = dev pernah rug-pull / dijual habis; "
+                     "menurunkan RAA.")
         lines.append("• Konfluensi: kesepakatan antar-bukti independen:")
         lines.append("   - HIGH_CONFLUENCE = banyak bukti independen searah (paling kuat)")
         lines.append("   - MODERATE_OPPORTUNITY = bukti cukup, ada peluang moderat")
@@ -146,8 +156,6 @@ def main() -> int:
     Usage: .venv/bin/python scripts/telegram_notify.py <snapshot.json>
     """
     import json
-    import sys
-    from pathlib import Path
 
     if len(sys.argv) < 2:
         print("Usage: telegram_notify.py <snapshot.json>")

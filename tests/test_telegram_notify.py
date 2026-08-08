@@ -55,6 +55,7 @@ def test_format_ranking():
             {"token": "TOKENADDR123456789", "symbol": "PEPE", "price_usd": 0.0000012,
              "mcap": 2500000, "risk_adjusted_alpha": 61.6,
              "confidence": 0.39, "insider_probability": 0.2,
+             "dev_reputation_risk": "MED",
              "confluence_label": "MODERATE_OPPORTUNITY"},
         ],
     }
@@ -65,6 +66,7 @@ def test_format_ranking():
     assert "Cap $2.50M" in msg    # mcap in M
     assert "RAA=61.6" in msg
     assert "Insider=20%" in msg   # formatted as percent
+    assert "DevRisk=MED" in msg   # dev reputation shown
     assert "Universe: 5 token" in msg
     assert "Admitted: 3" in msg
     # legend / definitions present
