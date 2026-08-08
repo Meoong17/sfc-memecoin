@@ -110,13 +110,17 @@ def test_available_sources_reporting():
 
 
 class _FakeOkx:
-    """OKX fetcher returning dev-reputation insider signals."""
-    def __init__(self, sig=None):
+    """OKX fetcher returning dev-reputation insider signals + holder tags."""
+    def __init__(self, sig=None, tags=None):
         self.sig = sig if sig is not None else {
             "okx_rug_pull_count": 69, "okx_dev_total_tokens": 14594,
             "okx_dev_holding_percent": 0.0}
+        self.tags = tags if tags is not None else {
+            "okx_snipers_percent": 44.0, "okx_top10_holdings_percent": 89.5}
     def insider_signals(self, address):
         return dict(self.sig)
+    def token_tags_by_address(self, address):
+        return dict(self.tags)
 
 
 def test_available_sources_includes_okx():
@@ -133,6 +137,20 @@ def test_build_features_wires_okx_insider_signals():
     f = wire.build_features(_info())
     assert f.okx_signals["okx_rug_pull_count"] == 69
     assert f.okx_signals["okx_dev_total_tokens"] == 14594
+
+
+def test_build_features_merges_holder_tags_into_okx_signals():
+    """Holder-composition tags (token-details) merge into okx_signals."""
+    okx = _FakeOkx()
+    wire = LivePipelineWire(
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(), okx=okx),
+        sources_from_env=False)
+    f = wire.build_features(_info())
+    # both dev-reputation (from token-dev-info) AND holder tags (from
+    # token-details) present in the merged signal set
+    assert f.okx_signals["okx_rug_pull_count"] == 69          # dev-info
+    assert f.okx_signals["okx_snipers_percent"] == 44.0       # token-details
+    assert f.okx_signals["okx_top10_holdings_percent"] == 89.5
 
 
 def test_okx_signals_lift_insider_probability_in_score():
@@ -171,9 +189,10 @@ def test_build_features_degrades_when_okx_fails():
 
 
 def test_okx_signals_degrade_when_empty():
-    """No OKX dev record -> empty okx_signals (not an insider signal)."""
+    """No OKX dev record + no holder tags -> empty okx_signals (not a signal)."""
     wire = LivePipelineWire(
-        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(), okx=_FakeOkx({})),
+        sources=LiveSourceBundle(dex_screener=None, gmgn=_DevGmgn(),
+                                 okx=_FakeOkx({}, {})),
         sources_from_env=False)
     f = wire.build_features(_info())
     assert f.okx_signals == {}

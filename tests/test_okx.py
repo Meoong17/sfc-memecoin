@@ -1,6 +1,7 @@
 """Test OKX Onchain OS fetcher (onchainos CLI interface, mocked _run)."""
 import pytest
 
+from fetchers.base import FetchError
 from fetchers.okx import OkxFetcher, _f
 
 
@@ -71,6 +72,33 @@ def test_tags_signals_maps_percentages(monkeypatch):
     assert sig["okx_snipers_percent"] == 44.38
     assert sig["okx_top10_holdings_percent"] == 89.5
     assert sig["okx_total_holders"] == 6.0
+
+
+def test_token_tags_by_address_parses_details(monkeypatch):
+    f = OkxFetcher(cli="onchainos")
+    monkeypatch.setattr(f, "_run", lambda *a, **kw: {"ok": True, "data": {
+        "tokenAddress": "AAA", "name": "X", "tags": {
+            "snipersPercent": "0.25", "top10HoldingsPercent": "15.34",
+            "devHoldingsPercent": "0", "totalHolders": "170"}}})
+    sig = f.token_tags_by_address("AAA")
+    assert sig["okx_snipers_percent"] == 0.25
+    assert sig["okx_top10_holdings_percent"] == 15.34
+    assert sig["okx_total_holders"] == 170.0
+
+
+def test_token_tags_by_address_null_data_degrades(monkeypatch):
+    f = OkxFetcher(cli="onchainos")
+    # non-mememump address returns ok:true with data:null
+    monkeypatch.setattr(f, "_run", lambda *a, **kw: {"ok": True, "data": None})
+    assert f.token_tags_by_address("NOTAMEMEPUMP") == {}
+
+
+def test_token_tags_by_address_failure_degrades(monkeypatch):
+    f = OkxFetcher(cli="onchainos")
+    def _boom(*a, **kw):
+        raise FetchError("okx down")
+    monkeypatch.setattr(f, "_run", _boom)
+    assert f.token_tags_by_address("AAA") == {}
 
 
 def test_f_helper_handles_bad_values():

@@ -188,6 +188,10 @@ class LivePipelineWire:
         if self.sources.okx is not None and info.chain in ("solana", "sol"):
             try:
                 okx_sig = self.sources.okx.insider_signals(info.address)
+                # holder-composition tags (snipers/insiders/bundlers/top10) come
+                # from token-details, not token-dev-info — merge them so the
+                # engine sees the full OKX signal set per token.
+                okx_sig.update(self.sources.okx.token_tags_by_address(info.address))
                 if okx_sig:
                     f.okx_signals = okx_sig
             except Exception as e:

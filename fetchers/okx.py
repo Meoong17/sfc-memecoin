@@ -93,6 +93,28 @@ class OkxFetcher:
             return {}
         return data.get("data") or {}
 
+    # --- token details -> holder-composition tags (per-address) ---
+    def token_tags_by_address(self, address: str) -> dict:
+        """Fetch the holder-composition `tags` for a single address.
+
+        `memepump token-details --address <addr>` returns the SAME `tags`
+        structure as the list endpoint (bundlersPercent, devHoldingsPercent,
+        freshWalletsPercent, insidersPercent, snipersPercent,
+        suspectedPhishingWalletPercent, top10HoldingsPercent, totalHolders).
+
+        This is the per-token path to holder composition that `insider_signals`
+        (token-dev-info) does NOT carry. Returns {} (safe degradation) when the
+        address is not a memepump token (`data:null`) or the call fails.
+        """
+        try:
+            data = self._run("token-details", "--address", address)
+        except FetchError:
+            return {}
+        tok = data.get("data")
+        if not isinstance(tok, dict):
+            return {}
+        return self.tags_signals(tok)
+
     # --- bundle / sniper ---
     def token_bundle_info(self, address: str) -> dict:
         """Fetch bundler/sniper analysis (totalBundlers, bundledValueNative)."""

@@ -224,6 +224,25 @@ evidence insider langsung (independen dari funding-cluster EV-021):
 - Kontribusi probabilitas ILLUSTRATIVE (belum walk-forward) — konsisten doktrin:
   menambah SINYAL nyata, bukan mengklaim terkalibrasi. 259 test hijau.
 
+### OKX holder-composition tags per-address (token-details) — wiring
+
+Perbaiki gap sebelumnya: `insider_signals` (token-dev-info) hanya membawa field
+dev-reputation, komposisi holder tidak masuk scoring per-token. Kini:
+
+- `fetchers/okx.py`: `token_tags_by_address(addr)` — memanggil `memepump
+  token-details --address <addr>` (mengembalikan `tags` yang SAMA dengan list
+  endpoint: bundlers/insiders/snipers/freshWallets/suspectedPhishing/top10
+  percent + totalHolders). Degradasi aman: `data:null` (bukan token mememump)
+  atau gagal -> {}.
+- `wiring.build_features`: `okx_sig.update(token_tags_by_address(addr))` —
+  merge komposisi holder ke `okx_signals` sehingga engine melihat SET sinyal
+  OKX lengkap per token.
+- Verifikasi live (collect_live --limit 3): tanpa warning (merge mulus), insider
+  0.20-0.40. Probe end-to-end: token TOAD (top10 98.3%, snipers 98.2%) ->
+  insider_prob 0.45, evidence `okx_coordinated_98.2%` + `okx_concentrated_top10_
+  98.3%` + `okx_dev_sold_off_0.0%`. Semua 14 key OKX ter-merge.
+- 263 test hijau (+4: token_tags_by_address parses/null/fail, wiring merge).
+
 ### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
 
 Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga
