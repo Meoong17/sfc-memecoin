@@ -153,6 +153,43 @@ belum stabil secara temporal di n=120 -> threshold insider TETAP ILLUSTRATIVE.
 Catatan: early_sell hanya 4 sampel, rug 0 (universe trending = LP dibakar aman);
 kelas minority belum cukup untuk menilai. Ini verdict jujur sesuai doktrin.
 
+### Label insider sejati — OKX Onchain OS (data/insider_labeled_dataset_okx_v1.json)
+
+Sumber kedua (TERPISAH dari GMGN) untuk memperkaya kelas minority rug/dev_dump
+yang GMGN trending tidak bisa hasilkan (n=120 GMGN: 0 rug). Modul
+`fetchers/okx.py` (shell ke `onchainos memepump` CLI, auth 3 kredensial) +
+`classify_okx_outcome`/`label_from_okx` di `backtest/insider_labels.py`.
+
+- Field OKX PERSEN (0-100), beda dari fraksi GMGN. Sinyal:
+  `tags.{devHoldingsPercent,insidersPercent,snipersPercent,bundlersPercent,
+  top10HoldingsPercent}`, `devLaunchedInfo.{rugPullCount,totalTokens}`,
+  `devHoldingInfo.devHoldingPercent`.
+- `scripts/label_insiders.py --universe okx` (blend NEW/MIGRATING/MIGRATED).
+- Live collect (n=8, smoke): **6 clean / 1 rug / 1 dev_dump**. PENTING: OKX
+  menghasilkan label `rug` pertama (GMGN trending selalu 0 rug). Contoh nyata:
+  - RUG: `rugPullCount=69`, `totalTokens=14.594` (serial rugger kentara),
+    `devHoldingPercent=0`.
+  - DEV_DUMP: `devHoldingPercent=0` (dev jual habis), `snipersPercent=50.6%`,
+    `top10HoldingsPercent=50.5%`.
+- Quota OKX longgar (basicFreeQuota=1.000.000) -> jalur aktif yang bagus saat
+  GMGN kena rate-limit ban (~8 jam).
+- Threshold OKX (OKX_RUG_ANY=1, OKX_DEV_DUMP_HOLDING=20%, OKX_DEV_DUMP_COORD=30%,
+  OKX_EARLY_SELL_TOP10=50%, OKX_EARLY_SELL_COORD=20%) TETAP ILLUSTRATIVE —
+  n=8 terlalu kecil utk walk-forward. Langkah berikut: perluas dataset OKX
+  (limit 30-50) lalu `walk_forward_insider.py` utk verdict stabilitas kelas
+  rug/dev_dump. 249 test hijau.
+
+### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
+
+Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga
+(sub-cent diformat pintar $0.00000120), market cap (suffix M/B/T $2.50M), label
+Konfluensi, dan alamat token; (2) legenda "Cara baca skor" Konfluensi diperbaiki
+— sebelumnya hanya menulis MODERATE_OPPORTUNITY, sekarang menjelaskan keempat
+label nyata dari engines/confluence.py: HIGH_CONFLUENCE / MODERATE_OPPORTUNITY /
+NEUTRAL / FALSE_MOMENTUM. Data harga/mcap ditangkap di `collect_live.py` via
+`enrich_market` lalu ditempel ke snapshot (`_attach_market`) sebelum dikirim.
+Plain text (tanpa markdown) agar render bersih.
+
 ### Telegram notifier (scripts/telegram_notify.py + collect_live --notify)
 
 Bot @SfcMeme_bot (TELEGRAM_BOT_TOKEN/CHAT_ID di .env) push ranking screener

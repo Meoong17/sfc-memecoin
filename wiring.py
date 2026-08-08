@@ -42,10 +42,11 @@ class LiveSourceBundle:
     """Holds optional fetcher instances; each may be None if unavailable."""
 
     def __init__(self, *, dex_screener: DexScreenerFetcher | None = None,
-                 gmgn=None, helius=None) -> None:
+                 gmgn=None, helius=None, okx=None) -> None:
         self.dex_screener = dex_screener
         self.gmgn = gmgn
         self.helius = helius
+        self.okx = okx
 
     @classmethod
     def from_env(cls) -> "LiveSourceBundle":
@@ -72,13 +73,21 @@ class LiveSourceBundle:
         except (ValueError, RuntimeError) as e:
             log.warning("Helius unavailable (skip funding trace): %s", e)
 
+        # OKX Onchain OS: needs OKX_API_KEY + SECRET + PASSPHRASE
+        try:
+            from fetchers.okx import OkxFetcher
+            bundle.okx = OkxFetcher()
+        except (ValueError, RuntimeError) as e:
+            log.warning("OKX unavailable (skip OKX memepump insider labels): %s", e)
+
         return bundle
 
     @property
     def available(self) -> list[str]:
         return [name for name, src in [("dex_screener", self.dex_screener),
                                        ("gmgn", self.gmgn),
-                                       ("helius", self.helius)] if src is not None]
+                                       ("helius", self.helius),
+                                       ("okx", self.okx)] if src is not None]
 
 
 class LivePipelineWire:

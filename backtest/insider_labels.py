@@ -135,3 +135,71 @@ def _safe(v, d=0.0) -> float:
         return float(v)
     except (TypeError, ValueError):
         return d
+
+
+# --- OKX Onchain OS insider labels (SEPARATE source from GMGN) ---
+#
+# OKX fields are PERCENTAGES (0-100), unlike GMGN's fractions. Signal meaning:
+#   okx_rug_pull_count        dev's historical rug pulls (serial-rugger fingerprint)
+#   okx_dev_total_tokens      tokens this dev launched (serial-creator fingerprint)
+#   okx_dev_holding_percent   dev's CURRENT holding share (low = dev sold off)
+#   okx_insiders/snipers/bundlers_percent  holder-composition (coordination)
+#   okx_top10_holdings_percent             top-10 concentration
+# All thresholds ILLUSTRATIVE until walk-forward on OKX-labeled data.
+OKX_RUG_ANY = 1                 # >=1 historical rug pull -> serial rugger
+OKX_DEV_DUMP_HOLDING = 20.0     # dev holding below this % -> dev sold off
+OKX_DEV_DUMP_LAUNCHES = 1       # must have launched (not a never-funded addr)
+OKX_DEV_DUMP_COORD = 30.0       # sniper/insider composition -> coordinated dump
+OKX_EARLY_SELL_TOP10 = 50.0     # top-10 concentration for early-sell
+OKX_EARLY_SELL_COORD = 20.0     # any insider-ish holder composition -> early sell
+
+
+def classify_okx_outcome(sig: dict) -> InsiderOutcome:
+    """Classify insider outcome from OKX Onchain OS dev/holder signals.
+
+    Inputs are OKX `okx_` prefixed keys (percentages 0-100). Mirrors the GMGN
+    rule but for OKX's richer dev-reputation fields.
+    """
+    def f(k, d=0.0) -> float:
+        v = sig.get(k)
+        if v is None:
+            return d
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return d
+
+    rug_pulls = f("okx_rug_pull_count")
+    dev_total = f("okx_dev_total_tokens")
+    dev_hold = f("okx_dev_holding_percent")
+    snipers = f("okx_snipers_percent")
+    insiders = f("okx_insiders_percent")
+    bundlers = f("okx_bundlers_percent")
+    top10 = f("okx_top10_holdings_percent")
+    coord = max(snipers, insiders, bundlers)
+
+    # RUG: dev has a historical rug-pull trail.
+    if rug_pulls >= OKX_RUG_ANY:
+        return InsiderOutcome.RUG
+
+    # DEV_DUMP: dev sold off its position (low current holding) on a token it
+    # launched, with coordinated insider/sniper composition around it.
+    if (dev_hold < OKX_DEV_DUMP_HOLDING and dev_total >= OKX_DEV_DUMP_LAUNCHES
+            and coord >= OKX_DEV_DUMP_COORD):
+        return InsiderOutcome.DEV_DUMP
+
+    # EARLY_SELL: high top-10 concentration + notable insider/sniper/bundler
+    # composition (early insiders holding to distribute), no full dev dump.
+    if top10 >= OKX_EARLY_SELL_TOP10 and coord >= OKX_EARLY_SELL_COORD:
+        return InsiderOutcome.EARLY_SELL
+
+    return InsiderOutcome.CLEAN
+
+
+def label_from_okx(token: str, chain: str, dev_signals: dict | None,
+                   tags_signals: dict | None = None) -> InsiderLabeledToken:
+    """Assemble an InsiderLabeledToken from raw OKX dev + tags signals."""
+    sig = dict(dev_signals or {})
+    sig.update(tags_signals or {})
+    return InsiderLabeledToken(token=token, chain=chain,
+                               outcome=classify_okx_outcome(sig), signals=sig)

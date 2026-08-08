@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from backfill import BackfillConfig
-from backtest.insider_labels import label_from_gmgn
+from backtest.insider_labels import label_from_gmgn, label_from_okx
 from wiring import LiveSourceBundle, LivePipelineWire
 
 
@@ -75,23 +75,54 @@ def _gmgn_completed_universe(gmgn, chain="solana", limit=100):
     return list(tokens.values())
 
 
+def _okx_universe(okx, chain="solana", stages=("NEW", "MIGRATING", "MIGRATED")):
+    """Universe from OKX `memepump tokens` (SEPARATE source from GMGN).
+
+    Blends NEW/MIGRATING/MIGRATED stages into one deduped pool. OKX is a good
+    fallback when GMGN is rate-limit-banned, and its MIGRATING/MIGRATED tokens
+    carry richer devHoldingsPercent / insidersPercent signals than newborn NEW.
+    Returns list of {address, chain, created_ts, tags}.
+    """
+    tokens: dict[str, dict] = {}
+    for st in stages:
+        try:
+            for t in okx.universe(chain=chain, stage=st):
+                addr = t.get("tokenAddress")
+                if addr:
+                    tokens[addr] = {
+                        "address": addr, "chain": chain,
+                        "created_ts": int(t.get("createdTimestamp") or 0),
+                        "tags": t.get("tags") or {},
+                    }
+        except Exception:
+            continue
+    return list(tokens.values())
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=20)
     ap.add_argument("--out", type=str, default="data/insider_labeled_dataset_v1.json")
     ap.add_argument("--universe", type=str, default="dex",
-                    choices=["dex", "trending", "completed", "blend"],
+                    choices=["dex", "trending", "completed", "blend", "okx"],
                     help="universe source: dex, trending, completed (bonding-curve "
-                         "finished = dev-dump/rug rich), or blend (trending+completed)")
+                         "finished = dev-dump/rug rich), blend (trending+completed), "
+                         "or okx (OKX Onchain OS memepump — fallback when GMGN banned)")
     args = ap.parse_args()
 
     sources = LiveSourceBundle.from_env()
     wire = LivePipelineWire(sources=sources, sources_from_env=False)
-    if sources.gmgn is None:
-        print("GMGN unavailable; cannot collect insider labels.")
+    if sources.gmgn is None and sources.okx is None:
+        print("Neither GMGN nor OKX available; cannot collect insider labels.")
         return 1
 
-    if args.universe == "trending":
+    if args.universe == "okx":
+        if sources.okx is None:
+            print("OKX unavailable; check OKX_API_KEY/SECRET/PASSPHRASE in .env.")
+            return 1
+        cand = _okx_universe(sources.okx)
+        print(f"OKX memepump universe: {len(cand)} tokens (pre-limit)")
+    elif args.universe == "trending":
         cand = _gmgn_trending_universe(sources.gmgn)
         print(f"GMGN trending universe: {len(cand)} tokens (pre-limit)")
     elif args.universe == "completed":
@@ -120,10 +151,15 @@ def main() -> int:
         if len(rows) >= args.limit:
             break
         seen.add(addr)
-        dev = sources.gmgn.dev_trader_signals(addr, "solana")
-        sec = sources.gmgn._run("token", "security", "--chain", "sol",
-                                "--address", addr)
-        lbl = label_from_gmgn(addr, "solana", dev, sec)
+        if args.universe == "okx":
+            dev = sources.okx.insider_signals(addr)
+            tags = sources.okx.tags_signals(t)
+            lbl = label_from_okx(addr, "solana", dev, tags)
+        else:
+            dev = sources.gmgn.dev_trader_signals(addr, "solana")
+            sec = sources.gmgn._run("token", "security", "--chain", "sol",
+                                    "--address", addr)
+            lbl = label_from_gmgn(addr, "solana", dev, sec)
         rec = lbl.summary()
         rec["created_ts"] = t.get("created_ts", 0)  # enables temporal walk-forward
         rows.append(rec)
@@ -137,7 +173,8 @@ def main() -> int:
             "generated_at": time.time(),
             "label_type": "insider_onchain (rug/dev_dump/early_sell/clean) — "
                           "NOT price proxy",
-            "source": "GMGN token traders --tag dev + token security",
+            "source": ("OKX memepump token-dev-info + tags" if args.universe == "okx"
+                       else "GMGN token traders --tag dev + token security"),
             "universe": args.universe,
             "n": len(rows),
             "counts": dict(c),

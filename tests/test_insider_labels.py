@@ -2,7 +2,8 @@
 import pytest
 
 from backtest.insider_labels import (InsiderOutcome, classify_insider_outcome,
-                                     label_from_gmgn)
+                                     classify_okx_outcome, label_from_gmgn,
+                                     label_from_okx)
 
 
 def test_rug_from_honeypot():
@@ -67,3 +68,56 @@ def test_label_from_gmgn_missing_security_defaults():
     # no security data -> cannot assume LP secure -> lp_locked_pct stays 0.0
     assert out.signals["lp_locked_pct"] == 0.0
     assert out.signals["lp_burned"] is False
+
+
+# --- OKX Onchain OS labels ---
+
+def test_okx_rug_from_rug_pull_count():
+    sig = {"okx_rug_pull_count": 3, "okx_dev_total_tokens": 9,
+           "okx_dev_holding_percent": 5.0, "okx_snipers_percent": 10.0,
+           "okx_top10_holdings_percent": 60.0}
+    assert classify_okx_outcome(sig) == InsiderOutcome.RUG
+
+
+def test_okx_dev_dump_sold_off_with_coordination():
+    sig = {"okx_rug_pull_count": 0, "okx_dev_total_tokens": 5,
+           "okx_dev_holding_percent": 8.0, "okx_snipers_percent": 44.0,
+           "okx_insiders_percent": 0.0, "okx_bundlers_percent": 0.0,
+           "okx_top10_holdings_percent": 60.0}
+    assert classify_okx_outcome(sig) == InsiderOutcome.DEV_DUMP
+
+
+def test_okx_early_sell_high_top10_with_coordination():
+    sig = {"okx_rug_pull_count": 0, "okx_dev_total_tokens": 3,
+           "okx_dev_holding_percent": 44.0, "okx_insiders_percent": 10.0,
+           "okx_snipers_percent": 44.0, "okx_bundlers_percent": 0.0,
+           "okx_top10_holdings_percent": 89.5}
+    assert classify_okx_outcome(sig) == InsiderOutcome.EARLY_SELL
+
+
+def test_okx_dev_dump_requires_coordination():
+    # dev sold off but no insider/sniper/bundler coordination -> not dev_dump
+    sig = {"okx_rug_pull_count": 0, "okx_dev_total_tokens": 5,
+           "okx_dev_holding_percent": 8.0, "okx_snipers_percent": 0.0,
+           "okx_insiders_percent": 0.0, "okx_bundlers_percent": 0.0,
+           "okx_top10_holdings_percent": 10.0}
+    assert classify_okx_outcome(sig) != InsiderOutcome.DEV_DUMP
+
+
+def test_okx_clean_when_no_signals():
+    sig = {"okx_rug_pull_count": 0, "okx_dev_total_tokens": 0,
+           "okx_dev_holding_percent": 0.0, "okx_insiders_percent": 0.0,
+           "okx_snipers_percent": 0.0, "okx_bundlers_percent": 0.0,
+           "okx_top10_holdings_percent": 1.0}
+    assert classify_okx_outcome(sig) == InsiderOutcome.CLEAN
+
+
+def test_label_from_okx_merges_dev_and_tags():
+    out = label_from_okx(
+        token="TOKEN", chain="solana",
+        dev_signals={"okx_rug_pull_count": 2.0, "okx_dev_total_tokens": 4.0,
+                     "okx_dev_holding_percent": 3.0},
+        tags_signals={"okx_snipers_percent": 55.0,
+                      "okx_top10_holdings_percent": 80.0})
+    assert out.outcome == InsiderOutcome.RUG  # rug_pull_count >= 1 wins
+    assert out.signals["okx_snipers_percent"] == 55.0

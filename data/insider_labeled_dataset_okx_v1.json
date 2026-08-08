@@ -1,0 +1,190 @@
+{
+  "generated_at": 1786203815.1394439,
+  "label_type": "insider_onchain (rug/dev_dump/early_sell/clean) \u2014 NOT price proxy",
+  "source": "OKX memepump token-dev-info + tags",
+  "universe": "okx",
+  "n": 8,
+  "counts": {
+    "clean": 6,
+    "rug": 1,
+    "dev_dump": 1
+  },
+  "samples": [
+    {
+      "token": "EAKTENbfezay3x18ZuStQdyVDajHHXbdWs6Rrypfpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "okx_rug_pull_count": 0.0,
+        "okx_dev_total_tokens": 0.0,
+        "okx_dev_migrated_count": 0.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "GU9S59hLLbmbJ6Wqi5bUZMvXykiiiywtpxTsS2bynugx",
+        "okx_funding_address": "Dm3Dh8uQUEzidw8ZUhXAYkgPVv1JGGtzo8dAWMRPk6Cm",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 0.0,
+        "okx_bundlers_percent": 0.0,
+        "okx_top10_holdings_percent": 12.4858,
+        "okx_fresh_wallets_percent": 0.0,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 2.0
+      },
+      "created_ts": 1786203812000
+    },
+    {
+      "token": "7gHJwAc5HzGyK9nSJYPaQq4wTvVhJHN8BBxWoegPKNgC",
+      "chain": "solana",
+      "outcome": "rug",
+      "signals": {
+        "okx_rug_pull_count": 69.0,
+        "okx_dev_total_tokens": 14594.0,
+        "okx_dev_migrated_count": 239.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "AV7PjXHL5JXZ1YoYRoN9Dsstg1x2UciBupMCXcJP8gUz",
+        "okx_funding_address": "AV7PjXHL5JXZ1YoYRoN9Dsstg1x2UciBupMCXcJP8gUz",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 0.0,
+        "okx_bundlers_percent": 0.0,
+        "okx_top10_holdings_percent": 15.3285,
+        "okx_fresh_wallets_percent": 0.0,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 2.0
+      },
+      "created_ts": 1786203812000
+    },
+    {
+      "token": "HqBPwRoKBaRU4ejn81CtrGy6odANbu8NbqEAbXzupump",
+      "chain": "solana",
+      "outcome": "dev_dump",
+      "signals": {
+        "okx_rug_pull_count": 0.0,
+        "okx_dev_total_tokens": 100.0,
+        "okx_dev_migrated_count": 0.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "3p27vcVRUQvcTnDGSWgPpEHeNKNXxdJpdPbCUzX2dQj8",
+        "okx_funding_address": "Cc3bpPzUvgAzdW9Nv7dUQ8cpap8Xa7ujJgLdpqGrTCu6",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 50.6363,
+        "okx_bundlers_percent": 0.0,
+        "okx_top10_holdings_percent": 50.5274,
+        "okx_fresh_wallets_percent": 0.0,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 3.0
+      },
+      "created_ts": 1786203811000
+    },
+    {
+      "token": "HGptFh72MDuJyNurnU2mnrvpWuLQLhF53EUUZaJupump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "okx_rug_pull_count": 0.0,
+        "okx_dev_total_tokens": 2143.0,
+        "okx_dev_migrated_count": 1.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "9k7n6mMY7rrabkqS8uk9mRLCyM2MMtRXu6BkyxEaGBMs",
+        "okx_funding_address": "CkaFDzF8g4RAnX49yQBH2Ufhhvq5613NbWYw2T7fZqCS",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 0.0,
+        "okx_bundlers_percent": 0.0,
+        "okx_top10_holdings_percent": 0.0,
+        "okx_fresh_wallets_percent": 0.0,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 2.0
+      },
+      "created_ts": 1786203810000
+    },
+    {
+      "token": "3dwe9igN5o5yqkTJpGQeR26zCLYPYbvf6XEQUxRbpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "okx_rug_pull_count": 0.0,
+        "okx_dev_total_tokens": 0.0,
+        "okx_dev_migrated_count": 0.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "Gaep9rLfMkZ1JTCaD69TTu2KxVLQbAj9xumr6UpWUdQJ",
+        "okx_funding_address": "iGdFcQoyR2MwbXMHQskhmNsqddZ6rinsipHc4TNSdwu",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 3.6368,
+        "okx_bundlers_percent": 0.0,
+        "okx_top10_holdings_percent": 3.6368,
+        "okx_fresh_wallets_percent": 0.0,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 10.0
+      },
+      "created_ts": 1786203806000
+    },
+    {
+      "token": "CdckTNcEQR67njdRcVemT3AMVfRE4qPG6fbVQ1oApump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "okx_rug_pull_count": 0.0,
+        "okx_dev_total_tokens": 0.0,
+        "okx_dev_migrated_count": 0.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "",
+        "okx_funding_address": "",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 1.449,
+        "okx_bundlers_percent": 0.0,
+        "okx_top10_holdings_percent": 2.4713,
+        "okx_fresh_wallets_percent": 0.0,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 5.0
+      },
+      "created_ts": 1786203803000
+    },
+    {
+      "token": "9F64r7Xohs626WJRLcihbN8YtisPEao5xm1pGF8epump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "okx_rug_pull_count": 0.0,
+        "okx_dev_total_tokens": 0.0,
+        "okx_dev_migrated_count": 0.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "",
+        "okx_funding_address": "",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 26.8172,
+        "okx_bundlers_percent": 12.5141,
+        "okx_top10_holdings_percent": 36.0857,
+        "okx_fresh_wallets_percent": 0.0,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 27.0
+      },
+      "created_ts": 1786203802000
+    },
+    {
+      "token": "A9eHf3H9rgh8YWZxdkADgCFtVz5kj7wpKUiqQUimpump",
+      "chain": "solana",
+      "outcome": "clean",
+      "signals": {
+        "okx_rug_pull_count": 0.0,
+        "okx_dev_total_tokens": 0.0,
+        "okx_dev_migrated_count": 0.0,
+        "okx_dev_golden_gem_count": 0.0,
+        "okx_dev_holding_percent": 0.0,
+        "okx_dev_address": "",
+        "okx_funding_address": "",
+        "okx_insiders_percent": 0.0,
+        "okx_snipers_percent": 7.011,
+        "okx_bundlers_percent": 7.011,
+        "okx_top10_holdings_percent": 7.011,
+        "okx_fresh_wallets_percent": 7.011,
+        "okx_suspected_phishing_percent": 0.0,
+        "okx_total_holders": 4.0
+      },
+      "created_ts": 1786203802000
+    }
+  ]
+}
