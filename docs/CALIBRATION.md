@@ -47,14 +47,45 @@ Catatan: field insider tersedia DI data trending nyata (`bundler_rate`,
 `entrapment_ratio`, `twitter_create_token_count`), bukan hanya di trenches.
 Ini menyediakan fitur untuk kalibrasi IHR/insider pada universe yang cukup.
 
+### Hasil backfill nyata — v3 (data/labeled_dataset_v3_variety.json)
+
+Pelajaran dari v2: universe trending 24h tunggal -> semua rugged (bias sampel).
+Solusi: gabungkan trending multi-interval (1h/6h/24h) + label berbasis harga
+FINAL (`final_return_pct`) bukan max_drawdown-only (yang over-label pump-then-
+crash sebagai rugged walau final > launch).
+
+- Universe: gabungan trending 1h+6h+24h, min-created 7d (156-157 token unik).
+- 40 sampel dilabeli. **VARIASI OUTCOME NYATA: 24 pumped, 8 survived, 8 rugged.**
+- Walk-forward mean score **0.279 -> INSUFFICIENT** (rug rate antar fold
+  berfluktuasi 0.05-0.49). Ini verdict VALID (data beragam, evaluator menguji
+  stabilitas) -> **threshold tetap ILLUSTRATIVE.**
+
+Korelasi fitur insider vs final_return (n=40, BERAGAM — lebih valid dari v2):
+
+| Fitur | corr(final) | rugged avg | pumped avg | survived avg | Baca |
+|---|---|---|---|---|---|
+| twitter_create_token_count | **+0.921** | 7.0 | 207.8 | 172.3 | aktivitas penciptaan X tinggi -> PUMPED (bukan rug) |
+| entrapment_ratio | +0.443 | 0.141 | 0.291 | 0.213 | entrapment tinggi -> final lebih tinggi |
+| bundler_rate | +0.249 | 0.130 | 0.155 | 0.103 | lemah-positif |
+| rug_ratio | -0.115 | 0.416 | 0.349 | 0.507 | lemah |
+| sniper_count | -0.048 | 27.1 | 22.4 | 20.9 | lemah |
+| top70_sniper_hold_rate | -0.079 | 0.009 | 0.015 | 0.010 | lemah |
+| dev_team_hold_rate | -0.099 | 0.009 | 0.007 | 0.010 | lemah |
+
+Temuan konsisten lintas dataset (v2 & v3): `twitter_create_token_count`
+berkorelasi kuat-positif dengan outcome menguntungkan (pumped/survived).
+Hipotesis: token dengan jejak sosial X aktif cenderung bertahan/pump; token
+mati (rugged) punya jejak sosial ~0. Ini KANDIDAT fitur untuk kalibrasi insider,
+perlu verifikasi kausalitas + n lebih besar sebelum jadi threshold.
+
 ### Kenapa belum bisa kalibrasi (final)
 
 | Masalah | Dampak |
 |---|---|
-| n kecil + semua label homogen (v1 survived, v2 rugged) | walk-forward score 1.000 = artefak, tak ada variasi untuk ukur diskriminasi |
-| Universe tunggal (trenches / trending 24h) bias sampel | bukan populasi meme coin yang beragam |
-| Threshold IHR/ITA butuh label insider | label insider = rug/dev-dump/early-sell, butuh data historis panjang + korelasi label |
-| Korelasi fitur v2 dari n=15 | sinyal awal, butuh n>=50-100 beragam utk threshold produksi |
+| n=40 beragam tapi masih moderat | walk-forward INSUFFICIENT (0.279) -> threshold tetap ILLUSTRATIVE |
+| Korelasi kuat (twitter_create_token_count) belum = kausal | butuh verifikasi + dataset label insider sejati (rug/dev-dump/early-sell) |
+| Threshold IHR/ITA butuh label insider per-wallet | label = rug/dev-dump/early-sell, butuh data historis panjang + korelasi label |
+| Universe trending bias | populasi meme coin yang beragam membutuhkan sumber tambahan (dex, trenches, historical) |
 
 ### Threshold belum dikalibrasi (dari config/thresholds.py)
 

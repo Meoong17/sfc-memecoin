@@ -32,6 +32,7 @@ class BackfillConfig:
     # universe source: "trending" (mature tokens via --min-created) or "trenches" (new)
     universe_mode: str = "trending"
     trending_min_created: str = "7d"  # min token age for trending universe
+    trending_intervals: tuple = ("1h", "6h", "24h")  # combine for variety
     # outcome thresholds (from backtest.labeler defaults; override for calibration)
     rug_max_dd_pct: float = -60.0
     pump_min_peak_pct: float = 300.0
@@ -43,7 +44,7 @@ class KlineAnalyzer:
 
     @staticmethod
     def analyze(kline_list: list[dict]) -> dict | None:
-        """Return {peak_return_pct, max_drawdown_pct, days_observed} or None."""
+        """Return {peak_return_pct, max_drawdown_pct, final_return_pct, days_observed} or None."""
         if not kline_list:
             return None
         closes = [float(k.get("close", 0.0)) for k in kline_list if k.get("close")]
@@ -54,6 +55,7 @@ class KlineAnalyzer:
         base = closes[0]
         peak_high = max(highs) if highs else base
         peak_return_pct = (peak_high / base - 1.0) * 100.0
+        final_return_pct = (closes[-1] / base - 1.0) * 100.0
 
         # max drawdown from running peak close
         running_peak = closes[0]
@@ -66,9 +68,30 @@ class KlineAnalyzer:
 
         return {
             "peak_return_pct": round(peak_return_pct, 2),
+            "final_return_pct": round(final_return_pct, 2),
             "max_drawdown_pct": round(max_dd, 2),
             "days_observed": len(closes),
         }
+
+
+def label_for_calibration(*, peak_return_pct: float, final_return_pct: float,
+                          max_drawdown_pct: float, days_observed: int) -> Outcome:
+    """Calibration label rule based on FINAL price (empirical, price-based).
+
+    Distinct from backtest.labeler.classify_outcome (which keys on max_drawdown
+    and over-labels pump-then-crash as rugged even when final > launch base).
+    Here:
+      - RUGGED : final return <= -60%  (token dead / near-dead vs launch)
+      - PUMPED : final return >= +50% AND peak >= 300% AND held >= 7 days
+      - SURVIVED: everything else (alive near/above launch)
+    This is a CALIBRATION label (ground truth for threshold fitting), not the
+    production classifier.
+    """
+    if final_return_pct <= -60.0:
+        return Outcome.RUGGED
+    if final_return_pct >= 50.0 and peak_return_pct >= 300.0 and days_observed >= 7:
+        return Outcome.PUMPED
+    return Outcome.SURVIVED
 
 
 class DatasetBackfiller:
@@ -85,21 +108,22 @@ class DatasetBackfiller:
         """Fetch token universe: trending mature tokens or trenches (new)."""
         tokens: dict[str, dict] = {}
         if self.config.universe_mode == "trending":
-            # mature universe: tokens older than min_created (need rug/pump horizon)
-            try:
-                data = self.gmgn._run("market", "trending", "--chain", self._chain(),
-                                      "--interval", "24h", "--limit", "100",
-                                      "--min-created", self.config.trending_min_created, "--raw")
-                rank = ((data or {}).get("data") or {}).get("rank") or []
-                for t in rank:
-                    addr = t.get("address")
-                    if addr:
-                        # trending uses creation_timestamp
-                        t.setdefault("created_timestamp", t.get("creation_timestamp", 0))
-                        tokens[addr] = t
-            except Exception as e:
-                import logging
-                logging.warning("trending universe failed: %s", e)
+            # mature universe: combine multiple trending intervals for variety
+            # (single 24h window skews to tokens that pumped then fell = all rug)
+            for iv in self.config.trending_intervals:
+                try:
+                    data = self.gmgn._run("market", "trending", "--chain", self._chain(),
+                                          "--interval", iv, "--limit", "100",
+                                          "--min-created", self.config.trending_min_created, "--raw")
+                    rank = ((data or {}).get("data") or {}).get("rank") or []
+                    for t in rank:
+                        addr = t.get("address")
+                        if addr:
+                            t.setdefault("created_timestamp", t.get("creation_timestamp", 0))
+                            tokens[addr] = t
+                except Exception as e:
+                    import logging
+                    logging.warning("trending[%s] failed: %s", iv, e)
         else:
             for typ in ("new_creation", "completed"):
                 try:
@@ -153,10 +177,10 @@ class DatasetBackfiller:
                 continue
 
             lp_removed = not bool(t.get("is_token_live", True)) and age > 2
-            outcome = classify_outcome(
-                lp_removed=lp_removed,
-                max_drawdown_pct=metrics["max_drawdown_pct"],
+            outcome = label_for_calibration(
                 peak_return_pct=metrics["peak_return_pct"],
+                final_return_pct=metrics["final_return_pct"],
+                max_drawdown_pct=metrics["max_drawdown_pct"],
                 days_observed=metrics["days_observed"],
             )
             # insider-relevant features present in real GMGN trending data
@@ -176,7 +200,7 @@ class DatasetBackfiller:
                 launch_ts=__import__("datetime").datetime.fromtimestamp(created or time.time()),
                 outcome=outcome,
                 peak_return_pct=metrics["peak_return_pct"],
-                final_return_pct=metrics["max_drawdown_pct"],
+                final_return_pct=metrics["final_return_pct"],
                 days_observed=metrics["days_observed"],
                 note=note,
             ))

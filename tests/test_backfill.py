@@ -53,8 +53,8 @@ def test_backfiller_build_classifies(monkeypatch):
             return {"completed": []}
         if args[0] == "market" and args[1] == "kline":
             addr = args[5]  # ["market","kline","--chain",chain,"--address",addr,...]
-            if addr == "A":  # rugged: peak then crash
-                return {"list": _kline([1.0, 2.0, 3.0, 0.5], [1.0, 2.0, 3.0, 0.5])}
+            if addr == "A":  # rugged: final -70% vs launch base
+                return {"list": _kline([1.0, 2.0, 3.0, 0.3], [1.0, 2.0, 3.0, 0.3])}
             if addr == "B":  # pumped: sustained rise over 8 days
                 return {"list": _kline([1.0, 2.0, 4.0, 8.0, 12.0, 15.0, 18.0, 20.0],
                                        [1.0, 2.0, 4.0, 8.0, 12.0, 15.0, 18.0, 20.0])}
@@ -92,8 +92,8 @@ def test_backfiller_trending_universe_and_from_launch_kline(monkeypatch):
             addr = args[5]  # --address at args[5]
             # verify --from/--to passed (launch-based backfill)
             assert "--from" in args
-            if addr == "T1":  # rugged
-                return {"data": {"list": _kline([1.0, 2.0, 3.0, 0.5], [1.0, 2.0, 3.0, 0.5])}}
+            if addr == "T1":  # rugged: final -70%
+                return {"data": {"list": _kline([1.0, 2.0, 3.0, 0.3], [1.0, 2.0, 3.0, 0.3])}}
             return {"data": {"list": _kline([1.0, 1.1, 1.2], [1.0, 1.1, 1.2])}}  # survived
         raise AssertionError(f"unexpected args: {args}")
 
