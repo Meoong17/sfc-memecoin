@@ -425,6 +425,13 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **LLM DISABLED di jalur otomatis**. User minta disable LLM.
+  Cron `sfc_memecoin_collect.sh` direvert: hapus `--gloss` dan export LLM_* keys;
+  kini hanya `--notify` (deterministik, 0 panggilan LLM). Flag `--gloss` di
+  `collect_live.py` tetap ada tapi default OFF, jadi manual run tidak memicu
+  LLM. Untuk re-enable: tambah `--gloss` + export LLM keys di cron. Kredensial
+  LLM di .env TIDAK dihapus (bisa diaktifkan kembali kapan saja).
+
 - 2026-08-09: **LLM Explainer -> Telegram (live)**. Penjelasan DeepSeek kini
   dikirim ke pesan ranking Telegram untuk 2 token teratas (--notify --gloss).
   `format_ranking` punya section "🧠 Kenapa token teratas ini?" (explain-only,
