@@ -306,6 +306,36 @@ Permintaan user: token dengan kontrak aman/terverifikasi harus tampil jelas.
   RAA 29.2 (terendah). `telegram_notify.py /tmp/snap_contract.json` ->
   sent=True. 277 test hijau (+8).
 
+### KALIBRASI OKX NON-CIRCULAR — DIPERIKSA, TIDAK FEASIBLE (verdict jujur)
+
+Permintaan user: kalibrasi threshold. Audit mengungkap 2 masalah yang memblokir
+kalibrasi VALID (non-circular):
+
+1. **Dataset OKX circular.** Label `data/insider_labeled_dataset_okx_v2.json`
+   dihasilkan oleh `classify_okx_outcome` — rule yang SAMA dengan threshold yang
+   mau dikalibrasi. Agreement label vs rule = 40/40 (100%). Mengkalibrasi dari
+   ini hanya mereproduksi asumsi sendiri, bukan bukti. Distribusi yang tampak
+   diskriminatif (rug_pull: rug=738 vs clean=0) adalah ARTEFAK label, karena
+   label rug DIBUAT dari rug_pull>=1.
+2. **Populasi DISJOINT (terukur live 2026-08-09):** fitur OKX (rugPullCount/
+   devHoldings/top10/snipers) HANYA ada di token mememump, yang hampir semua
+   baru lahir. Label price independen butuh token tua (PUMPED >=7 hari, RUGGED
+   crash dari peak). Tapi token tua TIDAK punya fitur OKX.
+   - Token GMGN trending MATANG (umur 8-101 hari, bisa di-label price):
+     0/10 dikenal OKX (okx_data=False untuk semua).
+   - Token OKX MIGRATING+MIGRATED (60 unique): 0 token berumur 7-120 hari.
+   Dua populasi tidak beririsan -> TIDAK mungkin dapat (fitur OKX + label price)
+   pada token yang sama dalam jumlah cukup.
+
+KESIMPULAN: tidak ada dataset saat ini yang mengkalibrasi threshold insider/
+OKX secara valid. Semua threshold TETAP ILLUSTRATIVE. Ini pola doktrin:
+narrative -> empirical test -> unavailable/unstable -> don't build. Mengubah
+threshold sekarang = menebak, bukan mengkalibrasi. JANGAN set calibrated=True.
+
+Jalur kalibrasi yang tersisa (butuh data baru, bukan usaha ulang):
+- Kumpulkan token OKX mememump yang cukup TUA (>=7 hari) seiring waktu, atau
+- Sumber ketiga yang memberi label price + fitur insider pada populasi sama.
+
 ### Telegram format — harga/mcap + legenda Konfluensi lengkap (revisi)
 
 Format pesan ranking diperbaiki: (1) tiap token kini menampilkan symbol, harga
