@@ -1,0 +1,1233 @@
+{
+  "generated_at": 1786199160.3593886,
+  "config": {
+    "chain": "solana",
+    "resolution": "1d",
+    "universe_mode": "trending",
+    "rug_max_dd_pct": -60.0,
+    "pump_min_peak_pct": 300.0,
+    "pump_min_hold_days": 7
+  },
+  "samples": [
+    {
+      "token": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+      "chain": "solana",
+      "launch": "2026-07-27T00:32:43",
+      "outcome": "pumped",
+      "peak_return_pct": 1900.11,
+      "final_return_pct": 475.02,
+      "days_observed": 13,
+      "note": "holder_count=72092; is_honeypot=0; bundler_rate=0.5675; sniper_count=30; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.93; entrapment_ratio=0.4166; renounced_mint=1; twitter_create_token_count=31"
+    },
+    {
+      "token": "Ge87EtsjwRQbHaqQmKRno69RFTwh9bfSsm99XNxTpump",
+      "chain": "solana",
+      "launch": "2026-07-16T18:15:45",
+      "outcome": "pumped",
+      "peak_return_pct": 530.64,
+      "final_return_pct": 80.22,
+      "days_observed": 23,
+      "note": "holder_count=31799; is_honeypot=0; bundler_rate=0.4702; sniper_count=14; top70_sniper_hold_rate=3.83785e-05; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.08; entrapment_ratio=0.3857; renounced_mint=1; twitter_create_token_count=55"
+    },
+    {
+      "token": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+      "chain": "solana",
+      "launch": "2026-07-24T03:06:56",
+      "outcome": "pumped",
+      "peak_return_pct": 26251.56,
+      "final_return_pct": 18515.63,
+      "days_observed": 15,
+      "note": "holder_count=7078; is_honeypot=0; bundler_rate=0.5215; sniper_count=0; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.18; entrapment_ratio=0.8444; renounced_mint=1; twitter_create_token_count=13"
+    },
+    {
+      "token": "9cRCn9rGT8V2imeM2BaKs13yhMEais3ruM3rPvTGpump",
+      "chain": "solana",
+      "launch": "2026-06-17T05:05:48",
+      "outcome": "pumped",
+      "peak_return_pct": 261472.72,
+      "final_return_pct": 110556.82,
+      "days_observed": 53,
+      "note": "holder_count=136712; is_honeypot=0; bundler_rate=0.306; sniper_count=18; top70_sniper_hold_rate=1e-10; dev_team_hold_rate=1e-10; creator_close=True; rug_ratio=0.22; entrapment_ratio=0.7744; renounced_mint=1; twitter_create_token_count=4557"
+    },
+    {
+      "token": "HBrfYZgeLKdSvBBGnGkvAK4563pq8oBGpgNFAaespump",
+      "chain": "solana",
+      "launch": "2026-07-25T09:58:56",
+      "outcome": "pumped",
+      "peak_return_pct": 157332.43,
+      "final_return_pct": 33263.43,
+      "days_observed": 14,
+      "note": "holder_count=3279; is_honeypot=0; bundler_rate=0.0737; sniper_count=42; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.07; entrapment_ratio=0.1441; renounced_mint=1; twitter_create_token_count=2"
+    },
+    {
+      "token": "Fvvj98QtaA3RjVgeQn79NokiMaLgBRje1Q9bXetwpump",
+      "chain": "solana",
+      "launch": "2026-07-27T12:39:34",
+      "outcome": "pumped",
+      "peak_return_pct": 2601.58,
+      "final_return_pct": 113.94,
+      "days_observed": 12,
+      "note": "holder_count=2560; is_honeypot=0; bundler_rate=0.2387; sniper_count=47; top70_sniper_hold_rate=0.2456222013; dev_team_hold_rate=0.0817843622; creator_close=True; rug_ratio=0.02; entrapment_ratio=0.1384; renounced_mint=1; twitter_create_token_count=21"
+    },
+    {
+      "token": "6oGuFDbEeaSzTcvrmmd2MqfNYwHKXFoN7regcR22pump",
+      "chain": "solana",
+      "launch": "2026-07-14T21:22:55",
+      "outcome": "pumped",
+      "peak_return_pct": 13107.32,
+      "final_return_pct": 7541.28,
+      "days_observed": 25,
+      "note": "holder_count=6860; is_honeypot=0; bundler_rate=0.1312; sniper_count=22; top70_sniper_hold_rate=7.45e-08; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.1; entrapment_ratio=0.1628; renounced_mint=1; twitter_create_token_count=16"
+    },
+    {
+      "token": "B4ptaVsUe6YbtBwAS38WFeweSrVNfQLCcj9JRrtjU8vn",
+      "chain": "solana",
+      "launch": "2026-07-15T21:40:40",
+      "outcome": "rugged",
+      "peak_return_pct": 316.44,
+      "final_return_pct": -76.2,
+      "days_observed": 24,
+      "note": "holder_count=5385; is_honeypot=0; bundler_rate=0.1226; sniper_count=37; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=False; rug_ratio=0.98; entrapment_ratio=0.1318; renounced_mint=1; twitter_create_token_count=23"
+    },
+    {
+      "token": "DTiLUGhzmtP3wZC6tXRXtxYPUxztvnQMxAW54ZtKpump",
+      "chain": "solana",
+      "launch": "2026-07-31T09:54:07",
+      "outcome": "survived",
+      "peak_return_pct": 359.42,
+      "final_return_pct": 28.99,
+      "days_observed": 8,
+      "note": "holder_count=1907; is_honeypot=0; bundler_rate=0.0745; sniper_count=26; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.01; entrapment_ratio=0.205; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "8Byg9wi43TNzgJpYta6UXxPz3LPe8v6ZwvmWWoWQpump",
+      "chain": "solana",
+      "launch": "2026-07-31T08:21:21",
+      "outcome": "survived",
+      "peak_return_pct": 260.49,
+      "final_return_pct": -43.2,
+      "days_observed": 8,
+      "note": "holder_count=3255; is_honeypot=0; bundler_rate=0.0981; sniper_count=14; top70_sniper_hold_rate=0.0464664413; dev_team_hold_rate=0.0464664413; creator_close=False; rug_ratio=0.7647058823529411; entrapment_ratio=0.1858; renounced_mint=1; twitter_create_token_count=122"
+    },
+    {
+      "token": "3VFnDoACa991DYe987w354sbvmhqjjzC4Z31SoZepump",
+      "chain": "solana",
+      "launch": "2026-07-29T22:12:04",
+      "outcome": "rugged",
+      "peak_return_pct": 135.25,
+      "final_return_pct": -83.38,
+      "days_observed": 10,
+      "note": "holder_count=3470; is_honeypot=0; bundler_rate=0.0896; sniper_count=20; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.01; entrapment_ratio=0.0891; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "2d2GZdehy2YGrj1MJ3y3yhXjficMa2J3GtncxkTQpump",
+      "chain": "solana",
+      "launch": "2026-07-25T10:34:14",
+      "outcome": "rugged",
+      "peak_return_pct": 244.42,
+      "final_return_pct": -75.09,
+      "days_observed": 14,
+      "note": "holder_count=4646; is_honeypot=0; bundler_rate=0.2498; sniper_count=45; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.86; entrapment_ratio=0.0538; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "Agmu8Xgn7rU4zFv4DMPrEBhYDdPsmiEG5hCiYyvSpump",
+      "chain": "solana",
+      "launch": "2026-07-31T02:41:05",
+      "outcome": "pumped",
+      "peak_return_pct": 6924.12,
+      "final_return_pct": 536.25,
+      "days_observed": 9,
+      "note": "holder_count=1064; is_honeypot=0; bundler_rate=0.1324; sniper_count=36; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.96; entrapment_ratio=0.1089; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "H78WENHosTWPFuQvtm8swi83ipTqANJi921iG51Apump",
+      "chain": "solana",
+      "launch": "2026-07-30T16:16:05",
+      "outcome": "survived",
+      "peak_return_pct": 563.76,
+      "final_return_pct": -21.21,
+      "days_observed": 9,
+      "note": "holder_count=2538; is_honeypot=0; bundler_rate=0.1366; sniper_count=41; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.2765957446808511; entrapment_ratio=0.0714; renounced_mint=1; twitter_create_token_count=1"
+    },
+    {
+      "token": "Am8iBffqgaedfdK5XhtorbcRrKzwH9nyL3ySikQfpump",
+      "chain": "solana",
+      "launch": "2026-07-27T09:16:39",
+      "outcome": "pumped",
+      "peak_return_pct": 2143.33,
+      "final_return_pct": 540.1,
+      "days_observed": 12,
+      "note": "holder_count=2581; is_honeypot=0; bundler_rate=0.0325; sniper_count=12; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.16666666666666666; entrapment_ratio=0.7534; renounced_mint=1; twitter_create_token_count=34"
+    },
+    {
+      "token": "Gihvutvj8wvAFLrazDgoHewwfy75ozjv3bGGdr87pump",
+      "chain": "solana",
+      "launch": "2026-07-28T06:23:19",
+      "outcome": "pumped",
+      "peak_return_pct": 982.77,
+      "final_return_pct": 118.3,
+      "days_observed": 12,
+      "note": "holder_count=917; is_honeypot=0; bundler_rate=0.2198; sniper_count=24; top70_sniper_hold_rate=0.0783060245; dev_team_hold_rate=0.0714131778; creator_close=True; rug_ratio=0.17073170731707318; entrapment_ratio=0.0377; renounced_mint=1; twitter_create_token_count=52"
+    },
+    {
+      "token": "HuZ2yj2H4crjHt43PieWS5iSQ5p2G6BFnEHvMFaUpump",
+      "chain": "solana",
+      "launch": "2026-07-31T18:55:38",
+      "outcome": "pumped",
+      "peak_return_pct": 2547.63,
+      "final_return_pct": 1066.94,
+      "days_observed": 8,
+      "note": "holder_count=1065; is_honeypot=0; bundler_rate=0.0482; sniper_count=12; top70_sniper_hold_rate=0.0099220608; dev_team_hold_rate=0; creator_close=False; rug_ratio=0.146; entrapment_ratio=0.1011; renounced_mint=1; twitter_create_token_count=8"
+    },
+    {
+      "token": "3XEe11RMNqNTka33ik2yEmr3siUWmFQWSESP9Ejepump",
+      "chain": "solana",
+      "launch": "2026-07-31T05:45:12",
+      "outcome": "pumped",
+      "peak_return_pct": 614.2,
+      "final_return_pct": 241.17,
+      "days_observed": 9,
+      "note": "holder_count=1453; is_honeypot=0; bundler_rate=0.0428; sniper_count=22; top70_sniper_hold_rate=0.0043698528; dev_team_hold_rate=0; creator_close=False; rug_ratio=0.168; entrapment_ratio=0.1629; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "F4GpAFr6vrxU3Y887F3XWkXRgybCVjZNk63m72f6pump",
+      "chain": "solana",
+      "launch": "2026-07-14T13:26:45",
+      "outcome": "rugged",
+      "peak_return_pct": 8.58,
+      "final_return_pct": -93.97,
+      "days_observed": 25,
+      "note": "holder_count=5459; is_honeypot=0; bundler_rate=0.1093; sniper_count=15; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.23; entrapment_ratio=0.2622; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "3aqXuwp6HuVXs9vdD9Gpg4dzJaUx443RjK7GXzphpump",
+      "chain": "solana",
+      "launch": "2026-07-28T20:03:56",
+      "outcome": "rugged",
+      "peak_return_pct": 612.21,
+      "final_return_pct": -76.35,
+      "days_observed": 11,
+      "note": "holder_count=4221; is_honeypot=0; bundler_rate=0.1211; sniper_count=16; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.25287356321839083; entrapment_ratio=0.2127; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "8kAYCongF4r6kVKe2uhDTJZhTEANcyAjUn3ZqgGxpump",
+      "chain": "solana",
+      "launch": "2026-07-27T06:08:52",
+      "outcome": "pumped",
+      "peak_return_pct": 2089.98,
+      "final_return_pct": 130.62,
+      "days_observed": 13,
+      "note": "holder_count=538; is_honeypot=0; bundler_rate=0.0496; sniper_count=17; top70_sniper_hold_rate=0.0182840753; dev_team_hold_rate=0.0182840753; creator_close=True; rug_ratio=0.93; entrapment_ratio=0.1065; renounced_mint=1; twitter_create_token_count=16"
+    },
+    {
+      "token": "DdPrHYqM8Ueovnk9kAnAgoGhswkuaTqmxcoZzU3Zpump",
+      "chain": "solana",
+      "launch": "2026-06-30T06:31:28",
+      "outcome": "pumped",
+      "peak_return_pct": 35679.48,
+      "final_return_pct": 849.84,
+      "days_observed": 40,
+      "note": "holder_count=29824; is_honeypot=0; bundler_rate=0.062; sniper_count=52; top70_sniper_hold_rate=1.2e-09; dev_team_hold_rate=1.2e-09; creator_close=True; rug_ratio=0.5; entrapment_ratio=0.5467; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "EV169nnxWHQGvDFiz999BUt8XDpcRLmwqkciytRQGFg2",
+      "chain": "solana",
+      "launch": "2026-08-01T04:08:45",
+      "outcome": "survived",
+      "peak_return_pct": 1478.83,
+      "final_return_pct": 20.49,
+      "days_observed": 8,
+      "note": "holder_count=2106; is_honeypot=0; bundler_rate=0.1178; sniper_count=11; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=False; rug_ratio=0.174; entrapment_ratio=0.1132; renounced_mint=1; twitter_create_token_count=57"
+    },
+    {
+      "token": "B62socheoeJVqiKnihcR96g61tzALYwcMsE91Sw6pump",
+      "chain": "solana",
+      "launch": "2026-07-22T16:22:44",
+      "outcome": "rugged",
+      "peak_return_pct": 565.48,
+      "final_return_pct": -95.21,
+      "days_observed": 17,
+      "note": "holder_count=6061; is_honeypot=0; bundler_rate=0.1104; sniper_count=15; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.04; entrapment_ratio=0.141; renounced_mint=1; twitter_create_token_count=3"
+    },
+    {
+      "token": "8qsXKEF12KwAnFU5YdRuzopfKj1HJ73D8QK8hYtSPabh",
+      "chain": "solana",
+      "launch": "2026-08-01T00:30:37",
+      "outcome": "pumped",
+      "peak_return_pct": 807.71,
+      "final_return_pct": 359.48,
+      "days_observed": 8,
+      "note": "holder_count=653; is_honeypot=0; bundler_rate=0.0967; sniper_count=33; top70_sniper_hold_rate=0.0091323977; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.15; entrapment_ratio=0.2009; renounced_mint=1; twitter_create_token_count=7"
+    },
+    {
+      "token": "BV5wremjY266bvEptiHLCEnTGEh2wZnMQgBQnSqXpump",
+      "chain": "solana",
+      "launch": "2026-07-30T08:05:06",
+      "outcome": "pumped",
+      "peak_return_pct": 1218.23,
+      "final_return_pct": 591.87,
+      "days_observed": 9,
+      "note": "holder_count=746; is_honeypot=0; bundler_rate=0.1774; sniper_count=18; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=1; entrapment_ratio=0.0426; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "4ko5tSr5o3H4v1sFtjTSd9MPUW7yx5AFCpkNPoL6pump",
+      "chain": "solana",
+      "launch": "2026-07-09T06:17:24",
+      "outcome": "survived",
+      "peak_return_pct": 584.8,
+      "final_return_pct": -48.84,
+      "days_observed": 31,
+      "note": "holder_count=9371; is_honeypot=0; bundler_rate=0.1706; sniper_count=11; top70_sniper_hold_rate=0.0111564176; dev_team_hold_rate=0.0111564176; creator_close=False; rug_ratio=1; entrapment_ratio=0.2761; renounced_mint=1; twitter_create_token_count=768"
+    },
+    {
+      "token": "HcfnJxLov6tY8i1dq9uYRRZKCvxADPpovcfkyXzdpump",
+      "chain": "solana",
+      "launch": "2026-07-19T03:48:34",
+      "outcome": "pumped",
+      "peak_return_pct": 8147.54,
+      "final_return_pct": 5443.99,
+      "days_observed": 21,
+      "note": "holder_count=5769; is_honeypot=0; bundler_rate=0.0485; sniper_count=10; top70_sniper_hold_rate=4.774e-07; dev_team_hold_rate=4.774e-07; creator_close=False; rug_ratio=0.206; entrapment_ratio=0.5225; renounced_mint=1; twitter_create_token_count=19"
+    },
+    {
+      "token": "DyKoCHKYn69hd2nW1rjRfScYdGz1YK4YahoN3ak8pump",
+      "chain": "solana",
+      "launch": "2026-07-30T06:30:22",
+      "outcome": "pumped",
+      "peak_return_pct": 2014.77,
+      "final_return_pct": 361.74,
+      "days_observed": 10,
+      "note": "holder_count=638; is_honeypot=0; bundler_rate=0.1131; sniper_count=16; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.2147; renounced_mint=1; twitter_create_token_count=2"
+    },
+    {
+      "token": "73DRYB2YpoHiZUdq37hQmHTR7Yvg5qJKsxxaYrsJSBCJ",
+      "chain": "solana",
+      "launch": "2026-07-30T07:15:54",
+      "outcome": "survived",
+      "peak_return_pct": 540.57,
+      "final_return_pct": 5.27,
+      "days_observed": 10,
+      "note": "holder_count=1384; is_honeypot=0; bundler_rate=0.0557; sniper_count=20; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.6; entrapment_ratio=0.0861; renounced_mint=1; twitter_create_token_count=11"
+    },
+    {
+      "token": "6YCYaiuXQubALutWr1eJB8HZ9i72hpTKgAvjR6qzpump",
+      "chain": "solana",
+      "launch": "2026-07-29T07:57:56",
+      "outcome": "pumped",
+      "peak_return_pct": 354.21,
+      "final_return_pct": 53.29,
+      "days_observed": 11,
+      "note": "holder_count=662; is_honeypot=0; bundler_rate=0.004; sniper_count=15; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.192; entrapment_ratio=0.229; renounced_mint=1; twitter_create_token_count=1"
+    },
+    {
+      "token": "Cg1hswfyVfnFaKHSEVyNdFWEj1bmnZoA8ZnWLVbApump",
+      "chain": "solana",
+      "launch": "2026-07-30T21:20:03",
+      "outcome": "pumped",
+      "peak_return_pct": 13043.78,
+      "final_return_pct": 2315.38,
+      "days_observed": 9,
+      "note": "holder_count=650; is_honeypot=0; bundler_rate=0.0817; sniper_count=24; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.02; entrapment_ratio=0.06; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "9Pfync3ejPC9eHqVzq3nYQJAhyhjqpnB9UsaSfLxpump",
+      "chain": "solana",
+      "launch": "2026-07-07T08:09:17",
+      "outcome": "pumped",
+      "peak_return_pct": 3809.74,
+      "final_return_pct": 884.44,
+      "days_observed": 32,
+      "note": "holder_count=5822; is_honeypot=0; bundler_rate=0.0754; sniper_count=3; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.47878787878787876; entrapment_ratio=0.6101; renounced_mint=1; twitter_create_token_count=131"
+    },
+    {
+      "token": "89gZQFtEe3RJctXghdbEmht8SV2vQvcN4DNyjmappump",
+      "chain": "solana",
+      "launch": "2026-07-20T07:48:33",
+      "outcome": "pumped",
+      "peak_return_pct": 1565.73,
+      "final_return_pct": 608.21,
+      "days_observed": 20,
+      "note": "holder_count=1959; is_honeypot=0; bundler_rate=0.1242; sniper_count=27; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.36082474226804123; entrapment_ratio=0.1772; renounced_mint=1; twitter_create_token_count=15"
+    },
+    {
+      "token": "EkgbQHYmZ4Az4Ek8dwnqA2NGeqfakktmoENwJh7FvY6h",
+      "chain": "solana",
+      "launch": "2026-07-28T17:19:11",
+      "outcome": "pumped",
+      "peak_return_pct": 2455.0,
+      "final_return_pct": 64.01,
+      "days_observed": 11,
+      "note": "holder_count=194; is_honeypot=0; bundler_rate=0.0151; sniper_count=27; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.094; entrapment_ratio=0.0347; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "7z5KZpYj7BEnGKGCY3kDkaX32ueBSNp8QjvFq8Lxpump",
+      "chain": "solana",
+      "launch": "2026-07-17T16:34:08",
+      "outcome": "pumped",
+      "peak_return_pct": 8628.65,
+      "final_return_pct": 1316.43,
+      "days_observed": 22,
+      "note": "holder_count=1346; is_honeypot=0; bundler_rate=0.0851; sniper_count=16; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.15384615384615385; entrapment_ratio=0.2188; renounced_mint=1; twitter_create_token_count=8"
+    },
+    {
+      "token": "CFPkPq1eYPR8GLzEo59wUbbMioX4bshaTQiSGzTSpump",
+      "chain": "solana",
+      "launch": "2026-07-02T10:29:19",
+      "outcome": "survived",
+      "peak_return_pct": 512.18,
+      "final_return_pct": 44.1,
+      "days_observed": 37,
+      "note": "holder_count=5616; is_honeypot=0; bundler_rate=0.0936; sniper_count=14; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.23; entrapment_ratio=0.4936; renounced_mint=1; twitter_create_token_count=26"
+    },
+    {
+      "token": "6weTzoLKhoYGChmkhotrJhNKwZdB8TWBG7XG3qmGpump",
+      "chain": "solana",
+      "launch": "2026-07-17T21:07:46",
+      "outcome": "rugged",
+      "peak_return_pct": 96.88,
+      "final_return_pct": -81.51,
+      "days_observed": 22,
+      "note": "holder_count=1052; is_honeypot=0; bundler_rate=0.1198; sniper_count=48; top70_sniper_hold_rate=0.0697881395; dev_team_hold_rate=0.0697881395; creator_close=True; rug_ratio=0.71; entrapment_ratio=0.1306; renounced_mint=1; twitter_create_token_count=21"
+    },
+    {
+      "token": "CF7JzBmY5sbGWbFw27Rfpja5BqpZVJ9pY1G4vXjJpump",
+      "chain": "solana",
+      "launch": "2026-08-01T20:41:41",
+      "outcome": "rugged",
+      "peak_return_pct": 77.5,
+      "final_return_pct": -66.4,
+      "days_observed": 7,
+      "note": "holder_count=635; is_honeypot=0; bundler_rate=0.1128; sniper_count=21; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.172; entrapment_ratio=0.1086; renounced_mint=1; twitter_create_token_count=9"
+    },
+    {
+      "token": "9gAVAtdnsrniW3GCwsvDeRPf5eJDjtT9S5bu1j7tpump",
+      "chain": "solana",
+      "launch": "2026-06-30T13:19:51",
+      "outcome": "rugged",
+      "peak_return_pct": 248.03,
+      "final_return_pct": -79.94,
+      "days_observed": 39,
+      "note": "holder_count=1595; is_honeypot=0; bundler_rate=0.0267; sniper_count=30; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.06; entrapment_ratio=0.0192; renounced_mint=1; twitter_create_token_count=3"
+    },
+    {
+      "token": "CgnQ8a1u99Gk7qoySMd2wrGPMPm9bdcSJNhqMEkYpump",
+      "chain": "solana",
+      "launch": "2026-07-08T09:00:08",
+      "outcome": "pumped",
+      "peak_return_pct": 7791.53,
+      "final_return_pct": 596.95,
+      "days_observed": 31,
+      "note": "holder_count=2151; is_honeypot=0; bundler_rate=0.0481; sniper_count=28; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.03333333333333333; entrapment_ratio=0.2053; renounced_mint=1; twitter_create_token_count=1"
+    },
+    {
+      "token": "HB7MPRYpegrJaJtsZvrXAEHx5kxdehiQQUNneVLnpump",
+      "chain": "solana",
+      "launch": "2026-07-28T04:12:51",
+      "outcome": "rugged",
+      "peak_return_pct": 110.46,
+      "final_return_pct": -79.74,
+      "days_observed": 12,
+      "note": "holder_count=1291; is_honeypot=0; bundler_rate=0.0607; sniper_count=40; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.01; entrapment_ratio=0.0413; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "5mPVUc7pDVZnJx28vrZFwYQcsMqqWsoW3QWdNTmZpump",
+      "chain": "solana",
+      "launch": "2026-07-30T00:35:00",
+      "outcome": "pumped",
+      "peak_return_pct": 7784.67,
+      "final_return_pct": 1860.88,
+      "days_observed": 10,
+      "note": "holder_count=482; is_honeypot=0; bundler_rate=0.0555; sniper_count=10; top70_sniper_hold_rate=0.1451065632; dev_team_hold_rate=0.0603910395; creator_close=True; rug_ratio=0.023255813953488372; entrapment_ratio=0.0527; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "6Quog29HQ5tA5BdnCv3FWpW8WEpdxCsxEpt2TGCZpump",
+      "chain": "solana",
+      "launch": "2026-07-28T01:17:49",
+      "outcome": "rugged",
+      "peak_return_pct": 316.22,
+      "final_return_pct": -64.33,
+      "days_observed": 12,
+      "note": "holder_count=1012; is_honeypot=0; bundler_rate=0.0449; sniper_count=20; top70_sniper_hold_rate=0.4428770884; dev_team_hold_rate=0.3605290172; creator_close=True; rug_ratio=0.33; entrapment_ratio=0.1745; renounced_mint=1; twitter_create_token_count=16"
+    },
+    {
+      "token": "GKUwfyQoJ9apCaoWyYaQ9RT8inZed469v41M1Ljb1ock",
+      "chain": "solana",
+      "launch": "2026-07-26T06:20:03",
+      "outcome": "pumped",
+      "peak_return_pct": 508.12,
+      "final_return_pct": 222.07,
+      "days_observed": 14,
+      "note": "holder_count=1995; is_honeypot=0; bundler_rate=0.0014; sniper_count=7; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=False; rug_ratio=0.366; entrapment_ratio=0.1168; renounced_mint=1; twitter_create_token_count=30"
+    },
+    {
+      "token": "7rSpKgASuXN5hfw3jsKNZN6ysNCR1Eixb2PD2Nd9pump",
+      "chain": "solana",
+      "launch": "2026-07-26T07:16:53",
+      "outcome": "pumped",
+      "peak_return_pct": 1220.89,
+      "final_return_pct": 171.83,
+      "days_observed": 14,
+      "note": "holder_count=768; is_honeypot=0; bundler_rate=0.0503; sniper_count=21; top70_sniper_hold_rate=0.0124645603; dev_team_hold_rate=0.0124645603; creator_close=False; rug_ratio=0.4230769230769231; entrapment_ratio=0.0766; renounced_mint=1; twitter_create_token_count=4"
+    },
+    {
+      "token": "4zEh89StirBvyHgiphKHNYAi8Fa6FVzVZjNUffcQpump",
+      "chain": "solana",
+      "launch": "2026-07-21T10:23:14",
+      "outcome": "survived",
+      "peak_return_pct": 175.4,
+      "final_return_pct": 80.01,
+      "days_observed": 18,
+      "note": "holder_count=784; is_honeypot=0; bundler_rate=0.025; sniper_count=16; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.11; entrapment_ratio=0.2037; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "7o3epu2ced1NKLZ6iTNhguMagZCk6fKX7m44nTCCpump",
+      "chain": "solana",
+      "launch": "2026-07-25T23:51:12",
+      "outcome": "pumped",
+      "peak_return_pct": 773.78,
+      "final_return_pct": 371.23,
+      "days_observed": 14,
+      "note": "holder_count=611; is_honeypot=0; bundler_rate=0.232; sniper_count=0; top70_sniper_hold_rate=0.0255887478; dev_team_hold_rate=0.0255887478; creator_close=False; rug_ratio=0.3333333333333333; entrapment_ratio=0.2692; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "AkchGAUdXXRGHt3HXaHbTvw3JLGUwtJRmYnkG66wpump",
+      "chain": "solana",
+      "launch": "2026-07-23T23:43:18",
+      "outcome": "rugged",
+      "peak_return_pct": 126.41,
+      "final_return_pct": -95.54,
+      "days_observed": 16,
+      "note": "holder_count=4304; is_honeypot=0; bundler_rate=0.1122; sniper_count=14; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.18867924528301888; entrapment_ratio=0.2205; renounced_mint=1; twitter_create_token_count=29"
+    },
+    {
+      "token": "BDdzUjksj1J4bSnMveQ5tV9Up8A9c6YS1tHrxNw3pump",
+      "chain": "solana",
+      "launch": "2026-06-29T01:09:54",
+      "outcome": "pumped",
+      "peak_return_pct": 1605.4,
+      "final_return_pct": 309.57,
+      "days_observed": 41,
+      "note": "holder_count=2845; is_honeypot=0; bundler_rate=0.1236; sniper_count=30; top70_sniper_hold_rate=0.0336671389; dev_team_hold_rate=0.0317293737; creator_close=True; rug_ratio=0.98; entrapment_ratio=0.1495; renounced_mint=1; twitter_create_token_count=2"
+    },
+    {
+      "token": "3f9LEP4RNM1yq5VnCD1LYMvq7FZis5tfGqyZMsiRpump",
+      "chain": "solana",
+      "launch": "2026-07-11T05:47:18",
+      "outcome": "pumped",
+      "peak_return_pct": 23748.89,
+      "final_return_pct": 7341.17,
+      "days_observed": 29,
+      "note": "holder_count=2996; is_honeypot=0; bundler_rate=0.0841; sniper_count=17; top70_sniper_hold_rate=0.0312182372; dev_team_hold_rate=0.0312182372; creator_close=False; rug_ratio=0.174; entrapment_ratio=0.1932; renounced_mint=1; twitter_create_token_count=53"
+    },
+    {
+      "token": "FMqh9mqR6drPZqqW6wPqLHxX4rqNDWGhYLaMfoaJpump",
+      "chain": "solana",
+      "launch": "2026-06-23T22:53:13",
+      "outcome": "survived",
+      "peak_return_pct": 272.1,
+      "final_return_pct": -40.55,
+      "days_observed": 46,
+      "note": "holder_count=6795; is_honeypot=0; bundler_rate=0.2775; sniper_count=14; top70_sniper_hold_rate=0.0002450911; dev_team_hold_rate=0.0002450911; creator_close=True; rug_ratio=0.168; entrapment_ratio=0.3295; renounced_mint=1; twitter_create_token_count=624"
+    },
+    {
+      "token": "5FUTTMiN9KqZkPsk4q9Kpp6kmweRKTrJrdhhv5DKpump",
+      "chain": "solana",
+      "launch": "2026-07-31T10:48:38",
+      "outcome": "rugged",
+      "peak_return_pct": 70.47,
+      "final_return_pct": -70.16,
+      "days_observed": 8,
+      "note": "holder_count=1083; is_honeypot=0; bundler_rate=0.0543; sniper_count=19; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.19; entrapment_ratio=0.1134; renounced_mint=1; twitter_create_token_count=14"
+    },
+    {
+      "token": "4ZETTdyBqqJZegJ2YKzuFqCcasDFFdTJ68xfA2F8pump",
+      "chain": "solana",
+      "launch": "2026-07-26T00:15:13",
+      "outcome": "pumped",
+      "peak_return_pct": 981.55,
+      "final_return_pct": 232.3,
+      "days_observed": 14,
+      "note": "holder_count=307; is_honeypot=0; bundler_rate=0.0403; sniper_count=27; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.1129; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "6Z6qeAuA45G8RrxG7hjZVdPHn1rNHtedJy9WAXg9pump",
+      "chain": "solana",
+      "launch": "2026-07-17T15:44:35",
+      "outcome": "rugged",
+      "peak_return_pct": 121.87,
+      "final_return_pct": -81.73,
+      "days_observed": 22,
+      "note": "holder_count=1817; is_honeypot=0; bundler_rate=0.0878; sniper_count=19; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.2502; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "GKaYkXHF6n5mKQ9htxWjN1SaXw7nTXQT4Y8S8vMYpump",
+      "chain": "solana",
+      "launch": "2026-07-31T10:58:14",
+      "outcome": "pumped",
+      "peak_return_pct": 718.65,
+      "final_return_pct": 470.21,
+      "days_observed": 8,
+      "note": "holder_count=666; is_honeypot=0; bundler_rate=0.1345; sniper_count=26; top70_sniper_hold_rate=0.0328277896; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.17; entrapment_ratio=0.0464; renounced_mint=1; twitter_create_token_count=11"
+    },
+    {
+      "token": "3taE4SdY29sa3fnwyWqfshudJ95gMb9LoFTy5Uuppump",
+      "chain": "solana",
+      "launch": "2026-07-29T01:41:02",
+      "outcome": "rugged",
+      "peak_return_pct": 71.37,
+      "final_return_pct": -71.3,
+      "days_observed": 11,
+      "note": "holder_count=1794; is_honeypot=0; bundler_rate=0.0137; sniper_count=34; top70_sniper_hold_rate=6.755e-07; dev_team_hold_rate=6.755e-07; creator_close=False; rug_ratio=0.298; entrapment_ratio=0.2136; renounced_mint=1; twitter_create_token_count=22"
+    },
+    {
+      "token": "7K4jGRV7PY1EymiY3jx75JSfi1jjzG7Gh5XHqF2Upump",
+      "chain": "solana",
+      "launch": "2026-08-01T21:37:06",
+      "outcome": "survived",
+      "peak_return_pct": 224.18,
+      "final_return_pct": -16.71,
+      "days_observed": 7,
+      "note": "holder_count=1222; is_honeypot=0; bundler_rate=0.1427; sniper_count=39; top70_sniper_hold_rate=0.2057753551; dev_team_hold_rate=0.1420767239; creator_close=True; rug_ratio=0; entrapment_ratio=0.133; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "BcHEaaTCvycPwwsJ9yQTXdHP9X2gCLkznDbZ8VySpump",
+      "chain": "solana",
+      "launch": "2026-06-07T13:15:25",
+      "outcome": "survived",
+      "peak_return_pct": 673.74,
+      "final_return_pct": 2.88,
+      "days_observed": 62,
+      "note": "holder_count=10792; is_honeypot=0; bundler_rate=0.2075; sniper_count=17; top70_sniper_hold_rate=2.07687e-05; dev_team_hold_rate=2.07687e-05; creator_close=False; rug_ratio=0.234; entrapment_ratio=0.2515; renounced_mint=1; twitter_create_token_count=112"
+    },
+    {
+      "token": "5xhJC2F2q8Mgk1DYaMBTxNY8t8xDE7cdgTcv5cevpump",
+      "chain": "solana",
+      "launch": "2026-07-24T03:37:37",
+      "outcome": "pumped",
+      "peak_return_pct": 1493.82,
+      "final_return_pct": 178.16,
+      "days_observed": 16,
+      "note": "holder_count=903; is_honeypot=0; bundler_rate=0.0856; sniper_count=36; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.99; entrapment_ratio=0.2051; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "2gYhGaFMBiPC2bBibG7yKZk94uJw2fcq6DtpYP7ZUory",
+      "chain": "solana",
+      "launch": "2026-07-20T23:03:50",
+      "outcome": "pumped",
+      "peak_return_pct": 1561.44,
+      "final_return_pct": 399.11,
+      "days_observed": 19,
+      "note": "holder_count=2652; is_honeypot=0; bundler_rate=0.1711; sniper_count=33; top70_sniper_hold_rate=1.80215e-05; dev_team_hold_rate=1.80215e-05; creator_close=False; rug_ratio=0.13; entrapment_ratio=0.1652; renounced_mint=1; twitter_create_token_count=27"
+    },
+    {
+      "token": "Dg2BuDyA6Af4gcCgeu5vN84N6eYDuKJfedAtg5RNpump",
+      "chain": "solana",
+      "launch": "2026-07-22T02:23:51",
+      "outcome": "pumped",
+      "peak_return_pct": 648.35,
+      "final_return_pct": 186.21,
+      "days_observed": 18,
+      "note": "holder_count=363; is_honeypot=0; bundler_rate=0.106; sniper_count=7; top70_sniper_hold_rate=1e-09; dev_team_hold_rate=1e-09; creator_close=True; rug_ratio=1; entrapment_ratio=0.2894; renounced_mint=1; twitter_create_token_count=6"
+    },
+    {
+      "token": "7QdnFDS77PkKFA4Q4RkMvwokDRXtsaEZqcoNmrXkpump",
+      "chain": "solana",
+      "launch": "2026-07-30T20:52:04",
+      "outcome": "rugged",
+      "peak_return_pct": 359.26,
+      "final_return_pct": -68.88,
+      "days_observed": 9,
+      "note": "holder_count=5277; is_honeypot=0; bundler_rate=0.0113; sniper_count=18; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.5; entrapment_ratio=0.0818; renounced_mint=1; twitter_create_token_count=18"
+    },
+    {
+      "token": "EpVHyKK8oxcLmp2C2NhAos1oDxgBNriw3wSLSozYpump",
+      "chain": "solana",
+      "launch": "2026-06-18T21:06:22",
+      "outcome": "survived",
+      "peak_return_pct": 58.74,
+      "final_return_pct": -11.64,
+      "days_observed": 51,
+      "note": "holder_count=6061; is_honeypot=0; bundler_rate=0.1791; sniper_count=20; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.4058; renounced_mint=1; twitter_create_token_count=63"
+    },
+    {
+      "token": "6mJoQqcPEjiQ1hFya9oH6NBCQLhvS3mwVQWV9EcTHg9u",
+      "chain": "solana",
+      "launch": "2026-07-21T22:18:37",
+      "outcome": "pumped",
+      "peak_return_pct": 1126.31,
+      "final_return_pct": 167.43,
+      "days_observed": 18,
+      "note": "holder_count=1400; is_honeypot=0; bundler_rate=0.0375; sniper_count=4; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.8208955223880597; entrapment_ratio=0.719; renounced_mint=1; twitter_create_token_count=18"
+    },
+    {
+      "token": "GiRrLzdan5Gz31ngH4zgxk6ybYaryNVCSLdAJyn1pump",
+      "chain": "solana",
+      "launch": "2026-07-26T18:31:20",
+      "outcome": "rugged",
+      "peak_return_pct": 126.11,
+      "final_return_pct": -73.23,
+      "days_observed": 13,
+      "note": "holder_count=1323; is_honeypot=0; bundler_rate=0.1188; sniper_count=15; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.0424; renounced_mint=1; twitter_create_token_count=30"
+    },
+    {
+      "token": "GEPfztBZqdh8nZHaPsRxd4UzzwAc8wJRQvC9Rkuxpump",
+      "chain": "solana",
+      "launch": "2026-07-21T21:01:05",
+      "outcome": "rugged",
+      "peak_return_pct": 38.64,
+      "final_return_pct": -85.93,
+      "days_observed": 18,
+      "note": "holder_count=1109; is_honeypot=0; bundler_rate=0.0138; sniper_count=32; top70_sniper_hold_rate=0.0005939402; dev_team_hold_rate=0.0005939402; creator_close=False; rug_ratio=0.8064516129032258; entrapment_ratio=0.1142; renounced_mint=1; twitter_create_token_count=36"
+    },
+    {
+      "token": "Tqj8yFmagrg7oorpQkVGYR52r96RFTamvWfth9bpump",
+      "chain": "solana",
+      "launch": "2026-05-23T01:47:23",
+      "outcome": "pumped",
+      "peak_return_pct": 9565.73,
+      "final_return_pct": 1217.79,
+      "days_observed": 78,
+      "note": "holder_count=21999; is_honeypot=0; bundler_rate=0.2072; sniper_count=19; top70_sniper_hold_rate=0.0094723052; dev_team_hold_rate=0.0001679885; creator_close=False; rug_ratio=0.23; entrapment_ratio=0.356; renounced_mint=1; twitter_create_token_count=104"
+    },
+    {
+      "token": "2NSHQefnzYtgNayCbbSPKSJgypi7dUf4QD4MhyvYUvxD",
+      "chain": "solana",
+      "launch": "2026-08-01T04:57:31",
+      "outcome": "rugged",
+      "peak_return_pct": 28.58,
+      "final_return_pct": -73.94,
+      "days_observed": 8,
+      "note": "holder_count=1082; is_honeypot=0; bundler_rate=0.0844; sniper_count=21; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.3333333333333333; entrapment_ratio=0.1632; renounced_mint=1; twitter_create_token_count=21"
+    },
+    {
+      "token": "BcoNUiz5cWTAmNz3akQ6xJy9ytUjrNC38uDkW3DTpump",
+      "chain": "solana",
+      "launch": "2026-08-01T17:46:24",
+      "outcome": "survived",
+      "peak_return_pct": 188.1,
+      "final_return_pct": 39.47,
+      "days_observed": 7,
+      "note": "holder_count=274; is_honeypot=0; bundler_rate=0.0822; sniper_count=20; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.0613; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "9BFw5KMWpBfzbEKh7qtp5U6hXRVZ6DqykZGV1BkFpump",
+      "chain": "solana",
+      "launch": "2026-07-28T14:48:51",
+      "outcome": "survived",
+      "peak_return_pct": 136.03,
+      "final_return_pct": 16.33,
+      "days_observed": 11,
+      "note": "holder_count=933; is_honeypot=0; bundler_rate=0.1703; sniper_count=26; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.062; entrapment_ratio=0.1626; renounced_mint=1; twitter_create_token_count=2"
+    },
+    {
+      "token": "BgVMUdzzKUAgjrKmLTT9aKXJUoew9YAqHrJUfs7xpump",
+      "chain": "solana",
+      "launch": "2026-07-15T02:05:43",
+      "outcome": "pumped",
+      "peak_return_pct": 1260.48,
+      "final_return_pct": 153.07,
+      "days_observed": 25,
+      "note": "holder_count=929; is_honeypot=0; bundler_rate=0.1334; sniper_count=23; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=1; entrapment_ratio=0.1019; renounced_mint=1; twitter_create_token_count=3"
+    },
+    {
+      "token": "4PRz3EwhbjrrX6YksMDuUzrXT51pr7CQtXNCravhpump",
+      "chain": "solana",
+      "launch": "2026-07-05T12:57:54",
+      "outcome": "survived",
+      "peak_return_pct": 177.85,
+      "final_return_pct": -38.36,
+      "days_observed": 34,
+      "note": "holder_count=809; is_honeypot=0; bundler_rate=0.0993; sniper_count=15; top70_sniper_hold_rate=0.0002119452; dev_team_hold_rate=0.0002119452; creator_close=False; rug_ratio=0.144; entrapment_ratio=0.0971; renounced_mint=1; twitter_create_token_count=8"
+    },
+    {
+      "token": "5pYB12kEhfhSFXJjZ7JtyqDpt6uUqhsF6iu6Ee9spump",
+      "chain": "solana",
+      "launch": "2026-06-22T15:00:21",
+      "outcome": "rugged",
+      "peak_return_pct": 306.53,
+      "final_return_pct": -86.95,
+      "days_observed": 47,
+      "note": "holder_count=8854; is_honeypot=0; bundler_rate=0.0351; sniper_count=14; top70_sniper_hold_rate=5.95e-08; dev_team_hold_rate=5.95e-08; creator_close=False; rug_ratio=0.7272727272727273; entrapment_ratio=0.3482; renounced_mint=1; twitter_create_token_count=2"
+    },
+    {
+      "token": "7MYegHoqDGhWdvrnxeuiAEndgG6qcs1N3W5v6SXspump",
+      "chain": "solana",
+      "launch": "2026-08-01T18:12:42",
+      "outcome": "survived",
+      "peak_return_pct": 115.56,
+      "final_return_pct": -31.01,
+      "days_observed": 7,
+      "note": "holder_count=527; is_honeypot=0; bundler_rate=0.0223; sniper_count=27; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.1905; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "UWUy7J86LUiBv5SjAUZ53LMGhtnqvbQ7QNSSkyupump",
+      "chain": "solana",
+      "launch": "2026-05-23T02:15:39",
+      "outcome": "pumped",
+      "peak_return_pct": 706.84,
+      "final_return_pct": 253.77,
+      "days_observed": 78,
+      "note": "holder_count=19764; is_honeypot=0; bundler_rate=0; sniper_count=5; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.19607843137254902; entrapment_ratio=0.4449; renounced_mint=1; twitter_create_token_count=167"
+    },
+    {
+      "token": "5sd8bKraewJNHFg72scxxYXNeLCASVct1gxqi3Xipump",
+      "chain": "solana",
+      "launch": "2026-07-25T01:15:48",
+      "outcome": "survived",
+      "peak_return_pct": 86.47,
+      "final_return_pct": -56.08,
+      "days_observed": 15,
+      "note": "holder_count=2908; is_honeypot=0; bundler_rate=0.0749; sniper_count=33; top70_sniper_hold_rate=3.87798e-05; dev_team_hold_rate=3.87798e-05; creator_close=False; rug_ratio=0.312; entrapment_ratio=0.3355; renounced_mint=1; twitter_create_token_count=8"
+    },
+    {
+      "token": "8VEM1Yc4JPFqVwsTcoBKiqAmsUD7xEzCLuDZWXccZGPN",
+      "chain": "solana",
+      "launch": "2026-07-13T11:58:06",
+      "outcome": "pumped",
+      "peak_return_pct": 2125.57,
+      "final_return_pct": 366.9,
+      "days_observed": 26,
+      "note": "holder_count=276; is_honeypot=0; bundler_rate=0.035; sniper_count=10; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.02; entrapment_ratio=0.0626; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "GMuQjK3KLzdyZTn7fLS99vxD8YGfXeHhLzzb7Dcepump",
+      "chain": "solana",
+      "launch": "2026-07-10T06:27:20",
+      "outcome": "survived",
+      "peak_return_pct": 364.1,
+      "final_return_pct": -59.27,
+      "days_observed": 30,
+      "note": "holder_count=882; is_honeypot=0; bundler_rate=0.0256; sniper_count=30; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.93; entrapment_ratio=0.1217; renounced_mint=1; twitter_create_token_count=428"
+    },
+    {
+      "token": "4Jdwem6D8NyzBS4QkznGfFscjA4uGgJyV4gCX1Njpump",
+      "chain": "solana",
+      "launch": "2026-07-15T06:48:26",
+      "outcome": "pumped",
+      "peak_return_pct": 878.25,
+      "final_return_pct": 243.34,
+      "days_observed": 19,
+      "note": "holder_count=620; is_honeypot=0; bundler_rate=0.0134; sniper_count=25; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.4380952380952381; entrapment_ratio=0.3068; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "BCdwQBAn8dYB5YjTsoB6TdHAWokxv28k2oZUodERpump",
+      "chain": "solana",
+      "launch": "2026-05-17T12:07:27",
+      "outcome": "survived",
+      "peak_return_pct": 351.52,
+      "final_return_pct": -31.94,
+      "days_observed": 83,
+      "note": "holder_count=21414; is_honeypot=0; bundler_rate=0.059; sniper_count=38; top70_sniper_hold_rate=0.0030310832; dev_team_hold_rate=0.0030310832; creator_close=False; rug_ratio=0.1836734693877551; entrapment_ratio=0.4053; renounced_mint=1; twitter_create_token_count=394"
+    },
+    {
+      "token": "9jVRLpzqYQBBhVejgtvCrBnivng62fjWrHxePh79pump",
+      "chain": "solana",
+      "launch": "2026-07-18T01:14:34",
+      "outcome": "survived",
+      "peak_return_pct": 148.97,
+      "final_return_pct": 57.11,
+      "days_observed": 22,
+      "note": "holder_count=474; is_honeypot=0; bundler_rate=0.057; sniper_count=8; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.248; entrapment_ratio=0.0899; renounced_mint=1; twitter_create_token_count=7"
+    },
+    {
+      "token": "wobYcxYiABaM6qByXMuBdespq3DPLNuSYqUpMmBpump",
+      "chain": "solana",
+      "launch": "2026-07-02T21:07:03",
+      "outcome": "pumped",
+      "peak_return_pct": 6806.27,
+      "final_return_pct": 87.33,
+      "days_observed": 37,
+      "note": "holder_count=7709; is_honeypot=0; bundler_rate=0.0219; sniper_count=16; top70_sniper_hold_rate=8.71697e-05; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.568; entrapment_ratio=0.0063; renounced_mint=1; twitter_create_token_count=6"
+    },
+    {
+      "token": "DUYw2p3NC6zDdsSrazV4JdDFKtRk2K4mw764EWs2pump",
+      "chain": "solana",
+      "launch": "2026-07-11T20:58:43",
+      "outcome": "rugged",
+      "peak_return_pct": 213.44,
+      "final_return_pct": -71.22,
+      "days_observed": 28,
+      "note": "holder_count=1670; is_honeypot=0; bundler_rate=0.0856; sniper_count=14; top70_sniper_hold_rate=0.0109241747; dev_team_hold_rate=0.0109241747; creator_close=False; rug_ratio=0.08333333333333333; entrapment_ratio=0.2816; renounced_mint=1; twitter_create_token_count=7"
+    },
+    {
+      "token": "MsGDybWRSNdNXkdDZhEksgzugT5CbVWUG2wkhwgpump",
+      "chain": "solana",
+      "launch": "2026-07-01T01:04:54",
+      "outcome": "survived",
+      "peak_return_pct": 157.97,
+      "final_return_pct": 11.99,
+      "days_observed": 39,
+      "note": "holder_count=614; is_honeypot=0; bundler_rate=0.1999; sniper_count=27; top70_sniper_hold_rate=0.0066649996; dev_team_hold_rate=0.0066649996; creator_close=True; rug_ratio=0.17045454545454544; entrapment_ratio=0.3323; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "3H7kMWRa7WfrpBGcyMpiAxkjBCc7k1pDShjQLDHJpump",
+      "chain": "solana",
+      "launch": "2026-07-26T02:28:59",
+      "outcome": "survived",
+      "peak_return_pct": 213.68,
+      "final_return_pct": -42.68,
+      "days_observed": 14,
+      "note": "holder_count=295; is_honeypot=0; bundler_rate=0.0413; sniper_count=37; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.124; entrapment_ratio=0.1501; renounced_mint=1; twitter_create_token_count=3"
+    },
+    {
+      "token": "SPCXwBHVrKpRqMRawL3NNvt1sXP2Yf3edwRbta53N69",
+      "chain": "solana",
+      "launch": "2026-06-12T22:02:50",
+      "outcome": "survived",
+      "peak_return_pct": 1352.28,
+      "final_return_pct": 22.4,
+      "days_observed": 57,
+      "note": "holder_count=5895; is_honeypot=0; bundler_rate=0.0001; sniper_count=40; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=False; rug_ratio=0.268; entrapment_ratio=0.0828; renounced_mint=1; twitter_create_token_count=58"
+    },
+    {
+      "token": "4Bxok7tP9kSTRGH3ga99Mmcgse2hY7TDXvtQD3Vrpump",
+      "chain": "solana",
+      "launch": "2026-07-31T15:54:38",
+      "outcome": "rugged",
+      "peak_return_pct": 135.56,
+      "final_return_pct": -86.42,
+      "days_observed": 8,
+      "note": "holder_count=839; is_honeypot=0; bundler_rate=0.0256; sniper_count=45; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.17073170731707318; entrapment_ratio=0.1267; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "62YE1d4sRArBQzR5bdbxsx2k9LV3MdPV4xMC4Di2pump",
+      "chain": "solana",
+      "launch": "2026-07-06T11:16:30",
+      "outcome": "rugged",
+      "peak_return_pct": 311.67,
+      "final_return_pct": -80.03,
+      "days_observed": 33,
+      "note": "holder_count=2070; is_honeypot=0; bundler_rate=0.0122; sniper_count=28; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.5; entrapment_ratio=0.7809; renounced_mint=1; twitter_create_token_count=66"
+    },
+    {
+      "token": "BtUiqGdsW3H47yvtyKSLhQfzVpwov3wyYY6qssU9pump",
+      "chain": "solana",
+      "launch": "2026-07-10T09:49:08",
+      "outcome": "rugged",
+      "peak_return_pct": 929.58,
+      "final_return_pct": -71.25,
+      "days_observed": 29,
+      "note": "holder_count=2388; is_honeypot=0; bundler_rate=0.0183; sniper_count=19; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.5; entrapment_ratio=0.1961; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "EVY4xJ3ytMHa77sjgs2uVj7fgXj1ha98QSQxPadApump",
+      "chain": "solana",
+      "launch": "2026-06-10T01:14:21",
+      "outcome": "pumped",
+      "peak_return_pct": 50855.42,
+      "final_return_pct": 10528.63,
+      "days_observed": 53,
+      "note": "holder_count=2403; is_honeypot=0; bundler_rate=0.0965; sniper_count=41; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.1188; renounced_mint=1; twitter_create_token_count=6"
+    },
+    {
+      "token": "2kcdBw85q4qMVCjUkEynTnZ3bGbBeCqZRDRNLpeWpump",
+      "chain": "solana",
+      "launch": "2026-06-17T01:42:13",
+      "outcome": "pumped",
+      "peak_return_pct": 4654.15,
+      "final_return_pct": 399.64,
+      "days_observed": 53,
+      "note": "holder_count=1987; is_honeypot=0; bundler_rate=0.0534; sniper_count=9; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.09; entrapment_ratio=0.2472; renounced_mint=1; twitter_create_token_count=5"
+    },
+    {
+      "token": "8NGpdSE1tZqUrvpUVqsn5Revncc6yUafk8mnAyK9fNCE",
+      "chain": "solana",
+      "launch": "2026-07-02T20:13:19",
+      "outcome": "survived",
+      "peak_return_pct": 117.54,
+      "final_return_pct": 2.36,
+      "days_observed": 37,
+      "note": "holder_count=1416; is_honeypot=0; bundler_rate=0.1174; sniper_count=11; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=1; entrapment_ratio=0.2629; renounced_mint=1; twitter_create_token_count=1"
+    },
+    {
+      "token": "HEU5mPDm5jCyn4AjQKjvWuvttACKvitgpAdwfmu2DoiA",
+      "chain": "solana",
+      "launch": "2026-06-28T12:35:55",
+      "outcome": "rugged",
+      "peak_return_pct": 161.02,
+      "final_return_pct": -65.67,
+      "days_observed": 41,
+      "note": "holder_count=1038; is_honeypot=0; bundler_rate=0.007; sniper_count=36; top70_sniper_hold_rate=0.1112644804; dev_team_hold_rate=0.0254129178; creator_close=True; rug_ratio=0.11; entrapment_ratio=0.5068; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "27b3yPhPVJQzCSDtML8XTNVYQcNa2urnMZXgzGhfpump",
+      "chain": "solana",
+      "launch": "2026-06-30T06:20:59",
+      "outcome": "survived",
+      "peak_return_pct": 127.48,
+      "final_return_pct": 33.49,
+      "days_observed": 40,
+      "note": "holder_count=429; is_honeypot=0; bundler_rate=0.0798; sniper_count=8; top70_sniper_hold_rate=0.0007717158; dev_team_hold_rate=0.0007626534; creator_close=False; rug_ratio=0.304; entrapment_ratio=0.2762; renounced_mint=1; twitter_create_token_count=10"
+    },
+    {
+      "token": "7LNFZcNigZay5U9e2sq6n2Z4iM8BC2Dd53L14pwvpump",
+      "chain": "solana",
+      "launch": "2026-06-23T17:08:26",
+      "outcome": "pumped",
+      "peak_return_pct": 1410.11,
+      "final_return_pct": 207.78,
+      "days_observed": 46,
+      "note": "holder_count=794; is_honeypot=0; bundler_rate=0.0345; sniper_count=9; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.12; entrapment_ratio=0.2595; renounced_mint=1; twitter_create_token_count=4"
+    },
+    {
+      "token": "DZfEKmpW3T2mG9XAcHg8aijFoyLAa5dtpVDffRE1pump",
+      "chain": "solana",
+      "launch": "2026-07-10T04:43:59",
+      "outcome": "rugged",
+      "peak_return_pct": 812.29,
+      "final_return_pct": -67.3,
+      "days_observed": 30,
+      "note": "holder_count=243; is_honeypot=0; bundler_rate=0.0346; sniper_count=9; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.01; entrapment_ratio=0.1665; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "5zCypRD91xWpaQba5t2GG7QzEaJGTQzpYBZdeKuepump",
+      "chain": "solana",
+      "launch": "2026-07-19T00:08:20",
+      "outcome": "survived",
+      "peak_return_pct": 211.59,
+      "final_return_pct": 13.77,
+      "days_observed": 21,
+      "note": "holder_count=2238; is_honeypot=0; bundler_rate=0.0009; sniper_count=8; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.02; entrapment_ratio=0.942; renounced_mint=1; twitter_create_token_count=4"
+    },
+    {
+      "token": "FaL1PFQhNo4JAGaQKSnKurWeNtpexqEAduQjR4H6pump",
+      "chain": "solana",
+      "launch": "2026-07-08T05:56:17",
+      "outcome": "pumped",
+      "peak_return_pct": 919.78,
+      "final_return_pct": 338.93,
+      "days_observed": 32,
+      "note": "holder_count=612; is_honeypot=0; bundler_rate=0.1134; sniper_count=12; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.49; entrapment_ratio=0.1918; renounced_mint=1; twitter_create_token_count=1"
+    },
+    {
+      "token": "4SnKwnz6DyagftnFqdxsvWvehrcbEDhxmmXNQk2Jpump",
+      "chain": "solana",
+      "launch": "2026-06-12T06:57:27",
+      "outcome": "pumped",
+      "peak_return_pct": 15684.08,
+      "final_return_pct": 3884.37,
+      "days_observed": 58,
+      "note": "holder_count=2538; is_honeypot=0; bundler_rate=0.0694; sniper_count=9; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.174; entrapment_ratio=0.3447; renounced_mint=1; twitter_create_token_count=5"
+    },
+    {
+      "token": "BGBsxrYAt7SLUGXHY5gk1P1kScwfrYKgNsATt3v6pump",
+      "chain": "solana",
+      "launch": "2026-07-28T04:27:58",
+      "outcome": "survived",
+      "peak_return_pct": 415.25,
+      "final_return_pct": 9.97,
+      "days_observed": 12,
+      "note": "holder_count=235; is_honeypot=0; bundler_rate=0.3924; sniper_count=24; top70_sniper_hold_rate=0.2595925618; dev_team_hold_rate=0.2592632086; creator_close=False; rug_ratio=0.2625; entrapment_ratio=0.0196; renounced_mint=1; twitter_create_token_count=6"
+    },
+    {
+      "token": "CvXyWJRq3ZxqifMzAuyUomDvJ8PF8NitXx8HxRLGpump",
+      "chain": "solana",
+      "launch": "2026-05-15T14:51:27",
+      "outcome": "survived",
+      "peak_return_pct": 501.66,
+      "final_return_pct": 44.49,
+      "days_observed": 85,
+      "note": "holder_count=1369; is_honeypot=0; bundler_rate=0.0278; sniper_count=12; top70_sniper_hold_rate=0.0275909853; dev_team_hold_rate=0.0275909853; creator_close=False; rug_ratio=0.338; entrapment_ratio=0.4191; renounced_mint=1; twitter_create_token_count=18"
+    },
+    {
+      "token": "6MA2JKo8YWV43g8de5NLehbKqKkDZcaZQ6zGAoAtpump",
+      "chain": "solana",
+      "launch": "2026-05-26T11:47:44",
+      "outcome": "survived",
+      "peak_return_pct": 508.22,
+      "final_return_pct": 6.35,
+      "days_observed": 17,
+      "note": "holder_count=64; is_honeypot=0; bundler_rate=0.1518; sniper_count=9; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.15853658536585366; entrapment_ratio=0.0195; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "E8TYqR58QyLvZLQb3pdNcZTXwWU2p9Ug5uocPfjUpump",
+      "chain": "solana",
+      "launch": "2026-05-25T23:15:03",
+      "outcome": "rugged",
+      "peak_return_pct": 237.74,
+      "final_return_pct": -63.76,
+      "days_observed": 75,
+      "note": "holder_count=909; is_honeypot=0; bundler_rate=0.0862; sniper_count=25; top70_sniper_hold_rate=0.0393169316; dev_team_hold_rate=0.0393169316; creator_close=False; rug_ratio=0.208; entrapment_ratio=0.2425; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "FeMbDoX7R1Psc4GEcvJdsbNbZA3bfztcyDCatJVJpump",
+      "chain": "solana",
+      "launch": "2026-04-29T15:09:01",
+      "outcome": "pumped",
+      "peak_return_pct": 19475.17,
+      "final_return_pct": 2160.77,
+      "days_observed": 100,
+      "note": "holder_count=15865; is_honeypot=0; bundler_rate=0.1507; sniper_count=23; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.272; entrapment_ratio=0.2993; renounced_mint=1; twitter_create_token_count=166"
+    },
+    {
+      "token": "EBnEBYA9ohw6qtz5MwLm19Q3kDrsC6ngP2LmthWLpump",
+      "chain": "solana",
+      "launch": "2026-06-18T23:54:55",
+      "outcome": "survived",
+      "peak_return_pct": 593.51,
+      "final_return_pct": 255.94,
+      "days_observed": 4,
+      "note": "holder_count=74; is_honeypot=0; bundler_rate=0.3636; sniper_count=2; top70_sniper_hold_rate=0.0188161816; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.02; entrapment_ratio=0.0003; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "CrJPSvj625TnPdWS42aG5ybMcHeFvnNqq5AExVespump",
+      "chain": "solana",
+      "launch": "2026-04-13T21:17:58",
+      "outcome": "pumped",
+      "peak_return_pct": 919.24,
+      "final_return_pct": 481.75,
+      "days_observed": 100,
+      "note": "holder_count=1457; is_honeypot=0; bundler_rate=0.0273; sniper_count=17; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.1113; renounced_mint=1; twitter_create_token_count=1"
+    },
+    {
+      "token": "6LLNiWXRZp8hn5oTFTHEo8ERbJS3QJfHSKhnTCqipump",
+      "chain": "solana",
+      "launch": "2026-07-20T06:07:53",
+      "outcome": "survived",
+      "peak_return_pct": 449.19,
+      "final_return_pct": 26.66,
+      "days_observed": 20,
+      "note": "holder_count=1260; is_honeypot=0; bundler_rate=0.1222; sniper_count=8; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.202; entrapment_ratio=0.2053; renounced_mint=1; twitter_create_token_count=63"
+    },
+    {
+      "token": "7ApHxf33x2aYFauLJjMUQyU9wRWLjJFSQBcFQJ2Dpump",
+      "chain": "solana",
+      "launch": "2026-07-16T22:04:19",
+      "outcome": "pumped",
+      "peak_return_pct": 574.02,
+      "final_return_pct": 147.39,
+      "days_observed": 9,
+      "note": "holder_count=233; is_honeypot=0; bundler_rate=0.0564; sniper_count=2; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.0418; renounced_mint=1; twitter_create_token_count=3"
+    },
+    {
+      "token": "8wxkvAfEns76yBzu4MnbV7VnXWjg3iDPA9uwAQ6cpump",
+      "chain": "solana",
+      "launch": "2026-05-22T05:02:16",
+      "outcome": "survived",
+      "peak_return_pct": 482.89,
+      "final_return_pct": -11.46,
+      "days_observed": 79,
+      "note": "holder_count=5793; is_honeypot=0; bundler_rate=0.0592; sniper_count=32; top70_sniper_hold_rate=0.0965060578; dev_team_hold_rate=0.0965056217; creator_close=False; rug_ratio=0.22; entrapment_ratio=0.3437; renounced_mint=1; twitter_create_token_count=392"
+    },
+    {
+      "token": "73RzBXoQXuRz3L6axtogcPXpGqZFVMBA8DZqQ5mEpump",
+      "chain": "solana",
+      "launch": "2026-06-16T19:27:58",
+      "outcome": "survived",
+      "peak_return_pct": 237.07,
+      "final_return_pct": 67.87,
+      "days_observed": 2,
+      "note": "holder_count=21; is_honeypot=0; bundler_rate=0.2132; sniper_count=0; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.01; entrapment_ratio=0; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "7HgfXftRBBqsYtAEYcqjGLQrNJLL6Tww9ek4rE3Apump",
+      "chain": "solana",
+      "launch": "2026-05-12T05:13:06",
+      "outcome": "rugged",
+      "peak_return_pct": 48.69,
+      "final_return_pct": -78.13,
+      "days_observed": 89,
+      "note": "holder_count=7749; is_honeypot=0; bundler_rate=0.3251; sniper_count=32; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.14285714285714285; entrapment_ratio=0.3955; renounced_mint=1; twitter_create_token_count=24"
+    },
+    {
+      "token": "utLyQQCPvjuCc6zeaXdsFeEC3JNdxKS3vxaZWoGdoge",
+      "chain": "solana",
+      "launch": "2026-05-08T03:46:52",
+      "outcome": "pumped",
+      "peak_return_pct": 15495.4,
+      "final_return_pct": 2557.02,
+      "days_observed": 93,
+      "note": "holder_count=3441; is_honeypot=0; bundler_rate=0.0195; sniper_count=29; top70_sniper_hold_rate=0.0020820015; dev_team_hold_rate=0.0020820015; creator_close=False; rug_ratio=0.248; entrapment_ratio=0.4099; renounced_mint=1; twitter_create_token_count=72"
+    },
+    {
+      "token": "GvUCjmWSXA5hrTh9smmNA1AU55YCtP9mDLQcrKA1pump",
+      "chain": "solana",
+      "launch": "2026-06-16T20:32:47",
+      "outcome": "survived",
+      "peak_return_pct": 202.18,
+      "final_return_pct": -34.04,
+      "days_observed": 53,
+      "note": "holder_count=1486; is_honeypot=0; bundler_rate=0.078; sniper_count=10; top70_sniper_hold_rate=0.054879335; dev_team_hold_rate=0.054879335; creator_close=False; rug_ratio=0.37777777777777777; entrapment_ratio=0.3164; renounced_mint=1; twitter_create_token_count=11"
+    },
+    {
+      "token": "B6f27ETGcjgGNB1fqULJbXVmw9FnL8HgBp7R83hmpump",
+      "chain": "solana",
+      "launch": "2026-05-29T15:54:29",
+      "outcome": "pumped",
+      "peak_return_pct": 109017.74,
+      "final_return_pct": 8594.84,
+      "days_observed": 71,
+      "note": "holder_count=3925; is_honeypot=0; bundler_rate=0.0401; sniper_count=23; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.21153846153846154; entrapment_ratio=0.2859; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "9NCBFpUvWTuAtHbUo4q1ruvrUsuzUtwhRoU7HwrTpump",
+      "chain": "solana",
+      "launch": "2026-07-29T21:09:06",
+      "outcome": "pumped",
+      "peak_return_pct": 3093.59,
+      "final_return_pct": 2220.4,
+      "days_observed": 10,
+      "note": "holder_count=847; is_honeypot=0; bundler_rate=0.0177; sniper_count=17; top70_sniper_hold_rate=0.0144137833; dev_team_hold_rate=0.0144137833; creator_close=False; rug_ratio=0.21052631578947367; entrapment_ratio=0.0527; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "DwAq3xURyT5MRKeEU9mKj7BcnpXxri1NR2xtiCP1pump",
+      "chain": "solana",
+      "launch": "2026-08-01T10:10:16",
+      "outcome": "survived",
+      "peak_return_pct": 110.26,
+      "final_return_pct": 84.53,
+      "days_observed": 7,
+      "note": "holder_count=1337; is_honeypot=0; bundler_rate=0; sniper_count=26; top70_sniper_hold_rate=0.2413514164; dev_team_hold_rate=0.2413514164; creator_close=False; rug_ratio=0.27877237851662406; entrapment_ratio=0.6624; renounced_mint=1; twitter_create_token_count=1"
+    },
+    {
+      "token": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+      "chain": "solana",
+      "launch": "2026-07-06T22:53:23",
+      "outcome": "pumped",
+      "peak_return_pct": 3985.79,
+      "final_return_pct": 1628.68,
+      "days_observed": 33,
+      "note": "holder_count=540; is_honeypot=0; bundler_rate=0.0328; sniper_count=11; top70_sniper_hold_rate=5.57811e-05; dev_team_hold_rate=5.57811e-05; creator_close=False; rug_ratio=0.16; entrapment_ratio=0.1328; renounced_mint=1; twitter_create_token_count=36"
+    },
+    {
+      "token": "hLArXvDs9xdDsr5hms1gEiVqdnVGeAot7AbuRpmpump",
+      "chain": "solana",
+      "launch": "2026-08-01T03:23:13",
+      "outcome": "survived",
+      "peak_return_pct": 641.99,
+      "final_return_pct": 0.0,
+      "days_observed": 1,
+      "note": "holder_count=43; is_honeypot=0; bundler_rate=0.1035; sniper_count=0; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.01; entrapment_ratio=0.0004; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "5gueCoVQkDw2ofNYJWvhM3heUuPV2cpjNUoooJ6ppump",
+      "chain": "solana",
+      "launch": "2026-07-01T18:52:46",
+      "outcome": "survived",
+      "peak_return_pct": 639.83,
+      "final_return_pct": 42.96,
+      "days_observed": 3,
+      "note": "holder_count=33; is_honeypot=0; bundler_rate=0.033; sniper_count=1; top70_sniper_hold_rate=0.0010958069; dev_team_hold_rate=0; creator_close=True; rug_ratio=0; entrapment_ratio=0.0002; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "EicU9erkt5gxj5FcXanaazS2ryvi2xcy4p5gN25Jpump",
+      "chain": "solana",
+      "launch": "2026-07-16T22:00:06",
+      "outcome": "survived",
+      "peak_return_pct": 942.27,
+      "final_return_pct": 4.14,
+      "days_observed": 2,
+      "note": "holder_count=26; is_honeypot=0; bundler_rate=0.0299; sniper_count=3; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=1; entrapment_ratio=0.0005; renounced_mint=1; twitter_create_token_count=0"
+    },
+    {
+      "token": "3grmULXrnQyN2A5LFStKFeSQsWvZjzNDsDVVLknFpump",
+      "chain": "solana",
+      "launch": "2026-07-10T00:36:19",
+      "outcome": "rugged",
+      "peak_return_pct": 553.92,
+      "final_return_pct": -93.01,
+      "days_observed": 30,
+      "note": "holder_count=1340; is_honeypot=0; bundler_rate=0.0071; sniper_count=18; top70_sniper_hold_rate=0; dev_team_hold_rate=0; creator_close=True; rug_ratio=0.11; entrapment_ratio=0.5974; renounced_mint=1; twitter_create_token_count=0"
+    }
+  ]
+}
