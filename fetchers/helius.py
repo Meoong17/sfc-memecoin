@@ -13,7 +13,7 @@ Requires HELIUS_API_KEY in .env. Uses the enhanced RPC endpoint:
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from data_sources.wallet_funding import FundingEdge
@@ -21,6 +21,29 @@ from fetchers.base import BaseFetcher, FetchError
 
 # SPL Token program (standard transfers)
 TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+
+
+def _amount_of(info: dict, ptype: str) -> float:
+    """Extract transfer amount from parsed instruction info.
+
+    transferChecked carries tokenAmount; plain transfer carries amount.
+    Normalizes raw token units to a comparable float (raw units, not decimals).
+    """
+    if ptype in ("transferChecked", "transferCheck"):
+        ta = info.get("tokenAmount") or {}
+        amt = ta.get("amount")
+        if amt is not None:
+            try:
+                return float(amt)
+            except (TypeError, ValueError):
+                return 0.0
+    amt = info.get("amount")
+    if amt is None:
+        return 0.0
+    try:
+        return float(amt)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 class HeliusRpcFetcher(BaseFetcher):
@@ -49,34 +72,54 @@ class HeliusRpcFetcher(BaseFetcher):
         return data.get("result") or []
 
     def get_parsed_transaction(self, signature: str) -> dict:
-        """Parse one transaction for token transfers."""
-        data = self._rpc("getParsedTransaction", [signature, {"maxSupportedTransactionVersion": 0}])
+        """Parse one transaction for token transfers.
+
+        Uses the standard `getTransaction` method (getParsedTransaction is NOT
+        exposed on the Helius enhanced RPC endpoint — verified live: method not
+        found). Version 0 handles Solana's current tx version.
+        """
+        data = self._rpc("getTransaction",
+                         [signature, {"maxSupportedTransactionVersion": 0,
+                                      "encoding": "jsonParsed"}])
         return data.get("result") or {}
 
     def _extract_transfers(self, tx: dict) -> list[dict]:
-        """Extract SPL token transfers from a parsed tx (from/to/amount)."""
+        """Extract SPL token transfers from a parsed tx (from/to/amount).
+
+        Uses the PARSED INSTRUCTIONS (source/destination fields) — the correct
+        source of truth for receiver identity, not just balance-delta owners
+        (which often equal the wallet itself). Verified live on Helius.
+        """
         out: list[dict] = []
         meta = tx.get("meta") or {}
         if meta.get("err"):
             return out
-        inner = meta.get("innerInstructions") or []
-        # top-level + inner token transfers
-        for instr_set in ([meta] + inner):
-            token_bal_changes = instr_set.get("postTokenBalances") or []
-            pre = {b.get("owner"): b.get("uiTokenAmount", {}).get("uiAmount", 0.0)
-                   for b in (instr_set.get("preTokenBalances") or [])}
-            for b in token_bal_changes:
-                owner = b.get("owner")
-                post = (b.get("uiTokenAmount") or {}).get("uiAmount", 0.0)
-                pre_amt = pre.get(owner, 0.0)
-                delta = (post or 0.0) - (pre_amt or 0.0)
-                if abs(delta) > 0:
-                    out.append({
-                        "owner": owner,
-                        "delta": delta,
-                        "mint": b.get("mint"),
-                        "signature": tx.get("transaction", {}).get("signatures", [None])[0],
-                    })
+        msg = tx.get("transaction", {}).get("message", {})
+        sig = (tx.get("transaction", {}).get("signatures") or [None])[0]
+
+        # gather all instructions incl. inner
+        instructions: list = list(msg.get("instructions") or [])
+        for inner in (meta.get("innerInstructions") or []):
+            instructions.extend(inner.get("instructions") or [])
+
+        for inst in instructions:
+            if not isinstance(inst, dict):
+                continue
+            parsed = inst.get("parsed") or {}
+            ptype = parsed.get("type") or ""
+            info = parsed.get("info") or {}
+            program = inst.get("program", "")
+
+            # SPL token transfer or system transfer: has source/destination
+            if ptype in ("transfer", "transferChecked", "transferCheck") or \
+               (program == "spl-token" and ptype in ("transfer", "transferChecked")):
+                src = info.get("source")
+                dst = info.get("destination")
+                amount = _amount_of(info, ptype)
+                mint = info.get("mint")
+                if src and dst and amount and amount > 0:
+                    out.append({"source": src, "destination": dst,
+                                "amount": amount, "mint": mint, "signature": sig})
         return out
 
     def fetch_funding_edges(self, master_wallet: str, *, token_mint: str,
@@ -102,13 +145,14 @@ class HeliusRpcFetcher(BaseFetcher):
             except FetchError:
                 continue
             for tr in self._extract_transfers(tx):
-                # master must be the source (its balance decreased)
-                if tr.get("owner") == master_wallet and tr["delta"] < 0 and tr.get("mint") == token_mint:
+                # master must be the SOURCE (outgoing transfer); receiver is
+                # destination (correct identity from parsed instructions).
+                if tr.get("source") == master_wallet and tr.get("mint") == token_mint:
                     edges.append(FundingEdge(
                         master_wallet=master_wallet,
-                        sub_wallet=str(tr["owner"]),  # placeholder; real receiver needs balance index
-                        amount=abs(tr["delta"]),
-                        ts=datetime.utcnow(),
+                        sub_wallet=tr["destination"],
+                        amount=tr["amount"],
+                        ts=datetime.now(timezone.utc),
                         chain=chain,
                     ))
         return edges

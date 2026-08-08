@@ -78,32 +78,36 @@ def test_dex_detail_no_pairs_returns_none(monkeypatch):
 
 # --- Helius transfer extraction ---
 
-def _parsed_tx(owner, post_bal, mint, sig):
+def _parsed_tx(src, dst, amount, mint, sig):
     return {
-        "meta": {
-            "err": None,
-            "postTokenBalances": [{"owner": owner, "mint": mint,
-                                   "uiTokenAmount": {"uiAmount": post_bal}}],
-            "preTokenBalances": [{"owner": owner, "mint": mint,
-                                  "uiTokenAmount": {"uiAmount": 0.0}}],
-            "innerInstructions": [],
+        "meta": {"err": None, "innerInstructions": []},
+        "transaction": {
+            "signatures": [sig],
+            "message": {"instructions": [
+                {"program": "spl-token", "parsed": {
+                    "type": "transferChecked",
+                    "info": {"source": src, "destination": dst, "mint": mint,
+                             "tokenAmount": {"amount": str(amount)}},
+                }},
+            ]},
         },
-        "transaction": {"signatures": [sig]},
     }
 
 
-def test_helius_extract_transfers_positive_delta(monkeypatch):
+def test_helius_extract_transfers_from_parsed_instructions():
     f = HeliusRpcFetcher(api_key="fake")
-    tx = _parsed_tx("RECEIVER", 100.0, "MINT", "SIG1")
+    tx = _parsed_tx("SRC", "DST", 100.0, "MINT", "SIG1")
     out = f._extract_transfers(tx)
     assert len(out) == 1
-    assert out[0]["delta"] == 100.0
-    assert out[0]["owner"] == "RECEIVER"
+    assert out[0]["source"] == "SRC"
+    assert out[0]["destination"] == "DST"
+    assert out[0]["amount"] == 100.0
+    assert out[0]["mint"] == "MINT"
 
 
 def test_helius_skips_failed_tx():
     f = HeliusRpcFetcher(api_key="fake")
-    tx = {"meta": {"err": {"InstructionError": [0, 0]}, "postTokenBalances": []}}
+    tx = {"meta": {"err": {"InstructionError": [0, 0]}, "innerInstructions": []}}
     assert f._extract_transfers(tx) == []
 
 
@@ -119,9 +123,11 @@ def test_helius_fetch_funding_edges_integration(monkeypatch):
     # mock get_signatures and get_parsed_transaction
     monkeypatch.setattr(f, "get_signatures",
                         lambda addr, **kw: [{"signature": "S1"}, {"signature": "S2"}])
-    monkeypatch.setattr(f, "get_parsed_transaction", lambda sig: _parsed_tx("SUB", -50.0, "MINT", sig))
+    monkeypatch.setattr(f, "get_parsed_transaction", lambda sig: _parsed_tx("MASTER", "SUB", 50.0, "MINT", sig))
     edges = f.fetch_funding_edges("MASTER", token_mint="MINT")
     assert isinstance(edges, list)
-    for e in edges:
-        assert isinstance(e, FundingEdge)
-        assert e.master_wallet == "MASTER"
+    assert len(edges) == 2  # both sigs (S1,S2) yield a MASTER->SUB transfer
+    e = edges[0]
+    assert isinstance(e, FundingEdge)
+    assert e.master_wallet == "MASTER"
+    assert e.sub_wallet == "SUB"  # correct receiver from parsed destination

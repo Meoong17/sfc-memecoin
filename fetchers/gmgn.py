@@ -134,20 +134,32 @@ class GmgnFetcher:
         )
 
     # --- portfolio stats -> WalletAnalytics (classification) ---
-    def wallet_stats(self, wallet: str, chain: str = "solana") -> WalletAnalytics:
-        """Fetch wallet trading stats via gmgn-cli portfolio stats."""
+    def wallet_stats(self, wallet: str, chain: str = "solana", period: str = "30d") -> WalletAnalytics:
+        """Fetch wallet trading stats via gmgn-cli portfolio stats.
+
+        Maps to the FIELDS ACTUALLY RETURNED by gmgn-cli (verified live):
+          pnl_stat.winrate, buy, sell, common.created_at (wallet age),
+          pnl_stat.avg_holding_period.
+        Sniper/bundler/insider_hold rates live in OTHER endpoints
+        (token traders / follow-wallet) and are left 0 here until wired.
+        """
         data = self._run("portfolio", "stats", "--chain", self._chain_flag(chain),
-                         "--wallet", wallet)
+                         "--wallet", wallet, "--period", period)
         d = data.get("data", data)
+        pnl = d.get("pnl_stat") or {}
+        common = d.get("common") or {}
+
+        # wallet age -> fresh_wallet_rate (created_at unix -> 0 if recent)
+        created = _f(common.get("created_at"), 0.0)
+        import time
+        age_days = (time.time() - created) / 86400.0 if created else 0.0
+        fresh_wallet = 1.0 if age_days < 30 else (0.5 if age_days < 90 else 0.0)
+
         return WalletAnalytics(
             wallet=wallet,
             chain=chain,
-            sniper_count=int(_f(d.get("sniper_count"))),
-            bundler_trader_amount_rate=_f(d.get("bundler_trader_amount_rate")),
-            rat_trader_amount_rate=_f(d.get("rat_trader_amount_rate")),
-            suspected_insider_hold_rate=_f(d.get("suspected_insider_hold_rate")),
-            fresh_wallet_rate=_f(d.get("fresh_wallet_rate")),
-            win_rate=_f(d.get("win_rate")),
-            early_entry_rate=_f(d.get("early_entry_rate")),
-            social_influence=_f(d.get("social_influence")),
+            win_rate=_f(pnl.get("winrate")),
+            sniper_count=int(_f(d.get("buy"))),   # buys as a volume proxy
+            early_entry_rate=_f(d.get("buy")) / max(1.0, _f(d.get("buy")) + _f(d.get("sell"))),
+            fresh_wallet_rate=fresh_wallet,
         )

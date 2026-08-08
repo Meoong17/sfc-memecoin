@@ -40,15 +40,17 @@ def test_token_security_honeypot_when_cannot_sell(monkeypatch):
 
 def test_wallet_stats_maps_to_analytics(monkeypatch):
     f = GmgnFetcher(api_key="fake")
+    import time
     monkeypatch.setattr(f, "_run", lambda *a, **kw: {"data": {
-        "sniper_count": 12, "win_rate": "0.7", "bundler_trader_amount_rate": "0.6",
-        "suspected_insider_hold_rate": "0.2", "fresh_wallet_rate": "0.1",
-        "early_entry_rate": "0.8", "social_influence": "0.4",
+        "pnl_stat": {"winrate": "0.7"},
+        "buy": 12, "sell": 4,
+        "common": {"created_at": time.time() - 20 * 86400},  # 20 days old -> fresh
     }})
     a = f.wallet_stats("W1", "solana")
-    assert a.sniper_count == 12
     assert a.win_rate == 0.7
-    assert a.early_entry_rate == 0.8
+    assert a.sniper_count == 12  # buys proxy
+    assert a.early_entry_rate == pytest.approx(12 / 16)
+    assert a.fresh_wallet_rate == 1.0  # < 30 days
 
 
 def test_analytics_to_signals_drives_smart_money_classification():
