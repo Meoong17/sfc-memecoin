@@ -425,6 +425,11 @@ Sumber data yang benar:
 
 ## Riwayat perubahan
 
+- 2026-08-09: **alpha_raw diperkaya momentum + buy pressure** (weight audit
+  langkah 4). `_map_alpha_raw()` menambah price_24h momentum (±15), buy_volume
+  share (±10), liquidity bonus (≤10) ke base `40 + vol/1M*40`. Live verify
+  (CATE): alpha=100. 291 test hijau (+2). Scaling TETAP ILLUSTRATIVE.
+
 - 2026-08-09: **Bobot inti kini TERUKUR (weight audit, docs/WEIGHT_AUDIT.md)**.
   Audit menemukan organic_raw & smart_money_raw HARDCODED 50 → Risk-Adjusted
   Alpha didorong hampir seluruhnya oleh penalti downside (bukan kualitas positif

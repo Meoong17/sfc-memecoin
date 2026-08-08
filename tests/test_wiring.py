@@ -4,7 +4,8 @@ import pytest
 from fetchers.dex_screener import TokenMarketInfo
 from pipeline import TokenFeatures
 from wiring import (LiveSourceBundle, LivePipelineWire, LiveUniverse,
-                    _gmgn_renounced_from_notes, _map_core_weights, _risk_level)
+                    _gmgn_renounced_from_notes, _map_alpha_raw, _map_core_weights,
+                    _risk_level)
 
 
 class _FakeGmgn:
@@ -135,6 +136,23 @@ def test_map_core_weights_penalizes_sniper_bundler():
 def test_map_core_weights_empty_returns_baseline():
     assert _map_core_weights({}) == (50.0, 50.0, 50.0)
     assert _map_core_weights(None) == (50.0, 50.0, 50.0)
+
+
+def test_map_alpha_raw_falls_back_without_market_data():
+    # no market stats -> volume+liquidity proxy only
+    assert _map_alpha_raw(None, volume=0, liquidity=0) == 40.0
+    assert _map_alpha_raw({}, volume=0, liquidity=0) == 40.0
+
+
+def test_map_alpha_raw_rewards_momentum_and_buy_pressure():
+    # strong momentum + balanced buy share -> higher than volume-only base
+    ms = {"price_24h": 0.5, "buy_volume_24h": 60.0, "volume_24h": 100.0}
+    base = _map_alpha_raw(None, volume=1_000_000, liquidity=0)
+    with_momentum = _map_alpha_raw(ms, volume=1_000_000, liquidity=0)
+    assert with_momentum > base
+    # clip: extreme momentum capped
+    assert _map_alpha_raw({"price_24h": 10.0}, volume=0, liquidity=0) <= 100.0
+    assert _map_alpha_raw({"price_24h": -10.0}, volume=0, liquidity=0) >= 20.0
 
 
 def test_build_features_measures_core_weights_from_gmgn():

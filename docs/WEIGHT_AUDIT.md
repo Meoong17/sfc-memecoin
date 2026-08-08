@@ -1,12 +1,13 @@
 # Audit Bobot Inti — SFC Memecoin Screening Engine
 Tanggal: 2026-08-09 | Sumber: docs folder B (spec v5 §6.15, §8) + repo aktual
 
-## STATUS: Langkah bernilai-tinggi 1-3 SELESAI (2026-08-09)
+## STATUS: Langkah bernilai-tinggi 1-4 SELESAI (2026-08-09)
 - GMGN `market_stats` method + `TokenMarketStats` dataclass ditambahkan (fetchers/gmgn.py) — ambil holder_count, wallet_tags_stat (smart/sniper/bundler/fresh/whale/renowned/rat), locked_ratio, buy/sell/volume 24h dari `token info`.
 - `_map_core_weights()` (wiring.py) mengisi organic/smart_money/safety dari data nyata, bukan konstanta.
-- `build_features` kini memanggil market_stats & mengisi bobot inti (organic/smart_money TIDAK lagi hardcoded 50).
-- Live verify (CATE): organic=31.3 (1000 bundler+1000 fresh → tidak organik), smart_money=59.6 (154 smart), safety=50 (locked 0.0002).
-- 289 test hijau (+4).
+- `_map_alpha_raw()` (wiring.py) memperkaya alpha_raw dengan momentum (price_24h) + buy pressure (buy_volume share) + liquidity — tak lagi hanya volume.
+- `build_features` kini memanggil market_stats & mengisi SEMUA bobot inti terukur (alpha/organic/smart_money/safety).
+- Live verify (CATE): alpha=100 (vol $15M + mom +4.1%), organic=31.3 (1000 bundler+1000 fresh → tidak organik), smart_money=59.6 (154 smart), safety=50 (locked 0.0002).
+- 291 test hijau (+6).
 
 ## Tujuan
 Menilai apakah bobot inti (Alpha / Organic / Safety / Smart Money) benar-benar

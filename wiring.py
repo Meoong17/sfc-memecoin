@@ -150,6 +150,8 @@ class LivePipelineWire:
                 org, sm, safe = _map_core_weights(f.market_stats)
                 f.organic_raw, f.smart_money_raw = org, sm
                 f.safety_raw = safe
+                f.alpha_raw = _map_alpha_raw(f.market_stats, volume=vol,
+                                             liquidity=liq)
             except Exception as e:
                 log.warning("GMGN market_stats failed for %s: %s", info.address, e)
 
@@ -284,6 +286,30 @@ def _map_core_weights(ms: dict | None) -> tuple[float, float, float]:
     return (min(100.0, max(20.0, organic)),
             min(100.0, max(20.0, smart_money)),
             min(100.0, max(20.0, safety)))
+
+
+def _map_alpha_raw(ms: dict | None, *, volume: float, liquidity: float) -> float:
+    """Map volume + liquidity + GMGN momentum/buy-pressure onto Alpha (0-100).
+
+    Alpha = raw opportunity. Previously just `40 + vol/1M*40`; now also rewards
+    price momentum (price_24h) and buy pressure (buy_volume_24h share) from
+    GMGN market stats, so a token that is moving on strong demand scores higher
+    than one moving on thin volume. Falls back to volume+liquidity only when no
+    market data is present. All scaling ILLUSTRATIVE (calibration doctrine).
+    """
+    base = min(100.0, 40.0 + max(0.0, volume) / 1_000_000 * 40.0)
+    if not ms:
+        return base
+    # price_24h is a fraction (e.g. 0.41 = +41%); clip momentum contribution
+    momentum = float(ms.get("price_24h", 0) or 0)
+    # buy pressure: buy_volume_24h / volume_24h, 0.5 = balanced -> ~no effect
+    buy_vol = float(ms.get("buy_volume_24h", 0) or 0)
+    tot_vol = float(ms.get("volume_24h", 0) or 0)
+    buy_share = (buy_vol / tot_vol) if tot_vol > 0 else 0.5
+    liq_bonus = min(10.0, max(0.0, liquidity) / 1_000_000 * 2.0)
+    alpha = base + max(-15.0, min(15.0, momentum * 30.0)) \
+        + (buy_share - 0.5) * 20.0 + liq_bonus
+    return min(100.0, max(20.0, alpha))
 
 
 def _gmgn_renounced_from_notes(notes: list) -> bool:
