@@ -136,7 +136,7 @@ class TelegramNotifier:
             lines.append(f"   📈 RAA={raa:.1f} | Conf={conf:.2f} | Insider={ins:.0%} "
                          f"| DevRisk={dev_rep}")
             lines.append(f"   🧩 Konfluensi: {conf_label} | Contract: {_contract_badge(cstat)}")
-            lines.append(f"   🔗 {tok[:24]}…" if len(tok) > 24 else f"   🔗 {tok}")
+            lines.append(f"   🔗 {tok}")
             lines.append("")
 
         lines.append(sep)

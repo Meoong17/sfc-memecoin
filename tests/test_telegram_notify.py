@@ -69,6 +69,10 @@ def test_format_ranking():
     assert "DevRisk=MED" in msg   # dev reputation shown
     assert "Universe: 5 token" in msg
     assert "Admitted: 3" in msg
+    # full contract address shown (not truncated to 24)
+    assert "🔗 TOKENADDR123456789" in msg
+    assert "TOKENADDR123456789" in msg
+    assert "…" not in msg.replace("Cara baca skor", "")  # no truncation ellipsis
     # legend / definitions present
     assert "Cara baca skor" in msg
     assert "Risk-Adjusted Alpha" in msg
